@@ -1,0 +1,16 @@
+name: Killstreak
+version: '${project.version}'
+main: com.georgev22.killstreak.Main
+api-version: 1.13
+prefix: KillStreak
+author: GeorgeV22
+softdepend:
+  - PlaceholderAPI
+  - HolographicDisplays
+libraries:
+  - "org.mongodb:mongo-java-driver:3.12.10"
+  - "mysql:mysql-connector-java:8.0.22"
+  - "org.xerial:sqlite-jdbc:3.34.0"
+  - "com.google.guava:guava:31.0.1-jre"
+  - "org.postgresql:postgresql:42.2.18"
+  - "commons-codec:commons-codec:1.11"

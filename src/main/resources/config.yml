@@ -1,0 +1,51 @@
+Options:
+  experimental features: false #Turn on experimental features
+  updater: true
+  message:
+    killstreak: # send a message on killstreak
+      receiver: all # values: all and player
+      enabled: true
+      every: 10 # send the message every X killstreak
+    level up: # send a message on level up
+      receiver: all # values: all and player
+      enabled: true
+      every: 5 # send the message every X levels
+  title:
+    level up: # show a title on level up
+      receiver: player # values: all and player
+      enabled: true
+      every: 5 # show the title every X levels
+      fade in: 10
+      stay: 20
+      fade out: 10
+  # File, MySQL, PostgreSQL, SQLite, MongoDB
+  # Select in what type you want your data to be stored
+  # File is recommended
+  #SQL section is for MySQL(or MariaDB) and PostgreSQL
+  #Default PostgreSQL port: 5432
+  #Default MySQL and MariaDB port: 3306
+  #Default MongoDB port: 27017
+  database:
+    type: File
+    SQLite:
+      file name: killstreak
+    SQL:
+      host: localhost
+      port: 3306
+      user: youruser
+      password: "yourpassword"
+      database: KillStreak
+      table name: "killstreak_users"
+    MongoDB:
+      host: "localhost"
+      port: 27017
+      user: youruser
+      password: "yourpassword"
+      database: "killstreak"
+      collection: "killstreak_users"
+Levels:
+  1: 1
+  2: 2
+  3: 5
+  4: 6
+  5: 7

@@ -1,0 +1,37 @@
+package com.georgev22.killstreak.utilities.interfaces;
+
+import com.georgev22.api.maps.ObjectMap;
+import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.killstreak.Main;
+import com.georgev22.killstreak.utilities.player.User;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
+
+public interface IDatabaseType {
+
+    void save(User user) throws Exception;
+
+    void load(User user, Callback callback) throws Exception;
+
+    void setupUser(User user, Callback callback) throws Exception;
+
+    default void reset(@NotNull User user) throws Exception {
+        user
+                .append("kills", 0)
+                .append("killstreak", 0)
+                .append("multiplier", 1.0)
+                .append("level", 0)
+                .append("experience", 0)
+        ;
+        save(user);
+        MinecraftUtils.debug(Main.getInstance(), "User " + user.name() + " has been reset!");
+    }
+
+    void delete(User user) throws Exception;
+
+    boolean playerExists(User user) throws Exception;
+
+    ObjectMap<UUID, User> getAllUsers() throws Exception;
+
+}
