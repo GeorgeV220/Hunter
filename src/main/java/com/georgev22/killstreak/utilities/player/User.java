@@ -32,7 +32,7 @@ public class User extends ConcurrentObjectMap<String, Object> {
      * @param map  initial map
      * @see User#User(UUID)
      */
-    public User(UUID uuid, final ObjectMap<String, Object> map) {
+    public User(UUID uuid, final @NotNull ObjectMap<String, Object> map) {
         super(map.append("uuid", uuid));
         this.uuid = uuid;
     }
@@ -96,11 +96,18 @@ public class User extends ConcurrentObjectMap<String, Object> {
         return getInteger("level", 0);
     }
 
-    public int deaths() {
-        return getInteger("deaths", 0);
-    }
-
     public int totalKills() {
         return getInteger("kills", 0);
+    }
+
+    public ObjectMap<String, String> placeholders() {
+        return ObjectMap.newHashObjectMap()
+                .append("%player%", name())
+                .append("%kills%", String.valueOf(totalKills()))
+                .append("%killstreak%", String.valueOf(killstreak()))
+                .append("%level%", String.valueOf(level()))
+                .append("%multiplier%", String.valueOf(multiplier()))
+                .append("%experience%", String.valueOf(experience()))
+                ;
     }
 }

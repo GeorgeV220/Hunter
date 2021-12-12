@@ -1,6 +1,7 @@
 package com.georgev22.killstreak.utilities.player;
 
 import com.georgev22.api.maps.HashObjectMap;
+import com.georgev22.api.maps.LinkedObjectMap;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
 import com.georgev22.killstreak.Main;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Used to handle all user's data and anything related to them.
@@ -223,6 +225,54 @@ public class UserData {
 
     public User user() {
         return user;
+    }
+
+    /**
+     * @param limit number of top players by level in a Map.
+     * @return a {@link LinkedObjectMap} with {@param limit} top players.
+     */
+    public static LinkedObjectMap<String, Integer> getTopPlayersByLevels(int limit) {
+        ObjectMap<String, Integer> objectMap = ObjectMap.newLinkedObjectMap();
+
+        for (Map.Entry<UUID, User> entry : UserData.getAllUsersMap().entrySet()) {
+            objectMap.append(entry.getValue().getString("name"), entry.getValue().getInteger("level"));
+        }
+
+        return objectMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(limit).collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedObjectMap::new));
+    }
+
+    /**
+     * @param limit number of top players by kills in a Map.
+     * @return a {@link LinkedObjectMap} with {@param limit} top players.
+     */
+    public static LinkedObjectMap<String, Integer> getTopPlayersByKills(int limit) {
+        ObjectMap<String, Integer> objectMap = ObjectMap.newLinkedObjectMap();
+
+        for (Map.Entry<UUID, User> entry : UserData.getAllUsersMap().entrySet()) {
+            objectMap.append(entry.getValue().getString("name"), entry.getValue().getInteger("kills"));
+        }
+
+        return objectMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(limit).collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedObjectMap::new));
+    }
+
+    /**
+     * @param limit number of top players by killstreak in a Map.
+     * @return a {@link LinkedObjectMap} with {@param limit} top players.
+     */
+    public static LinkedObjectMap<String, Integer> getTopPlayersByKillstreak(int limit) {
+        ObjectMap<String, Integer> objectMap = ObjectMap.newLinkedObjectMap();
+
+        for (Map.Entry<UUID, User> entry : UserData.getAllUsersMap().entrySet()) {
+            objectMap.append(entry.getValue().getString("name"), entry.getValue().getInteger("killstreak"));
+        }
+
+        return objectMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(limit).collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedObjectMap::new));
     }
 
     /**

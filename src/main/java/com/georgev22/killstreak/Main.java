@@ -1,5 +1,6 @@
 package com.georgev22.killstreak;
 
+import com.georgev22.api.configmanager.CFG;
 import com.georgev22.api.database.Database;
 import com.georgev22.api.database.mongo.MongoDB;
 import com.georgev22.api.database.sql.mysql.MySQL;
@@ -10,7 +11,9 @@ import com.georgev22.api.maven.LibraryLoader;
 import com.georgev22.api.maven.MavenLibrary;
 import com.georgev22.api.utilities.MinecraftUtils;
 import com.georgev22.killstreak.commands.KillstreakCommand;
+import com.georgev22.killstreak.commands.KillstreakMainCommand;
 import com.georgev22.killstreak.commands.LevelCommand;
+import com.georgev22.killstreak.hooks.HolographicDisplays;
 import com.georgev22.killstreak.hooks.PAPI;
 import com.georgev22.killstreak.listeners.DeveloperInformListener;
 import com.georgev22.killstreak.listeners.PlayerListeners;
@@ -23,6 +26,7 @@ import com.georgev22.killstreak.utilities.interfaces.IDatabaseType;
 import com.georgev22.killstreak.utilities.player.UserData;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -68,7 +72,8 @@ public final class Main extends JavaPlugin {
         final FileManager fm = FileManager.getInstance();
         fm.loadFiles(this);
         MessagesUtil.repairPaths(fm.getMessages());
-
+        CFG dataCFG = fm.getData();
+        FileConfiguration data = dataCFG.getFileConfiguration();
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
             try {
                 setupDatabase();
@@ -81,8 +86,12 @@ public final class Main extends JavaPlugin {
                 new PlayerListeners(),
                 new DeveloperInformListener());
 
-        MinecraftUtils.registerCommand("killstreak", new KillstreakCommand());
-        MinecraftUtils.registerCommand("level", new LevelCommand());
+        if (OptionsUtil.COMMANDS_KILLSTREAK.getBooleanValue())
+            MinecraftUtils.registerCommand("killstreak", new KillstreakCommand());
+        if (OptionsUtil.COMMANDS_LEVEL.getBooleanValue())
+            MinecraftUtils.registerCommand("level", new LevelCommand());
+        if (OptionsUtil.COMMANDS_KILLSTREAK_MAIN.getBooleanValue())
+            MinecraftUtils.registerCommand("killstreakmain", new KillstreakMainCommand());
 
         if (OptionsUtil.UPDATER.getBooleanValue()) {
             new Updater();
@@ -92,6 +101,16 @@ public final class Main extends JavaPlugin {
             placeholdersAPI = new PAPI();
             if (placeholdersAPI.register())
                 MinecraftUtils.debug(this, "[KillStreak] Hooked into PlaceholderAPI!");
+        }
+
+        if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+            if (data.get("Holograms") != null) {
+                data.getConfigurationSection("Holograms").getKeys(false)
+                        .forEach(s -> HolographicDisplays.create(s, (Location) data.get("Holograms." + s + ".location"),
+                                data.getString("Holograms." + s + ".type"), false));
+            }
+            HolographicDisplays.setHook(true);
+            Bukkit.getLogger().info("[KillStreak] Hooked into HolographicDisplays!");
         }
 
         Metrics metrics = new Metrics(this, 0);
@@ -106,14 +125,12 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        MinecraftUtils.unRegisterCommand("killstreak");
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            if (placeholdersAPI.isRegistered()) {
-                if (placeholdersAPI.unregister()) {
-                    MinecraftUtils.debug(this, "[KillStreak] Unhooked from PlaceholderAPI!");
-                }
-            }
-        }
+        if (OptionsUtil.COMMANDS_KILLSTREAK.getBooleanValue())
+            MinecraftUtils.unRegisterCommand("killstreak");
+        if (OptionsUtil.COMMANDS_LEVEL.getBooleanValue())
+            MinecraftUtils.unRegisterCommand("level");
+        if (OptionsUtil.COMMANDS_KILLSTREAK_MAIN.getBooleanValue())
+            MinecraftUtils.unRegisterCommand("killstreakmain");
         Bukkit.getOnlinePlayers().forEach(player -> {
             UserData userData = UserData.getUser(player.getUniqueId());
             userData.save(false, new Callback() {
@@ -127,6 +144,19 @@ public final class Main extends JavaPlugin {
                 }
             });
         });
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            if (placeholdersAPI.isRegistered()) {
+                if (placeholdersAPI.unregister()) {
+                    MinecraftUtils.debug(this, "[KillStreak] Unhooked from PlaceholderAPI!");
+                }
+            }
+        }
+        if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+            if (HolographicDisplays.isHooked()) {
+                HolographicDisplays.getHologramMap().forEach((name, hologram) -> HolographicDisplays.remove(name, false));
+                MinecraftUtils.debug(this, "[KillStreak] Unhooked from HolographicDisplays");
+            }
+        }
         if (connection != null) {
             try {
                 connection.close();
@@ -245,6 +275,12 @@ public final class Main extends JavaPlugin {
             }
         });
 
+        if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+            if (HolographicDisplays.isHooked()) {
+                HolographicDisplays.updateAll();
+            }
+        }
+
     }
 
     /**
@@ -293,5 +329,13 @@ public final class Main extends JavaPlugin {
     @Override
     public void saveConfig() {
         FileManager.getInstance().getConfig().saveFile();
+    }
+
+    @Override
+    public void reloadConfig() {
+        FileManager fm = FileManager.getInstance();
+        fm.getConfig().reloadFile();
+        fm.getMessages().reloadFile();
+        MessagesUtil.repairPaths(fm.getMessages());
     }
 }

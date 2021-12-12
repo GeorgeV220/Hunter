@@ -15,6 +15,12 @@ import static com.georgev22.api.utilities.Utils.Assertions.notNull;
 
 public enum OptionsUtil {
 
+    COMMANDS_KILLSTREAK("command.killstreak", true),
+
+    COMMANDS_KILLSTREAK_MAIN("command.killstreak main", true),
+
+    COMMANDS_LEVEL("command.level", true),
+
     DATABASE_HOST("database.SQL.host", "localhost"),
 
     DATABASE_PORT("database.SQL.port", 3306),
@@ -57,7 +63,7 @@ public enum OptionsUtil {
 
     MESSAGE_KILLSTREAK("message.killstreak.enabled", true),
 
-    MESSAGE_KILLSTREAK_EVERY("message.killstreaka.every", 10),
+    MESSAGE_KILLSTREAK_EVERY("message.killstreak.every", 10),
 
     TITLE_LEVEL_UP_RECEIVER("title.level up.receiver", "player"),
 
@@ -70,6 +76,26 @@ public enum OptionsUtil {
     TITLE_LEVEL_UP_STAY("title.level up.stay", 20),
 
     TITLE_LEVEL_UP_FADE_OUT("title.level up.fade out", 10),
+
+    REWARDS_LEVEL_UP("rewards.level up", true),
+
+    REWARDS_KILLSTREAK("rewards.killstreak", true),
+
+    REWARDS_KILLS("rewards.kills.enabled", true),
+
+    REWARDS_KILLS_CLOSEST("rewards.kills.closest", true),
+
+    DISCORD_LEVEL_UP("discord.level up", false),
+
+    DISCORD_KILL("discord.kill", false),
+
+    DISCORD_KILL_STREAK("discord.killstreak", false),
+
+    TOP_PLAYERS_LEVEL("top.levels", 5),
+
+    TOP_PLAYERS_KILLS("top.kills", 5),
+
+    TOP_PLAYERS_KILLSTREAK("top.killstreak", 5),
 
 
     ;
