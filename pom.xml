@@ -6,7 +6,7 @@
 
     <groupId>com.georgev22</groupId>
     <artifactId>killstreak</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>Killstreak</name>
@@ -41,6 +41,14 @@
                             <pattern>com.georgev22.api</pattern>
                             <shadedPattern>com.georgev22.killstreak.api</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
+                            <shadedPattern>com.georgev22.killstreak.nbtapi</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>de.tr7zw.annotations</pattern>
+                            <shadedPattern>com.georgev22.killstreak.annotations</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -57,7 +65,6 @@
                                     <excludes>
                                         <exclude>META-INF/**</exclude>
                                         <exclude>com/cryptomorin/**</exclude>
-                                        <exclude>de/tr7zw/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -103,16 +110,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.papermc.paper</groupId>
+            <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.georgev22</groupId>
             <artifactId>api</artifactId>
-            <version>2.0</version>
+            <version>2.2</version>
         </dependency>
 
         <dependency>
@@ -154,6 +161,13 @@
             <groupId>com.gmail.filoghost.holographicdisplays</groupId>
             <artifactId>holographicdisplays-api</artifactId>
             <version>2.4.4</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

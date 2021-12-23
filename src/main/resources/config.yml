@@ -1,44 +1,43 @@
 Options:
   experimental features: false #Turn on experimental features
+  debug: false
   updater: true
   command:
     killstreak: true
     level: true
     killstreak main: true
-  discord:
-    level up: false
-    kill: false
-    killstreak: false
-  top:
-    levels: 5
-    kills: 5
-    killstreak: 5
-  rewards:
-    level up: true
-    killstreak: true
-    kills:
+    prestige: true
+  levels:
+    top: 5
+    discord: false
+    rewards: true
+    message:
       enabled: true
-      # Set true, so you don't have to set rewards for every kill
-      # the closest kill will be used e.g. if the player have 10 kills and in the config
-      # only exists the reward of 3 and 20 then the player will get kill 3 rewards
-      closest: true
-  message:
-    killstreak: # send a message on killstreak
       receiver: all # values: all and player
-      enabled: true
-      every: 10 # send the message every X killstreak
-    level up: # send a message on level up
-      receiver: all # values: all and player
-      enabled: true
       every: 5 # send the message every X levels
-  title:
-    level up: # show a title on level up
+    title:
       receiver: player # values: all and player
       enabled: true
       every: 5 # show the title every X levels
       fade in: 10
       stay: 20
       fade out: 10
+  killstreak:
+    top: 5
+    discord: false
+    rewards: true
+    message:
+      receiver: all # values: all and player
+      enabled: true
+      every: 10 # send the message every X killstreak
+  kills:
+    top: 5
+    discord: false
+    rewards: true
+    # Set true, so you don't have to set rewards for every kill
+    # the closest kill will be used e.g. if the player have 10 kills and in the config
+    # only exists the reward of 3 and 20 then the player will get kill 3 rewards
+    closest: true
   # File, MySQL, PostgreSQL, SQLite, MongoDB
   # Select in what type you want your data to be stored
   # File is recommended

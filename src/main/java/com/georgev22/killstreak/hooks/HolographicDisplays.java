@@ -211,36 +211,24 @@ public class HolographicDisplays {
     public static @NotNull ObjectMap<String, String> getPlaceholderMap() {
         final ObjectMap<String, String> map = ObjectMap.newHashObjectMap();
         int levelTop = 1;
-        for (Map.Entry<String, Integer> b : UserData.getTopPlayersByLevels(OptionsUtil.TOP_PLAYERS_LEVEL.getIntValue()).entrySet()) {
+        for (Map.Entry<String, Integer> b : UserData.getTopPlayersByLevels(OptionsUtil.LEVELS_TOP.getIntValue()).entrySet()) {
             String[] args = String.valueOf(b).split("=");
             map.append("%toplevel-" + levelTop + "%", args[0]).append("%level-" + levelTop + "%", args[1]);
             levelTop++;
         }
         int killsTop = 1;
-        for (Map.Entry<String, Integer> b : UserData.getTopPlayersByKills(OptionsUtil.TOP_PLAYERS_KILLS.getIntValue()).entrySet()) {
+        for (Map.Entry<String, Integer> b : UserData.getTopPlayersByKills(OptionsUtil.KILLS_TOP.getIntValue()).entrySet()) {
             String[] args = String.valueOf(b).split("=");
             map.append("%topkills-" + killsTop + "%", args[0]).append("%kills-" + killsTop + "%", args[1]);
             killsTop++;
         }
         int killstreakTop = 1;
-        for (Map.Entry<String, Integer> b : UserData.getTopPlayersByKillstreak(OptionsUtil.TOP_PLAYERS_KILLS.getIntValue()).entrySet()) {
+        for (Map.Entry<String, Integer> b : UserData.getTopPlayersByKillstreak(OptionsUtil.KILLS_TOP.getIntValue()).entrySet()) {
             String[] args = String.valueOf(b).split("=");
             map.append("%topkillstreak-" + killstreakTop + "%", args[0]).append("%killstreak-" + killstreakTop + "%", args[1]);
             killstreakTop++;
         }
         return map;
     }
-
-    // IGNORE
-    private static boolean a = false;
-
-    public static void setHook(boolean b) {
-        a = b;
-    }
-
-    public static boolean isHooked() {
-        return a;
-    }
-    //
 
 }

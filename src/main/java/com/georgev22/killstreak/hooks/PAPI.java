@@ -53,11 +53,23 @@ public class PAPI extends PlaceholderExpansion {
         if (identifier.equalsIgnoreCase("player_kills")) {
             return String.valueOf(userData.getKills());
         }
+        if (identifier.equalsIgnoreCase("player_kills_roman")) {
+            return Utils.toRoman(userData.getKills());
+        }
         if (identifier.equalsIgnoreCase("player_killstreak")) {
             return String.valueOf(userData.getKillStreak());
         }
+        if (identifier.equalsIgnoreCase("player_killstreak_roman")) {
+            return Utils.toRoman(userData.getKillStreak());
+        }
         if (identifier.equalsIgnoreCase("player_multiplier")) {
             return String.valueOf(userData.getMultiplier());
+        }
+        if (identifier.equalsIgnoreCase("player_prestige")) {
+            return String.valueOf(userData.getPrestige());
+        }
+        if (identifier.equalsIgnoreCase("player_prestige_roman")) {
+            return Utils.toRoman(userData.getPrestige());
         }
         return null;
     }

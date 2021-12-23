@@ -2,9 +2,9 @@ package com.georgev22.killstreak.utilities.player;
 
 import com.georgev22.api.maps.ConcurrentObjectMap;
 import com.georgev22.api.maps.ObjectMap;
+import com.georgev22.api.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,19 +58,6 @@ public class User extends ConcurrentObjectMap<String, Object> {
     }
 
     /**
-     * Gets a {@link Player} object that this represents, if there is one
-     * <p>
-     * If the player is online, this will return that player. Otherwise,
-     * it will return null.
-     *
-     * @return Online player
-     */
-    @Nullable
-    public Player player() {
-        return offlinePlayer().getPlayer();
-    }
-
-    /**
      * Returns the name of this player
      *
      * @return Player name or null
@@ -84,8 +71,8 @@ public class User extends ConcurrentObjectMap<String, Object> {
         return getInteger("killstreak", 0);
     }
 
-    public int experience() {
-        return getInteger("experience", 0);
+    public double experience() {
+        return getDouble("experience", 0D);
     }
 
     public double multiplier() {
@@ -100,14 +87,23 @@ public class User extends ConcurrentObjectMap<String, Object> {
         return getInteger("kills", 0);
     }
 
+    public int prestige() {
+        return getInteger("prestige", 0);
+    }
+
     public ObjectMap<String, String> placeholders() {
         return ObjectMap.newHashObjectMap()
                 .append("%player%", name())
                 .append("%kills%", String.valueOf(totalKills()))
+                .append("%kills_roman%", Utils.toRoman(totalKills()))
                 .append("%killstreak%", String.valueOf(killstreak()))
+                .append("%killstreak_roman%", Utils.toRoman(killstreak()))
                 .append("%level%", String.valueOf(level()))
+                .append("%level_roman%", Utils.toRoman(level()))
                 .append("%multiplier%", String.valueOf(multiplier()))
                 .append("%experience%", String.valueOf(experience()))
+                .append("%prestige%", String.valueOf(prestige()))
+                .append("%prestige_roman%", Utils.toRoman(prestige()))
                 ;
     }
 }

@@ -10,102 +10,111 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.georgev22.api.utilities.Utils.Assertions.notNull;
 
 public enum OptionsUtil {
 
-    COMMANDS_KILLSTREAK("command.killstreak", true),
+    DEBUG("debug", false, Optional.empty()),
 
-    COMMANDS_KILLSTREAK_MAIN("command.killstreak main", true),
+    COMMAND_KILLSTREAK("command.killstreak", true, Optional.empty()),
 
-    COMMANDS_LEVEL("command.level", true),
+    COMMAND_KILLSTREAK_MAIN("command.killstreak main", true, Optional.empty()),
 
-    DATABASE_HOST("database.SQL.host", "localhost"),
+    COMMAND_PRESTIGE("command.prestige", true, Optional.empty()),
 
-    DATABASE_PORT("database.SQL.port", 3306),
+    COMMAND_LEVEL("command.level", true, Optional.empty()),
 
-    DATABASE_USER("database.SQL.user", "youruser"),
+    DATABASE_HOST("database.SQL.host", "localhost", Optional.empty()),
 
-    DATABASE_PASSWORD("database.SQL.password", "yourpassword"),
+    DATABASE_PORT("database.SQL.port", 3306, Optional.empty()),
 
-    DATABASE_DATABASE("database.SQL.database", "Killstreak"),
+    DATABASE_USER("database.SQL.user", "youruser", Optional.empty()),
 
-    DATABASE_TABLE_NAME("database.SQL.table name", "killstreak_users"),
+    DATABASE_PASSWORD("database.SQL.password", "yourpassword", Optional.empty()),
 
-    DATABASE_SQLITE("database.SQLite.file name", "killstreak"),
+    DATABASE_DATABASE("database.SQL.database", "Killstreak", Optional.empty()),
 
-    DATABASE_MONGO_HOST("database.MongoDB.host", "localhost"),
+    DATABASE_TABLE_NAME("database.SQL.table name", "killstreak_users", Optional.empty()),
 
-    DATABASE_MONGO_PORT("database.MongoDB.port", 27017),
+    DATABASE_SQLITE("database.SQLite.file name", "killstreak", Optional.empty()),
 
-    DATABASE_MONGO_USER("database.MongoDB.user", "youruser"),
+    DATABASE_MONGO_HOST("database.MongoDB.host", "localhost", Optional.empty()),
 
-    DATABASE_MONGO_PASSWORD("database.MongoDB.password", "yourpassword"),
+    DATABASE_MONGO_PORT("database.MongoDB.port", 27017, Optional.empty()),
 
-    DATABASE_MONGO_DATABASE("database.MongoDB.database", "KillStreak"),
+    DATABASE_MONGO_USER("database.MongoDB.user", "youruser", Optional.empty()),
 
-    DATABASE_MONGO_COLLECTION("database.MongoDB.collection", "killstreak_users"),
+    DATABASE_MONGO_PASSWORD("database.MongoDB.password", "yourpassword", Optional.empty()),
 
-    DATABASE_TYPE("database.type", "File"),
+    DATABASE_MONGO_DATABASE("database.MongoDB.database", "KillStreak", Optional.empty()),
 
-    EXPERIMENTAL_FEATURES("experimental features", false),
+    DATABASE_MONGO_COLLECTION("database.MongoDB.collection", "killstreak_users", Optional.empty()),
 
-    UPDATER("updater", true),
+    DATABASE_TYPE("database.type", "File", Optional.empty()),
 
-    MESSAGE_LEVEL_UP_RECEIVER("message.level up.receiver", "all"),
+    EXPERIMENTAL_FEATURES("experimental features", false, Optional.empty()),
 
-    MESSAGE_LEVEL_UP("message.level up.enabled", true),
+    UPDATER("updater", true, Optional.empty()),
 
-    MESSAGE_LEVEL_UP_EVERY("message.level up.every", 5),
+    LEVELS_MESSAGE_RECEIVER("levels.message.receiver", "all", Optional.of("message.level up.receiver")),
 
-    MESSAGE_KILLSTREAK_RECEIVER("message.killstreak.receiver", "all"),
+    LEVELS_MESSAGE("levels.message.enabled", true, Optional.of("message.level up.enabled")),
 
-    MESSAGE_KILLSTREAK("message.killstreak.enabled", true),
+    LEVELS_MESSAGE__EVERY("levels.message.every", 5, Optional.of("message.level up.every")),
 
-    MESSAGE_KILLSTREAK_EVERY("message.killstreak.every", 10),
+    KILLSTREAK_MESSAGE_RECEIVER("killstreak.message.receiver", "all", Optional.of("message.killstreak.receiver")),
 
-    TITLE_LEVEL_UP_RECEIVER("title.level up.receiver", "player"),
+    KILLSTREAK_MESSAGE("killstreak.message.enabled", true, Optional.of("message.killstreak.enabled")),
 
-    TITLE_LEVEL_UP("title.level up.enabled", true),
+    KILLSTREAK_MESSAGE_EVERY("killstreak.message.every", 10, Optional.of("message.killstreak.every")),
 
-    TITLE_LEVEL_UP_EVERY("title.level up.every", 5),
+    LEVELS_TITLE_RECEIVER("levels.title.receiver", "player", Optional.of("title.level up.receiver")),
 
-    TITLE_LEVEL_UP_FADE_IN("title.level up.fade in", 10),
+    LEVELS_TITLE("levels.title.enabled", true, Optional.of("title.level up.enabled")),
 
-    TITLE_LEVEL_UP_STAY("title.level up.stay", 20),
+    LEVELS_TITLE_EVERY("levels.title.every", 5, Optional.of("title.level up.every")),
 
-    TITLE_LEVEL_UP_FADE_OUT("title.level up.fade out", 10),
+    LEVELS_TITLE_FADE_IN("levels.title.fade in", 10, Optional.of("title.level up.fade in")),
 
-    REWARDS_LEVEL_UP("rewards.level up", true),
+    LEVELS_TITLE__STAY("levels.title.stay", 20, Optional.of("title.level up.stay")),
 
-    REWARDS_KILLSTREAK("rewards.killstreak", true),
+    LEVELS_TITLE_FADE_OUT("levels.title.fade out", 10, Optional.of("title.level up.fade out")),
 
-    REWARDS_KILLS("rewards.kills.enabled", true),
+    LEVELS_REWARDS("levels.rewards", true, Optional.of("rewards.level up")),
 
-    REWARDS_KILLS_CLOSEST("rewards.kills.closest", true),
+    KILLSTREAK_REWARDS("killstreak.rewards", true, Optional.of("rewards.killstreak")),
 
-    DISCORD_LEVEL_UP("discord.level up", false),
+    KILLS_REWARDS("kills.rewards", true, Optional.of("rewards.kills.enabled")),
 
-    DISCORD_KILL("discord.kill", false),
+    KILLS_REWARDS_CLOSEST("kills.closest", true, Optional.of("rewards.kills.closest")),
 
-    DISCORD_KILL_STREAK("discord.killstreak", false),
+    LEVELS_DISCORD("levels.discord", false, Optional.of("discord.level up")),
 
-    TOP_PLAYERS_LEVEL("top.levels", 5),
+    KILLS_DISCORD("kills.discord", false, Optional.of("discord.kills")),
 
-    TOP_PLAYERS_KILLS("top.kills", 5),
+    KILLSTREAK_DISCORD("killstreak.discord", false, Optional.of("discord.killstreak")),
 
-    TOP_PLAYERS_KILLSTREAK("top.killstreak", 5),
+    LEVELS_TOP("levels.top", 5, Optional.of("top.levels")),
+
+    KILLS_TOP("kills.top", 5, Optional.of("top.kills")),
+
+    KILLSTREAK_TOP("killstreak.top", 5, Optional.of("top.killstreak")),
 
 
     ;
     private final String pathName;
     private final Object value;
+    private final Optional<String>[] oldPaths;
     private static final Main mainPlugin = Main.getInstance();
 
-    OptionsUtil(final String pathName, final Object value) {
+    @SafeVarargs
+    @Contract(pure = true)
+    OptionsUtil(final String pathName, final Object value, Optional<String>... oldPaths) {
         this.pathName = pathName;
         this.value = value;
+        this.oldPaths = oldPaths;
     }
 
     public boolean getBooleanValue() {
@@ -117,7 +126,7 @@ public enum OptionsUtil {
     }
 
     public String getStringValue() {
-        return mainPlugin.getConfig().getString(getPath(), String.valueOf(getDefaultValue()));
+        return mainPlugin.getConfig().getString(getPath(), (String) getDefaultValue());
     }
 
     public @NotNull Long getLongValue() {
@@ -152,13 +161,56 @@ public enum OptionsUtil {
     }
 
     /**
+     * Converts and return a String List of color codes to a List of Color classes that represent the colors.
+     *
+     * @return a List of Color classes that represent the colors.
+     */
+    public @NotNull List<Color> getColors() {
+        List<Color> colors = Lists.newArrayList();
+        for (String stringColor : getStringList()) {
+            colors.add(Color.from(stringColor));
+        }
+
+        return colors;
+    }
+
+    /**
      * Returns the path.
      *
      * @return the path.
      */
-    @Contract(pure = true)
     public @NotNull String getPath() {
-        return "Options." + this.pathName;
+        for (Optional<String> paths : getOldPaths()) {
+            if (mainPlugin.getConfig().get("Options." + getDefaultPath()) == null) {
+                if (paths.isPresent()) {
+                    if (mainPlugin.getConfig().get("Options." + paths.get()) != null) {
+                        return "Options." + paths.get();
+                    }
+                }
+            } else {
+                return "Options." + getDefaultPath();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the default path.
+     *
+     * @return the default path.
+     */
+    @Contract(pure = true)
+    public @NotNull String getDefaultPath() {
+        return this.pathName;
+    }
+
+    /**
+     * Returns the old path if it exists.
+     *
+     * @return the old path if it exists.
+     */
+    public Optional<String>[] getOldPaths() {
+        return oldPaths;
     }
 
     /**
@@ -168,14 +220,5 @@ public enum OptionsUtil {
      */
     public Object getDefaultValue() {
         return value;
-    }
-
-    public @NotNull List<Color> getColors() {
-        List<Color> colors = Lists.newArrayList();
-        for (String stringColor : getStringList()) {
-            colors.add(Color.from(stringColor));
-        }
-
-        return colors;
     }
 }

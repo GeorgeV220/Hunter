@@ -3,6 +3,8 @@ package com.georgev22.killstreak.utilities.configmanager;
 import com.georgev22.api.configmanager.CFG;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public final class FileManager {
 
     private static FileManager instance;
@@ -11,7 +13,7 @@ public final class FileManager {
         return instance == null ? instance = new FileManager() : instance;
     }
 
-    private CFG config, messages, discord, data;
+    private CFG config, messages, discord, data, prestige, items;
 
 
     private FileManager() {
@@ -22,6 +24,8 @@ public final class FileManager {
         this.config = new CFG(plugin, "config", true);
         this.discord = new CFG(plugin, "discord", true);
         this.data = new CFG(plugin, "data", false);
+        this.prestige = new CFG(plugin, "inventories" + File.separator + "prestige" + File.separator + "prestige_0", true);
+        this.items = new CFG(plugin, "items", true);
     }
 
     public CFG getMessages() {
@@ -38,5 +42,13 @@ public final class FileManager {
 
     public CFG getData() {
         return data;
+    }
+
+    public CFG getPrestige() {
+        return prestige;
+    }
+
+    public CFG getItems() {
+        return items;
     }
 }

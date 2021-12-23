@@ -31,6 +31,18 @@ public enum MessagesUtil {
     LEVEL_COMMAND_OTHER("Messages.Level command other", "&a%player% level is %level%"),
 
     TITLE_LEVEL_UP("Title.Level UP", "&aYou have reached level", "%level%"),
+
+    ITEM_ON_COOLDOWN("Messages.Item on cooldown", "&c&l(!)&c Please wait %seconds%s in order to use this item(%item%) again."),
+
+    PRESTIGE("Messages.Prestige", "&a&l(!)&a The prestige were successfully completed!"),
+
+    TRANSACTION_WITHDRAW_SUCCESS("Messages.Transaction success withdraw", "&a&l(!)&a Successfully withdraw %transaction%"),
+
+    TRANSACTION_DEPOSIT_SUCCESS("Messages.Transaction success deposit", "&a&l(!)&a Successfully deposit %transaction%"),
+
+    TRANSACTION_ERROR("Messages.Transaction error", "&c&l(!)&c Insufficient funds (%transaction%)!"),
+
+    TRANSACTION_FULL_INVENTORY("Messages.Transaction full inventory", "&c&l(!)&c Your inventory is full!"),
     ;
 
     /**
@@ -131,6 +143,14 @@ public enum MessagesUtil {
         return this.messages;
     }
 
+    public @NotNull String getMessagesToString() {
+        StringBuilder sb = new StringBuilder();
+        for (String message : this.messages) {
+            sb.append(message).append("\n");
+        }
+        return sb.toString();
+    }
+
     /**
      * Sets the current messages to a different string array.
      *
@@ -195,9 +215,9 @@ public enum MessagesUtil {
      */
     public void title(final Player target, final Map<String, String> map, final boolean ignoreCase) {
         if (this.isMultiLined()) {
-            Titles.sendTitle(target, MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)), "");
-        } else {
             Titles.sendTitle(target, MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)), MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[1], map, ignoreCase)));
+        } else {
+            Titles.sendTitle(target, MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)), "");
         }
     }
 

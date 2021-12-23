@@ -1,0 +1,26 @@
+sell:
+  'paperitem':
+    item: PAPER
+    title: "&c&lTest"
+    lores: [ ]
+    enchantments: [ ]
+    amount: 1
+  'diamond1':
+    item: DIAMOND
+    title: "&c&lDiamond"
+    lores: [ ]
+    enchantments: [ ]
+    amount: 1
+buy:
+  'paperitem':
+    item: PAPER
+    title: "&c&lTest"
+    lores: [ ]
+    enchantments: [ ]
+    amount: 1
+  'diamond1':
+    item: DIAMOND
+    title: "&c&lDiamond"
+    lores: [ ]
+    enchantments: [ ]
+    amount: 1

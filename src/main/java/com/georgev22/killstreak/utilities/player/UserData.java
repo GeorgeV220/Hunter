@@ -4,9 +4,9 @@ import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.maps.LinkedObjectMap;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.utilities.Utils.Callback;
 import com.georgev22.killstreak.Main;
 import com.georgev22.killstreak.utilities.OptionsUtil;
-import com.georgev22.killstreak.utilities.interfaces.Callback;
 import com.georgev22.killstreak.utilities.interfaces.IDatabaseType;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
@@ -122,8 +122,13 @@ public class UserData {
         return this;
     }
 
-    public UserData setExperience(int experience) {
+    public UserData setExperience(double experience) {
         user.append("experience", experience);
+        return this;
+    }
+
+    public UserData setPrestige(int prestige) {
+        user.append("prestige", prestige);
         return this;
     }
 
@@ -143,8 +148,12 @@ public class UserData {
         return user.multiplier();
     }
 
-    public int getExperience() {
+    public double getExperience() {
         return user.experience();
+    }
+
+    public int getPrestige() {
+        return user.prestige();
     }
 
     /**
@@ -299,7 +308,8 @@ public class UserData {
                             "`killstreak` = '" + user.killstreak() + "', " +
                             "`multiplier` = '" + user.multiplier() + "', " +
                             "`kills` = '" + user.totalKills() + "', " +
-                            "`level` = '" + user.level() + "' " +
+                            "`level` = '" + user.level() + "', " +
+                            "`prestige` = '" + user.prestige() + "' " +
                             "WHERE `uuid` = '" + user.uniqueId() + "'");
         }
 
@@ -329,11 +339,12 @@ public class UserData {
                         while (resultSet.next()) {
                             user
                                     .append("name", resultSet.getString("name"))
-                                    .append("experience", resultSet.getInt("experience"))
+                                    .append("experience", resultSet.getDouble("experience"))
                                     .append("killstreak", resultSet.getInt("killstreak"))
                                     .append("level", resultSet.getInt("level"))
                                     .append("kills", resultSet.getInt("kills"))
                                     .append("multiplier", resultSet.getDouble("multiplier"))
+                                    .append("prestige", resultSet.getInt("prestige"))
                             ;
                         }
                         callback.onSuccess();
@@ -367,9 +378,9 @@ public class UserData {
             try {
                 if (!playerExists(user)) {
                     mainPlugin.getDatabase().updateSQL(
-                            "INSERT INTO `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` (`uuid`, `name`, `experience`, `killstreak`, `level`, `kills` `multiplier`)" +
+                            "INSERT INTO `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` (`uuid`, `name`, `experience`, `killstreak`, `level`, `kills` `multiplier`, `prestige`)" +
                                     " VALUES " +
-                                    "('" + user.uniqueId().toString() + "', '" + user.offlinePlayer().getName() + "', '0', '0', '0', '0', '1.0');");
+                                    "('" + user.uniqueId().toString() + "', '" + user.offlinePlayer().getName() + "', '0.0', '0', '0', '0', '1.0', '0');");
                 }
                 callback.onSuccess();
             } catch (SQLException | ClassNotFoundException throwables) {
@@ -428,6 +439,7 @@ public class UserData {
                     .append("level", user.level())
                     .append("kills", user.totalKills())
                     .append("multiplier", user.multiplier())
+                    .append("prestige", user.prestige())
             );
 
             mainPlugin.getMongoDB().getCollection().updateOne(query, updateObject);
@@ -449,11 +461,12 @@ public class UserData {
                     Document document = findIterable.first();
                     user
                             .append("name", document.getString("name"))
-                            .append("experience", document.getInteger("experience"))
+                            .append("experience", document.getDouble("experience"))
                             .append("killstreak", document.getInteger("killstreak"))
                             .append("level", document.getInteger("level"))
                             .append("kills", document.getInteger("kills"))
                             .append("multiplier", document.getDouble("multiplier"))
+                            .append("prestige", document.getInteger("prestige"))
                     ;
                     callback.onSuccess();
                 }
@@ -476,11 +489,12 @@ public class UserData {
                 mainPlugin.getMongoDB().getCollection().insertOne(new Document()
                         .append("uuid", user.uniqueId().toString())
                         .append("name", user.offlinePlayer().getName())
-                        .append("experience", 0)
+                        .append("experience", 0D)
                         .append("killstreak", 0)
                         .append("level", 0)
                         .append("kills", 0)
-                        .append("multiplier", 1.0)
+                        .append("multiplier", 1.0D)
+                        .append("prestige", 0)
                 );
             }
             callback.onSuccess();
@@ -577,6 +591,7 @@ public class UserData {
             yamlConfiguration.set("level", user.level());
             yamlConfiguration.set("kills", user.totalKills());
             yamlConfiguration.set("multiplier", user.multiplier());
+            yamlConfiguration.set("prestige", user.prestige());
             try {
                 yamlConfiguration.save(file);
             } catch (IOException e) {
@@ -601,8 +616,9 @@ public class UserData {
                             .append("kills", yamlConfiguration.getInt("kills"))
                             .append("killstreak", yamlConfiguration.getInt("killstreak"))
                             .append("level", yamlConfiguration.getInt("level"))
-                            .append("experience", yamlConfiguration.getInt("experience"))
+                            .append("experience", yamlConfiguration.getDouble("experience"))
                             .append("multiplier", yamlConfiguration.getDouble("multiplier"))
+                            .append("prestige", yamlConfiguration.getInt("prestige"))
                     ;
                     callback.onSuccess();
                 }
@@ -634,11 +650,12 @@ public class UserData {
                 }
                 user
                         .append("name", user.offlinePlayer().getName())
-                        .append("experience", 0)
+                        .append("experience", 0D)
                         .append("killstreak", 0)
                         .append("level", 0)
                         .append("kills", 0)
-                        .append("multiplier", 1.0)
+                        .append("multiplier", 1.0D)
+                        .append("prestige", 0)
                 ;
                 save(user);
             }

@@ -1,0 +1,158 @@
+name: "&a&lInventory (%prestige_inventory%-%prestige_inventory_roman%)/%prestige%-%prestige_roman%"
+copy and dont touch: true
+animation:
+  enabled: false
+navigation:
+  cancel:
+    item: ANVIL
+    title: "&8&l» &e&lExit &8&l«"
+    amount: 1
+    lores: [ ]
+    show all attributes: false
+    glow: false
+    slot: 4
+    animated: true
+    animation: "wave"
+    colors:
+      - "#48D1CC"
+      - "#778899"
+      - "#55FF55"
+      - "#FF1493"
+    commands: [ ]
+    commands cooldown:
+      RIGHT: 10
+      LEFT: 10
+      MIDDLE: 10
+  back:
+    item: PAPER
+    title: "&8&l» &e&lBack &8&l«"
+    amount: 1
+    lores: [ ]
+    show all attributes: false
+    glow: false
+    slot: 2
+    animated: true
+    animation: "wave"
+    colors:
+      - "#48D1CC"
+      - "#778899"
+      - "#55FF55"
+      - "#FF1493"
+    commands: [ ]
+    commands cooldown:
+      RIGHT: 10
+      LEFT: 10
+      MIDDLE: 10
+  next:
+    item: BOOK
+    title: "&8&l» &e&lNext &8&l«"
+    amount: 1
+    lores: [ ]
+    show all attributes: false
+    glow: false
+    slot: 6
+    animated: true
+    animation: "wave"
+    colors:
+      - "#48D1CC"
+      - "#778899"
+      - "#55FF55"
+      - "#FF1493"
+    commands: [ ]
+    commands cooldown:
+      RIGHT: 10
+      LEFT: 10
+      MIDDLE: 10
+custom item:
+  navigation:
+    '0':
+      item: CHAIN
+      title: "&8Test navigation item"
+      lores:
+        - ""
+        - ""
+      glow: false
+      show attributes: false
+      amount: 1
+      animated: true
+      animation: "wave"
+      colors:
+        - "#F3F8FA"
+        - "#A2CCE3"
+        - "#68A4C4"
+        - "#32627B"
+        - "#1E4356"
+      commands:
+        RIGHT:
+          - "broadcast right %player%"
+        LEFT:
+          - "broadcast left %player%"
+        MIDDLE:
+          - "broadcast middle %player%"
+      commands cooldown:
+        RIGHT: 10
+        LEFT: 10
+        MIDDLE: 10
+  gui:
+    '1':
+      item: EXPERIENCE_BOTTLE
+      title: "&c&lPrestige"
+      lores:
+        - "Multiplier %multiplier%"
+        - "Prestige %prestige%"
+        - "Next Prestige 1"
+        - "Next Multiplier 1.2"
+        - "Purchase next prestige level for $200000"
+      glow: false
+      show attributes: false
+      amount: 1
+      animated: true
+      animation: "wave"
+      colors:
+        - "#F3F8FA"
+        - "#A2CCE3"
+        - "#68A4C4"
+        - "#32627B"
+        - "#1E4356"
+      commands:
+        RIGHT:
+          - "killstreakmain transaction %player% 200000 prestige 1 0.2 true"
+        LEFT: [ ]
+        MIDDLE: [ ]
+      commands cooldown:
+        RIGHT: 10
+        LEFT: 0
+        MIDDLE: 0
+      frames:
+        '1':
+          item: PAPER
+    '5':
+      item: DIAMOND
+      title: "&c&lSell or Purchase a Diamond"
+      lores:
+        - "Sell Price $100"
+        - "Purchase Price $150"
+      glow: false
+      show attributes: false
+      amount: 1
+      animated: true
+      animation: "wave"
+      colors:
+        - "#F3F8FA"
+        - "#A2CCE3"
+        - "#68A4C4"
+        - "#32627B"
+        - "#1E4356"
+      commands:
+        RIGHT:
+          - "killstreakmain transaction %player% 100 sell diamond1"
+        LEFT:
+          - "killstreakmain transaction %player% 150 buy diamond1"
+        MIDDLE: [ ]
+      commands cooldown:
+        RIGHT: 10
+        LEFT: 10
+        MIDDLE: 0
+      frames:
+        '1':
+          item: PAPER
