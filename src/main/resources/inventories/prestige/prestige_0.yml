@@ -114,6 +114,9 @@ custom item:
         - "#68A4C4"
         - "#32627B"
         - "#1E4356"
+      actions:
+        TAKE:
+          - 10000
       commands:
         RIGHT:
           - "killstreakmain transaction %player% 200000 prestige 1 0.2 true"

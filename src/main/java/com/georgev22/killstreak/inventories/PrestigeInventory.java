@@ -8,12 +8,16 @@ import com.georgev22.api.inventory.NavigationRow;
 import com.georgev22.api.inventory.handlers.PagedInventoryClickHandler;
 import com.georgev22.api.inventory.handlers.PagedInventoryCustomNavigationHandler;
 import com.georgev22.api.inventory.navigationitems.*;
+import com.georgev22.api.inventory.utils.actions.Action;
+import com.georgev22.api.inventory.utils.actions.ActionManager;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
 import com.georgev22.api.utilities.Utils;
 import com.georgev22.api.utilities.Utils.Cooldown;
 import com.georgev22.killstreak.Main;
+import com.georgev22.killstreak.inventories.actions.InventoryClickAction;
 import com.georgev22.killstreak.utilities.MessagesUtil;
+import com.georgev22.killstreak.utilities.OptionsUtil;
 import com.georgev22.killstreak.utilities.configmanager.FileManager;
 import com.georgev22.killstreak.utilities.player.UserData;
 import com.google.common.collect.Lists;
@@ -81,6 +85,7 @@ public class PrestigeInventory {
                 ItemStack itemStack = ItemBuilder.buildItemFromConfig(prestigeConfig.getFileConfiguration(), "custom item.gui." + s,
                                 userData.user().placeholders(),
                                 userData.user().placeholders())
+                        .customNBT("actions", ItemBuilder.buildActionsFromConfig(prestigeConfig.getFileConfiguration(), "custom item.gui." + s, InventoryClickAction.class))
                         .build();
                 objectMap.append(Integer.parseInt(s), itemStack);
             }
@@ -115,6 +120,14 @@ public class PrestigeInventory {
                 Cooldown cooldown;
 
                 String name = MinecraftUtils.stripColor(itemStack.getItemMeta().getDisplayName());
+
+                if (nbtItem.hasKey("actions")) {
+                    List<InventoryClickAction> actions = Utils.deserialize(nbtItem.getString("actions"), new TypeToken<List<InventoryClickAction>>() {
+                    }.getType());
+                    List<Action> actionList = Lists.newArrayList(actions.toArray(new Action[0]));
+                    if (!actions.isEmpty())
+                        ActionManager.runActions(player, mainPlugin, OptionsUtil.DEBUG_ERROR.getBooleanValue(), actionList);
+                }
 
                 if (nbtItem.hasKey("commands")) {
                     List<ItemBuilder.ItemCommand> itemCommands = Utils.deserialize(nbtItem.getString("commands"), new TypeToken<List<ItemBuilder.ItemCommand>>() {

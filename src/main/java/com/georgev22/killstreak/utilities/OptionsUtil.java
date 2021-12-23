@@ -18,6 +18,8 @@ public enum OptionsUtil {
 
     DEBUG("debug", false, Optional.empty()),
 
+    DEBUG_ERROR("show errors", false, Optional.empty()),
+
     COMMAND_KILLSTREAK("command.killstreak", true, Optional.empty()),
 
     COMMAND_KILLSTREAK_MAIN("command.killstreak main", true, Optional.empty()),
@@ -180,16 +182,20 @@ public enum OptionsUtil {
      * @return the path.
      */
     public @NotNull String getPath() {
-        for (Optional<String> paths : getOldPaths()) {
-            if (mainPlugin.getConfig().get("Options." + getDefaultPath()) == null) {
-                if (paths.isPresent()) {
-                    if (mainPlugin.getConfig().get("Options." + paths.get()) != null) {
-                        return "Options." + paths.get();
+        if (getOldPaths().length > 0) {
+            for (Optional<String> paths : getOldPaths()) {
+                if (mainPlugin.getConfig().get("Options." + getDefaultPath()) == null) {
+                    if (paths.isPresent()) {
+                        if (mainPlugin.getConfig().get("Options." + paths.get()) != null) {
+                            return "Options." + paths.get();
+                        }
                     }
+                } else {
+                    return "Options." + getDefaultPath();
                 }
-            } else {
-                return "Options." + getDefaultPath();
             }
+        } else {
+            return "Options." + getDefaultPath();
         }
         return null;
     }
