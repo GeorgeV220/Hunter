@@ -1,9 +1,9 @@
-package com.georgev22.killstreak.listeners;
+package com.georgev22.hunter.listeners;
 
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
-import com.georgev22.killstreak.Main;
-import com.georgev22.killstreak.utilities.OptionsUtil;
+import com.georgev22.hunter.Main;
+import com.georgev22.hunter.utilities.OptionsUtil;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

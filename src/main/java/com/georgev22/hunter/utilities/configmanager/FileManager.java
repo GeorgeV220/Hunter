@@ -1,4 +1,4 @@
-package com.georgev22.killstreak.utilities.configmanager;
+package com.georgev22.hunter.utilities.configmanager;
 
 import com.georgev22.api.configmanager.CFG;
 import org.bukkit.plugin.java.JavaPlugin;

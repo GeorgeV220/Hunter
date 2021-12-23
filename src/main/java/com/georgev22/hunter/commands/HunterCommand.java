@@ -1,14 +1,14 @@
-package com.georgev22.killstreak.commands;
+package com.georgev22.hunter.commands;
 
 import com.georgev22.api.inventory.ItemBuilder;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
-import com.georgev22.killstreak.Main;
-import com.georgev22.killstreak.hooks.HolographicDisplays;
-import com.georgev22.killstreak.hooks.Vault;
-import com.georgev22.killstreak.utilities.MessagesUtil;
-import com.georgev22.killstreak.utilities.configmanager.FileManager;
-import com.georgev22.killstreak.utilities.player.UserData;
+import com.georgev22.hunter.Main;
+import com.georgev22.hunter.hooks.HolographicDisplays;
+import com.georgev22.hunter.hooks.Vault;
+import com.georgev22.hunter.utilities.MessagesUtil;
+import com.georgev22.hunter.utilities.configmanager.FileManager;
+import com.georgev22.hunter.utilities.player.UserData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -24,15 +24,15 @@ import java.nio.file.Files;
 
 import static com.georgev22.api.utilities.Utils.*;
 
-public class KillstreakMainCommand extends BukkitCommand {
+public class HunterCommand extends BukkitCommand {
 
     private final Main mainPlugin = Main.getInstance();
 
-    public KillstreakMainCommand() {
-        super("killstreakmain");
-        this.description = "Killstreak main command";
-        this.usageMessage = "/killstreakmain";
-        this.setPermission("killstreakmain.use");
+    public HunterCommand() {
+        super("hunter");
+        this.description = "hunter main command";
+        this.usageMessage = "/hunter";
+        this.setPermission("hunter.main");
         this.setPermissionMessage(MinecraftUtils.colorize(MessagesUtil.NO_PERMISSION.getMessages()[0]));
     }
 
@@ -46,7 +46,7 @@ public class KillstreakMainCommand extends BukkitCommand {
         }
         if (args[0].equalsIgnoreCase("clear")) {
             if (args.length == 1) {
-                MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain clear <player>");
+                MinecraftUtils.msg(sender, "&c&l(!)&c /hunter clear <player>");
                 return true;
             }
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
@@ -64,7 +64,7 @@ public class KillstreakMainCommand extends BukkitCommand {
             }
         } else if (args[0].equalsIgnoreCase("set")) {
             if (args.length < 3) {
-                MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain set <player> <data> <value>");
+                MinecraftUtils.msg(sender, "&c&l(!)&c /hunter set <player> <data> <value>");
                 MinecraftUtils.msg(sender, "&c&l(!)&c Data: kills killstreak prestige levels multiplier experience");
                 return true;
             }
@@ -89,7 +89,7 @@ public class KillstreakMainCommand extends BukkitCommand {
                 userData.setExperience(Double.parseDouble(args[3]));
                 MinecraftUtils.msg(sender, "&a&l(!) &aSuccessfully set " + target.getName() + " experience to " + args[3]);
             } else {
-                MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain set <player> <data> <value>");
+                MinecraftUtils.msg(sender, "&c&l(!)&c /hunter set <player> <data> <value>");
                 MinecraftUtils.msg(sender, "&c&l(!)&c Data: kills killstreak prestige levels multiplier experience");
             }
             UserData.getAllUsersMap().replace(target.getUniqueId(), userData.user());
@@ -106,7 +106,7 @@ public class KillstreakMainCommand extends BukkitCommand {
             return true;
         } else if (args[0].equalsIgnoreCase("copy")) {
             if (args.length < 2) {
-                MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain copy <config> <newConfig>");
+                MinecraftUtils.msg(sender, "&c&l(!)&c /hunter copy <config> <newConfig>");
                 return true;
             }
             String originalFileName = args[1];
@@ -127,11 +127,8 @@ public class KillstreakMainCommand extends BukkitCommand {
                 }
             }
         } else if (args[0].equalsIgnoreCase("transaction")) {
-            //killstreakmain transaction player 200000 prestige 1 0.8
-            //killstreakmain transaction player 200000 sell itemName
-            //killstreakmain transaction player 200000 buy itemName
             if (args.length < 4) {
-                MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain transaction <player> <funds> <data> <values>");
+                MinecraftUtils.msg(sender, "&c&l(!)&c /hunter transaction <player> <funds> <data> <values>");
                 MinecraftUtils.msg(sender, "&c&l(!)&c Data: prestige sell buy");
                 return true;
             }
@@ -150,7 +147,7 @@ public class KillstreakMainCommand extends BukkitCommand {
             if (Vault.isHooked()) {
                 if (args[3].equalsIgnoreCase("prestige")) {
                     if (args.length < 7) {
-                        MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain transaction <player> <funds> prestige <prestige> <multiplier> <global>");
+                        MinecraftUtils.msg(sender, "&c&l(!)&c /hunter transaction <player> <funds> prestige <prestige> <multiplier> <global>");
                         return true;
                     }
                     if (Vault.getEconomy().has(target, transaction)) {
@@ -167,7 +164,7 @@ public class KillstreakMainCommand extends BukkitCommand {
                     }
                 } else if (args[3].equalsIgnoreCase("sell")) {
                     if (args.length < 5) {
-                        MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain transaction <player> <funds> sell <value>");
+                        MinecraftUtils.msg(sender, "&c&l(!)&c /hunter transaction <player> <funds> sell <value>");
                         return true;
                     }
                     ItemBuilder itemBuilder = ItemBuilder.buildSimpleItemFromConfig(fileManager.getItems().getFileConfiguration(), "sell." + args[4]);
@@ -191,7 +188,7 @@ public class KillstreakMainCommand extends BukkitCommand {
                     }
                 } else if (args[3].equalsIgnoreCase("buy")) {
                     if (args.length < 5) {
-                        MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain transaction <player> <funds> buy <value>");
+                        MinecraftUtils.msg(sender, "&c&l(!)&c /hunter transaction <player> <funds> buy <value>");
                         return true;
                     }
                     if (Vault.getEconomy().has(target, transaction)) {
@@ -229,7 +226,7 @@ public class KillstreakMainCommand extends BukkitCommand {
                 }
                 Player player = (Player) sender;
                 if (args.length < 4) {
-                    MinecraftUtils.msg(player, "&c&l(!) &cUsage: /killstreakmain hologram create <hologramName> <type>");
+                    MinecraftUtils.msg(player, "&c&l(!) &cUsage: /hunter hologram create <hologramName> <type>");
                     return true;
                 }
 
@@ -256,7 +253,7 @@ public class KillstreakMainCommand extends BukkitCommand {
 
             } else if (args[1].equalsIgnoreCase("remove")) {
                 if (args.length == 2) {
-                    MinecraftUtils.msg(sender, "&c&l(!) &cUsage: /killstreakmain hologram remove <hologramName>");
+                    MinecraftUtils.msg(sender, "&c&l(!) &cUsage: /hunter hologram remove <hologramName>");
                     return true;
                 }
 
@@ -274,22 +271,22 @@ public class KillstreakMainCommand extends BukkitCommand {
             MinecraftUtils.msg(sender, " ");
             MinecraftUtils.msg(sender, " ");
             MinecraftUtils.msg(sender, "&c&l(!)&c Commands&c &l(!)");
-            MinecraftUtils.msg(sender, "&6/killstreakmain clear <player>");
-            MinecraftUtils.msg(sender, "&6/killstreakmain set <player> <data> <value>");
-            MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain transaction <player> <funds> <data> <values>");
-            MinecraftUtils.msg(sender, "&6/killstreakmain reload");
-            MinecraftUtils.msg(sender, "&6/killstreakmain help");
+            MinecraftUtils.msg(sender, "&6/hunter clear <player>");
+            MinecraftUtils.msg(sender, "&6/hunter set <player> <data> <value>");
+            MinecraftUtils.msg(sender, "&c&l(!)&c /hunter transaction <player> <funds> <data> <values>");
+            MinecraftUtils.msg(sender, "&6/hunter reload");
+            MinecraftUtils.msg(sender, "&6/hunter help");
             MinecraftUtils.msg(sender, "&c&l==============");
         } else {
             MinecraftUtils.msg(sender, " ");
             MinecraftUtils.msg(sender, " ");
             MinecraftUtils.msg(sender, " ");
             MinecraftUtils.msg(sender, "&c&l(!)&c Commands&c &l(!)");
-            MinecraftUtils.msg(sender, "&6/killstreakmain clear <player>");
-            MinecraftUtils.msg(sender, "&6/killstreakmain set <player> <data> <value>");
-            MinecraftUtils.msg(sender, "&c&l(!)&c /killstreakmain transaction <player> <funds> <data> <values>");
-            MinecraftUtils.msg(sender, "&6/killstreakmain reload");
-            MinecraftUtils.msg(sender, "&6/killstreakmain help");
+            MinecraftUtils.msg(sender, "&6/hunter clear <player>");
+            MinecraftUtils.msg(sender, "&6/hunter set <player> <data> <value>");
+            MinecraftUtils.msg(sender, "&c&l(!)&c /hunter transaction <player> <funds> <data> <values>");
+            MinecraftUtils.msg(sender, "&6/hunter reload");
+            MinecraftUtils.msg(sender, "&6/hunter help");
             MinecraftUtils.msg(sender, "&c&l==============");
             return true;
         }

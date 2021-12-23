@@ -1,14 +1,14 @@
-package com.georgev22.killstreak.listeners;
+package com.georgev22.hunter.listeners;
 
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
-import com.georgev22.killstreak.Main;
-import com.georgev22.killstreak.hooks.HolographicDisplays;
-import com.georgev22.killstreak.utilities.MessagesUtil;
-import com.georgev22.killstreak.utilities.OptionsUtil;
-import com.georgev22.killstreak.utilities.Updater;
-import com.georgev22.killstreak.utilities.configmanager.FileManager;
-import com.georgev22.killstreak.utilities.player.UserData;
+import com.georgev22.hunter.Main;
+import com.georgev22.hunter.hooks.HolographicDisplays;
+import com.georgev22.hunter.utilities.MessagesUtil;
+import com.georgev22.hunter.utilities.OptionsUtil;
+import com.georgev22.hunter.utilities.Updater;
+import com.georgev22.hunter.utilities.configmanager.FileManager;
+import com.georgev22.hunter.utilities.player.UserData;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

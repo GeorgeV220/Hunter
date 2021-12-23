@@ -1,9 +1,9 @@
-package com.georgev22.killstreak.utilities.interfaces;
+package com.georgev22.hunter.utilities.interfaces;
 
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
-import com.georgev22.killstreak.Main;
-import com.georgev22.killstreak.utilities.player.User;
+import com.georgev22.hunter.Main;
+import com.georgev22.hunter.utilities.player.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;

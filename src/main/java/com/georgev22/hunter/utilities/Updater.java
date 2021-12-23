@@ -1,7 +1,7 @@
-package com.georgev22.killstreak.utilities;
+package com.georgev22.hunter.utilities;
 
 import com.georgev22.api.utilities.MinecraftUtils;
-import com.georgev22.killstreak.Main;
+import com.georgev22.hunter.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

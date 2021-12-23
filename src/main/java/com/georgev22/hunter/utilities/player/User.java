@@ -1,4 +1,4 @@
-package com.georgev22.killstreak.utilities.player;
+package com.georgev22.hunter.utilities.player;
 
 import com.georgev22.api.maps.ConcurrentObjectMap;
 import com.georgev22.api.maps.ObjectMap;

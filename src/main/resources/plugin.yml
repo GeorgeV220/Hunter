@@ -1,6 +1,6 @@
-name: Killstreak
+name: Hunter
 version: '${project.version}'
-main: com.georgev22.killstreak.Main
+main: com.georgev22.hunter.Main
 api-version: 1.13
 prefix: KillStreak
 author: GeorgeV22

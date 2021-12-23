@@ -1,8 +1,8 @@
-package com.georgev22.killstreak.commands;
+package com.georgev22.hunter.commands;
 
 import com.georgev22.api.utilities.MinecraftUtils;
-import com.georgev22.killstreak.inventories.PrestigeInventory;
-import com.georgev22.killstreak.utilities.MessagesUtil;
+import com.georgev22.hunter.inventories.PrestigeInventory;
+import com.georgev22.hunter.utilities.MessagesUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;

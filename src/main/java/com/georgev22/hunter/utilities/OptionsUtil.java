@@ -1,9 +1,9 @@
-package com.georgev22.killstreak.utilities;
+package com.georgev22.hunter.utilities;
 
 import com.georgev22.api.colors.Color;
 import com.georgev22.api.externals.xseries.XMaterial;
 import com.georgev22.api.inventory.ItemBuilder;
-import com.georgev22.killstreak.Main;
+import com.georgev22.hunter.Main;
 import com.google.common.collect.Lists;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
@@ -22,7 +22,7 @@ public enum OptionsUtil {
 
     COMMAND_KILLSTREAK("command.killstreak", true, Optional.empty()),
 
-    COMMAND_KILLSTREAK_MAIN("command.killstreak main", true, Optional.empty()),
+    COMMAND_HUNTER("command.hunter", true, Optional.of("command.killstreak main")),
 
     COMMAND_PRESTIGE("command.prestige", true, Optional.empty()),
 
@@ -36,11 +36,11 @@ public enum OptionsUtil {
 
     DATABASE_PASSWORD("database.SQL.password", "yourpassword", Optional.empty()),
 
-    DATABASE_DATABASE("database.SQL.database", "Killstreak", Optional.empty()),
+    DATABASE_DATABASE("database.SQL.database", "hunter", Optional.empty()),
 
-    DATABASE_TABLE_NAME("database.SQL.table name", "killstreak_users", Optional.empty()),
+    DATABASE_TABLE_NAME("database.SQL.table name", "hunter_users", Optional.empty()),
 
-    DATABASE_SQLITE("database.SQLite.file name", "killstreak", Optional.empty()),
+    DATABASE_SQLITE("database.SQLite.file name", "hunter", Optional.empty()),
 
     DATABASE_MONGO_HOST("database.MongoDB.host", "localhost", Optional.empty()),
 
@@ -50,9 +50,9 @@ public enum OptionsUtil {
 
     DATABASE_MONGO_PASSWORD("database.MongoDB.password", "yourpassword", Optional.empty()),
 
-    DATABASE_MONGO_DATABASE("database.MongoDB.database", "KillStreak", Optional.empty()),
+    DATABASE_MONGO_DATABASE("database.MongoDB.database", "hunter", Optional.empty()),
 
-    DATABASE_MONGO_COLLECTION("database.MongoDB.collection", "killstreak_users", Optional.empty()),
+    DATABASE_MONGO_COLLECTION("database.MongoDB.collection", "hunter_users", Optional.empty()),
 
     DATABASE_TYPE("database.type", "File", Optional.empty()),
 

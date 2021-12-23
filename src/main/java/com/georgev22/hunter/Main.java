@@ -1,4 +1,4 @@
-package com.georgev22.killstreak;
+package com.georgev22.hunter;
 
 import com.georgev22.api.configmanager.CFG;
 import com.georgev22.api.database.Database;
@@ -11,21 +11,21 @@ import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.maven.LibraryLoader;
 import com.georgev22.api.maven.MavenLibrary;
 import com.georgev22.api.utilities.MinecraftUtils;
-import com.georgev22.killstreak.commands.KillstreakCommand;
-import com.georgev22.killstreak.commands.KillstreakMainCommand;
-import com.georgev22.killstreak.commands.LevelCommand;
-import com.georgev22.killstreak.commands.PrestigeCommand;
-import com.georgev22.killstreak.hooks.HolographicDisplays;
-import com.georgev22.killstreak.hooks.PAPI;
-import com.georgev22.killstreak.hooks.Vault;
-import com.georgev22.killstreak.listeners.DeveloperInformListener;
-import com.georgev22.killstreak.listeners.PlayerListeners;
-import com.georgev22.killstreak.utilities.MessagesUtil;
-import com.georgev22.killstreak.utilities.OptionsUtil;
-import com.georgev22.killstreak.utilities.Updater;
-import com.georgev22.killstreak.utilities.configmanager.FileManager;
-import com.georgev22.killstreak.utilities.interfaces.IDatabaseType;
-import com.georgev22.killstreak.utilities.player.UserData;
+import com.georgev22.hunter.commands.KillstreakCommand;
+import com.georgev22.hunter.commands.HunterCommand;
+import com.georgev22.hunter.commands.LevelCommand;
+import com.georgev22.hunter.commands.PrestigeCommand;
+import com.georgev22.hunter.hooks.HolographicDisplays;
+import com.georgev22.hunter.hooks.PAPI;
+import com.georgev22.hunter.hooks.Vault;
+import com.georgev22.hunter.listeners.DeveloperInformListener;
+import com.georgev22.hunter.listeners.PlayerListeners;
+import com.georgev22.hunter.utilities.MessagesUtil;
+import com.georgev22.hunter.utilities.OptionsUtil;
+import com.georgev22.hunter.utilities.Updater;
+import com.georgev22.hunter.utilities.configmanager.FileManager;
+import com.georgev22.hunter.utilities.interfaces.IDatabaseType;
+import com.georgev22.hunter.utilities.player.UserData;
 import com.google.gson.reflect.TypeToken;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -100,8 +100,8 @@ public final class Main extends JavaPlugin {
             MinecraftUtils.registerCommand("killstreak", new KillstreakCommand());
         if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
             MinecraftUtils.registerCommand("level", new LevelCommand());
-        if (OptionsUtil.COMMAND_KILLSTREAK_MAIN.getBooleanValue())
-            MinecraftUtils.registerCommand("killstreakmain", new KillstreakMainCommand());
+        if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
+            MinecraftUtils.registerCommand("hunter", new HunterCommand());
         if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
             MinecraftUtils.registerCommand("prestige", new PrestigeCommand());
 
@@ -112,7 +112,7 @@ public final class Main extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             placeholdersAPI = new PAPI();
             if (placeholdersAPI.register())
-                MinecraftUtils.debug(this, "[KillStreak] Hooked into PlaceholderAPI!");
+                MinecraftUtils.debug(this, "[Hunter] Hooked into PlaceholderAPI!");
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
@@ -121,20 +121,20 @@ public final class Main extends JavaPlugin {
                         .forEach(s -> HolographicDisplays.create(s, (Location) data.get("Holograms." + s + ".location"),
                                 data.getString("Holograms." + s + ".type"), false));
             }
-            Bukkit.getLogger().info("[KillStreak] Hooked into HolographicDisplays!");
+            Bukkit.getLogger().info("[Hunter] Hooked into HolographicDisplays!");
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
             if (Vault.hook()) {
-                Bukkit.getLogger().info("[KillStreak] Hooked into Vault!");
+                Bukkit.getLogger().info("[Hunter] Hooked into Vault!");
             } else {
-                Bukkit.getLogger().warning("[KillStreak] Please install an economy plugin. Example: EssentialsX!");
+                Bukkit.getLogger().warning("[Hunter] Please install an economy plugin. Example: EssentialsX!");
             }
         }
 
         Metrics metrics = new Metrics(this, 0);
         if (YamlConfiguration.loadConfiguration(new File(new File(this.getDataFolder().getParentFile(), "bStats"), "config.yml")).getBoolean("enabled", true)) {
-            Bukkit.getLogger().info("[KillStreak] Metrics are enabled!");
+            Bukkit.getLogger().info("[Hunter] Metrics are enabled!");
         }
 
         if (MinecraftUtils.MinecraftVersion.getCurrentVersion().isBelow(MinecraftUtils.MinecraftVersion.V1_12_R1)) {
@@ -148,8 +148,8 @@ public final class Main extends JavaPlugin {
             MinecraftUtils.unRegisterCommand("killstreak");
         if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
             MinecraftUtils.unRegisterCommand("level");
-        if (OptionsUtil.COMMAND_KILLSTREAK_MAIN.getBooleanValue())
-            MinecraftUtils.unRegisterCommand("killstreakmain");
+        if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
+            MinecraftUtils.unRegisterCommand("hunter");
         if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
             MinecraftUtils.unRegisterCommand("prestige");
         Bukkit.getOnlinePlayers().forEach(player -> {
@@ -173,13 +173,13 @@ public final class Main extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             if (placeholdersAPI.isRegistered()) {
                 if (placeholdersAPI.unregister()) {
-                    MinecraftUtils.debug(this, "[KillStreak] Unhooked from PlaceholderAPI!");
+                    MinecraftUtils.debug(this, "[Hunter] Unhooked from PlaceholderAPI!");
                 }
             }
         }
         if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
             HolographicDisplays.getHologramMap().forEach((name, hologram) -> HolographicDisplays.remove(name, false));
-            MinecraftUtils.debug(this, "[KillStreak] Unhooked from HolographicDisplays");
+            MinecraftUtils.debug(this, "[Hunter] Unhooked from HolographicDisplays");
         }
         if (connection != null) {
             try {

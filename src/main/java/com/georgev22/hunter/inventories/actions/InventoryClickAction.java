@@ -1,14 +1,14 @@
-package com.georgev22.killstreak.inventories.actions;
+package com.georgev22.hunter.inventories.actions;
 
 import com.georgev22.api.inventory.ItemBuilder;
 import com.georgev22.api.inventory.utils.actions.Action;
 import com.georgev22.api.inventory.utils.actions.ActionManager;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.exceptions.ActionRunException;
-import com.georgev22.killstreak.hooks.Vault;
-import com.georgev22.killstreak.utilities.MessagesUtil;
-import com.georgev22.killstreak.utilities.configmanager.FileManager;
-import com.georgev22.killstreak.utilities.player.UserData;
+import com.georgev22.hunter.hooks.Vault;
+import com.georgev22.hunter.utilities.MessagesUtil;
+import com.georgev22.hunter.utilities.configmanager.FileManager;
+import com.georgev22.hunter.utilities.player.UserData;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;

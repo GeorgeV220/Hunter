@@ -1,8 +1,8 @@
-package com.georgev22.killstreak.hooks;
+package com.georgev22.hunter.hooks;
 
 import com.georgev22.api.utilities.Utils;
-import com.georgev22.killstreak.Main;
-import com.georgev22.killstreak.utilities.player.UserData;
+import com.georgev22.hunter.Main;
+import com.georgev22.hunter.utilities.player.UserData;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;

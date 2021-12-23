@@ -1,4 +1,4 @@
-package com.georgev22.killstreak.utilities;
+package com.georgev22.hunter.utilities;
 
 import com.georgev22.api.configmanager.CFG;
 import com.georgev22.api.externals.xseries.messages.Titles;
@@ -22,9 +22,9 @@ public enum MessagesUtil {
 
     KILLSTREAK("Messages.Killstreak", "&a&l(!)&a Player %player% reached a killstreak of %killstreak%!"),
 
-    KILLSTREAK_MAIN_COMMAND("Messages.Killstreak command", "&aYou currently have a killstreak of %killstreak%", "&aYou currently have %kills% of total kills", "&aYou currently have %experience% experience", "&aYour level is %level%"),
+    KILLSTREAK_COMMAND("Messages.Killstreak command", "&aYou currently have a killstreak of %killstreak%", "&aYou currently have %kills% of total kills", "&aYou currently have %experience% experience", "&aYour level is %level%"),
 
-    KILLSTREAK_MAIN_COMMAND_OTHER("Messages.Killstreak command other", "&%player% currently have a killstreak of %killstreak%", "&a%player% currently have %kills% of total kills", "&a%player% currently have %experience% experience", "&a%player% level is %level%"),
+    KILLSTREAK_COMMAND_OTHER("Messages.Killstreak command other", "&%player% currently have a killstreak of %killstreak%", "&a%player% currently have %kills% of total kills", "&a%player% currently have %experience% experience", "&a%player% level is %level%"),
 
     LEVEL_COMMAND("Messages.Level command", "&aYour level is %level%"),
 

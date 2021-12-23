@@ -1,13 +1,13 @@
-package com.georgev22.killstreak.utilities.player;
+package com.georgev22.hunter.utilities.player;
 
 import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.maps.LinkedObjectMap;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
 import com.georgev22.api.utilities.Utils.Callback;
-import com.georgev22.killstreak.Main;
-import com.georgev22.killstreak.utilities.OptionsUtil;
-import com.georgev22.killstreak.utilities.interfaces.IDatabaseType;
+import com.georgev22.hunter.Main;
+import com.georgev22.hunter.utilities.OptionsUtil;
+import com.georgev22.hunter.utilities.interfaces.IDatabaseType;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
 import com.mongodb.client.FindIterable;

@@ -5,7 +5,7 @@ Options:
   command:
     killstreak: true
     level: true
-    killstreak main: true
+    hunter: true
     prestige: true
   levels:
     top: 5
@@ -48,21 +48,21 @@ Options:
   database:
     type: File
     SQLite:
-      file name: killstreak
+      file name: hunter
     SQL:
       host: localhost
       port: 3306
       user: youruser
       password: "yourpassword"
-      database: KillStreak
-      table name: "killstreak_users"
+      database: hunter
+      table name: "hunter_users"
     MongoDB:
       host: "localhost"
       port: 27017
       user: youruser
       password: "yourpassword"
-      database: "killstreak"
-      collection: "killstreak_users"
+      database: "hunter"
+      collection: "hunter_users"
 
 Rewards:
   level up:

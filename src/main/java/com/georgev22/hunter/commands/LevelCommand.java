@@ -1,10 +1,10 @@
-package com.georgev22.killstreak.commands;
+package com.georgev22.hunter.commands;
 
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
 import com.georgev22.api.utilities.Utils;
-import com.georgev22.killstreak.utilities.MessagesUtil;
-import com.georgev22.killstreak.utilities.player.UserData;
+import com.georgev22.hunter.utilities.MessagesUtil;
+import com.georgev22.hunter.utilities.player.UserData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;

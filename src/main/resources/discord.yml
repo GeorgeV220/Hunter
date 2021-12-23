@@ -1,7 +1,7 @@
 levelup:
   webhook: "https://discord.com/api/webhooks/..."
   avatar url: "https://avatars.githubusercontent.com/u/30936682?v=4"
-  username: "KillStreak"
+  username: "Hunter"
   message: "idk what to put here.."
   embeds:
     embed1:
@@ -10,7 +10,7 @@ levelup:
       color: "C0C0C0"
       thumbnail url: "https://i1.sndcdn.com/artworks-000577448120-g90q20-t500x500.jpg"
       footer:
-        message: "KillStreak"
+        message: "Hunter"
         icon url: "https://avatars.githubusercontent.com/u/30936682?v=4"
       image url: "https://avatars.githubusercontent.com/u/30936682?v=4"
       author:
@@ -21,7 +21,7 @@ levelup:
 killstreak:
   webhook: "https://discord.com/api/webhooks/..."
   avatar url: "https://avatars.githubusercontent.com/u/30936682?v=4"
-  username: "KillStreak"
+  username: "Hunter"
   message: "idk what to put here.."
   embeds:
     embed1:
@@ -30,7 +30,7 @@ killstreak:
       color: "C0C0C0"
       thumbnail url: "https://i1.sndcdn.com/artworks-000577448120-g90q20-t500x500.jpg"
       footer:
-        message: "KillStreak"
+        message: "Hunter"
         icon url: "https://avatars.githubusercontent.com/u/30936682?v=4"
       image url: "https://avatars.githubusercontent.com/u/30936682?v=4"
       author:
@@ -41,7 +41,7 @@ killstreak:
 kill:
   webhook: "https://discord.com/api/webhooks/..."
   avatar url: "https://avatars.githubusercontent.com/u/30936682?v=4"
-  username: "KillStreak"
+  username: "Hunter"
   message: "idk what to put here.."
   embeds:
     embed1:
@@ -50,7 +50,7 @@ kill:
       color: "C0C0C0"
       thumbnail url: "https://i1.sndcdn.com/artworks-000577448120-g90q20-t500x500.jpg"
       footer:
-        message: "KillStreak"
+        message: "Hunter"
         icon url: "https://avatars.githubusercontent.com/u/30936682?v=4"
       image url: "https://avatars.githubusercontent.com/u/30936682?v=4"
       author:

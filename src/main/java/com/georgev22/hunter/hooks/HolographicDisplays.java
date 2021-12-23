@@ -1,13 +1,13 @@
-package com.georgev22.killstreak.hooks;
+package com.georgev22.hunter.hooks;
 
 import com.georgev22.api.configmanager.CFG;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
 import com.georgev22.api.utilities.Utils;
-import com.georgev22.killstreak.Main;
-import com.georgev22.killstreak.utilities.OptionsUtil;
-import com.georgev22.killstreak.utilities.configmanager.FileManager;
-import com.georgev22.killstreak.utilities.player.UserData;
+import com.georgev22.hunter.Main;
+import com.georgev22.hunter.utilities.OptionsUtil;
+import com.georgev22.hunter.utilities.configmanager.FileManager;
+import com.georgev22.hunter.utilities.player.UserData;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;

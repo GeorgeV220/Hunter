@@ -1,4 +1,4 @@
-package com.georgev22.killstreak.hooks;
+package com.georgev22.hunter.hooks;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
