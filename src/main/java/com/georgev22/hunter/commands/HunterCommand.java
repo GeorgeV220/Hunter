@@ -134,13 +134,13 @@ public class HunterCommand extends BukkitCommand {
             }
             Player target = Bukkit.getPlayerExact(args[1]);
             if (target == null) {
-                //TODO PLAYER NOT FOUND ERROR
+                MessagesUtil.PLAYER_NOT_FOUND.msg(sender);
                 return true;
             }
             UserData userData = UserData.getUser(target);
             FileManager fileManager = FileManager.getInstance();
             if (!userData.playerExists()) {
-                //TODO PLAYER NOT FOUND ERROR
+                MessagesUtil.PLAYER_NOT_FOUND.msg(sender);
                 return true;
             }
             double transaction = Double.parseDouble(args[2]);
