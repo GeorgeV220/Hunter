@@ -7,6 +7,7 @@ Options:
     level: true
     hunter: true
     prestige: true
+    bounty: true
   levels:
     top: 5
     discord: false
@@ -38,6 +39,13 @@ Options:
     # the closest kill will be used e.g. if the player have 10 kills and in the config
     # only exists the reward of 3 and 20 then the player will get kill 3 rewards
     closest: true
+  bounty:
+    enabled: false
+    base: 300.0
+    killstreak: 10
+    killstreak enabled: true
+    percentage: 3.5
+    percentage enabled: true
   # File, MySQL, PostgreSQL, SQLite, MongoDB
   # Select in what type you want your data to be stored
   # File is recommended

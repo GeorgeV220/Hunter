@@ -13,12 +13,12 @@ public class PAPI extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "killstreak";
+        return "hunter";
     }
 
     @Override
     public String getRequiredPlugin() {
-        return "KillStreak";
+        return "Hunter";
     }
 
     @Override

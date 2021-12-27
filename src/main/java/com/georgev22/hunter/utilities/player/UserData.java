@@ -132,6 +132,11 @@ public class UserData {
         return this;
     }
 
+    public UserData setBounty(double bounty) {
+        user.append("bounty", bounty);
+        return this;
+    }
+
     public int getKills() {
         return user.totalKills();
     }
@@ -154,6 +159,14 @@ public class UserData {
 
     public int getPrestige() {
         return user.prestige();
+    }
+
+    public double getBounty() {
+        return user.bounty();
+    }
+
+    public boolean haveBounty() {
+        return user.bounty() > 0;
     }
 
     /**

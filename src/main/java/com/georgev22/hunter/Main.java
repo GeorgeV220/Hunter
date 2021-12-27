@@ -11,10 +11,7 @@ import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.maven.LibraryLoader;
 import com.georgev22.api.maven.MavenLibrary;
 import com.georgev22.api.utilities.MinecraftUtils;
-import com.georgev22.hunter.commands.KillstreakCommand;
-import com.georgev22.hunter.commands.HunterCommand;
-import com.georgev22.hunter.commands.LevelCommand;
-import com.georgev22.hunter.commands.PrestigeCommand;
+import com.georgev22.hunter.commands.*;
 import com.georgev22.hunter.hooks.HolographicDisplays;
 import com.georgev22.hunter.hooks.PAPI;
 import com.georgev22.hunter.hooks.Vault;
@@ -104,6 +101,8 @@ public final class Main extends JavaPlugin {
             MinecraftUtils.registerCommand("hunter", new HunterCommand());
         if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
             MinecraftUtils.registerCommand("prestige", new PrestigeCommand());
+        if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
+            MinecraftUtils.registerCommand("bounty", new BountyCommand());
 
         if (OptionsUtil.UPDATER.getBooleanValue()) {
             new Updater();
@@ -152,6 +151,8 @@ public final class Main extends JavaPlugin {
             MinecraftUtils.unRegisterCommand("hunter");
         if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
             MinecraftUtils.unRegisterCommand("prestige");
+        if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
+            MinecraftUtils.unRegisterCommand("bounty");
         Bukkit.getOnlinePlayers().forEach(player -> {
             UserData userData = UserData.getUser(player.getUniqueId());
             userData.save(false, new Callback() {

@@ -18,6 +18,8 @@ public enum MessagesUtil {
 
     ONLY_PLAYER_COMMAND("Messages.Only-Player-Command", "&c&l(!)&c Only players can run this command!"),
 
+    PLAYER_NOT_FOUND("Messages.Player not found", "&c&l(!)&c Player not found!"),
+
     LEVEL_UP("Messages.Level Up", "&a&l(!)&a Player %player% reached level: %level%"),
 
     KILLSTREAK("Messages.Killstreak", "&a&l(!)&a Player %player% reached a killstreak of %killstreak%!"),
@@ -43,6 +45,10 @@ public enum MessagesUtil {
     TRANSACTION_ERROR("Messages.Transaction error", "&c&l(!)&c Insufficient funds (%transaction%)!"),
 
     TRANSACTION_FULL_INVENTORY("Messages.Transaction full inventory", "&c&l(!)&c Your inventory is full!"),
+
+    BOUNTY_PLAYER("Messages.Bounty player", "&a&l(!)&a You currently have %bounty% bounty on your head!"),
+
+    BOUNTY_PLAYER_OTHER("Messages.Bounty player other", "&a&l(!)&a Player %player% have a %bounty% bounty on his head!"),
     ;
 
     /**

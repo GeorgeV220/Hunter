@@ -91,6 +91,10 @@ public class User extends ConcurrentObjectMap<String, Object> {
         return getInteger("prestige", 0);
     }
 
+    public double bounty() {
+        return getDouble("bounty", 0.0);
+    }
+
     public ObjectMap<String, String> placeholders() {
         return ObjectMap.newHashObjectMap()
                 .append("%player%", name())
@@ -104,6 +108,7 @@ public class User extends ConcurrentObjectMap<String, Object> {
                 .append("%experience%", String.valueOf(experience()))
                 .append("%prestige%", String.valueOf(prestige()))
                 .append("%prestige_roman%", Utils.toRoman(prestige()))
+                .append("%bounty%", String.valueOf(bounty()))
                 ;
     }
 }

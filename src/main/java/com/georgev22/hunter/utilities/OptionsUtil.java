@@ -28,6 +28,8 @@ public enum OptionsUtil {
 
     COMMAND_LEVEL("command.level", true, Optional.empty()),
 
+    COMMAND_BOUNTY("command.bounty", true, Optional.empty()),
+
     DATABASE_HOST("database.SQL.host", "localhost", Optional.empty()),
 
     DATABASE_PORT("database.SQL.port", 3306, Optional.empty()),
@@ -104,6 +106,17 @@ public enum OptionsUtil {
 
     KILLSTREAK_TOP("killstreak.top", 5, Optional.of("top.killstreak")),
 
+    BOUNTY_ENABLED("bounty.enabled", false, Optional.empty()),
+
+    BOUNTY_BASE("bounty.base", 300.0, Optional.empty()),
+
+    BOUNTY_KILLSTREAK("bounty.killstreak", 10, Optional.empty()),
+
+    BOUNTY_KILLSTREAK_ENABLED("bounty.killstreak enabled", true, Optional.empty()),
+
+    BOUNTY_PERCENTAGE("bounty.percentage", 3.5, Optional.empty()),
+
+    BOUNTY_PERCENTAGE_ENABLE("bounty.percentage enabled", true, Optional.empty()),
 
     ;
     private final String pathName;
@@ -120,7 +133,7 @@ public enum OptionsUtil {
     }
 
     public boolean getBooleanValue() {
-        return mainPlugin.getConfig().getBoolean(getPath(), true);
+        return mainPlugin.getConfig().getBoolean(getPath(), Boolean.parseBoolean(String.valueOf(getDefaultValue())));
     }
 
     public Object getObjectValue() {
@@ -128,18 +141,26 @@ public enum OptionsUtil {
     }
 
     public String getStringValue() {
-        return mainPlugin.getConfig().getString(getPath(), (String) getDefaultValue());
+        return mainPlugin.getConfig().getString(getPath(), String.valueOf(getDefaultValue()));
     }
 
-    public @NotNull Long getLongValue() {
-        return mainPlugin.getConfig().getLong(getPath(), (Long) getDefaultValue());
+    public @NotNull
+    Long getLongValue() {
+        return mainPlugin.getConfig().getLong(getPath(), Long.parseLong(String.valueOf(getDefaultValue())));
     }
 
-    public @NotNull Integer getIntValue() {
-        return mainPlugin.getConfig().getInt(getPath(), (Integer) getDefaultValue());
+    public @NotNull
+    Integer getIntValue() {
+        return mainPlugin.getConfig().getInt(getPath(), Integer.parseInt(String.valueOf(getDefaultValue())));
     }
 
-    public @NotNull List<String> getStringList() {
+    public @NotNull
+    Double getDoubleValue() {
+        return mainPlugin.getConfig().getDouble(getPath(), Double.parseDouble(String.valueOf(getDefaultValue())));
+    }
+
+    public @NotNull
+    List<String> getStringList() {
         return mainPlugin.getConfig().getStringList(getPath());
     }
 
@@ -167,7 +188,8 @@ public enum OptionsUtil {
      *
      * @return a List of Color classes that represent the colors.
      */
-    public @NotNull List<Color> getColors() {
+    public @NotNull
+    List<Color> getColors() {
         List<Color> colors = Lists.newArrayList();
         for (String stringColor : getStringList()) {
             colors.add(Color.from(stringColor));
@@ -181,23 +203,20 @@ public enum OptionsUtil {
      *
      * @return the path.
      */
-    public @NotNull String getPath() {
+    public @NotNull
+    String getPath() {
         if (getOldPaths().length > 0) {
-            for (Optional<String> paths : getOldPaths()) {
-                if (mainPlugin.getConfig().get("Options." + getDefaultPath()) == null) {
-                    if (paths.isPresent()) {
-                        if (mainPlugin.getConfig().get("Options." + paths.get()) != null) {
-                            return "Options." + paths.get();
-                        }
+            for (Optional<String> path : getOldPaths()) {
+                if (mainPlugin.getConfig().get("Options." + getDefaultPath()) == null & path.isPresent()) {
+                    if (mainPlugin.getConfig().get("Options." + path.get()) != null) {
+                        return "Options." + path.get();
                     }
                 } else {
                     return "Options." + getDefaultPath();
                 }
             }
-        } else {
-            return "Options." + getDefaultPath();
         }
-        return null;
+        return "Options." + getDefaultPath();
     }
 
     /**
@@ -206,7 +225,8 @@ public enum OptionsUtil {
      * @return the default path.
      */
     @Contract(pure = true)
-    public @NotNull String getDefaultPath() {
+    public @NotNull
+    String getDefaultPath() {
         return this.pathName;
     }
 
