@@ -44,6 +44,8 @@ Options:
     base: 300.0
     killstreak: 10
     killstreak enabled: true
+    message: true
+    every: 10
     percentage: 3.5
     percentage enabled: true
   # File, MySQL, PostgreSQL, SQLite, MongoDB

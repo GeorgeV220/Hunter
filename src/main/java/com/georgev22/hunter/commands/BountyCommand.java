@@ -1,6 +1,8 @@
 package com.georgev22.hunter.commands;
 
+import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.hunter.hooks.Vault;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.player.UserData;
 import org.bukkit.Bukkit;
@@ -33,13 +35,43 @@ public class BountyCommand extends BukkitCommand {
             MessagesUtil.BOUNTY_PLAYER.msg(sender, UserData.getUser((Player) sender).user().placeholders(), true);
             return true;
         }
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-        if (offlinePlayer == null || !offlinePlayer.hasPlayedBefore()) {
-            MessagesUtil.PLAYER_NOT_FOUND.msg(sender);
+        if (args.length == 1) {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+            if (offlinePlayer == null || !offlinePlayer.hasPlayedBefore()) {
+                MessagesUtil.PLAYER_NOT_FOUND.msg(sender);
+                return true;
+            }
+            MessagesUtil.BOUNTY_PLAYER_OTHER.msg(sender, UserData.getUser(offlinePlayer).user().placeholders(), true);
             return true;
         }
 
-        MessagesUtil.BOUNTY_PLAYER_OTHER.msg(sender, UserData.getUser(offlinePlayer).user().placeholders(), true);
+        if (args.length > 1) {
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+            if (offlinePlayer == null || !offlinePlayer.hasPlayedBefore()) {
+                MessagesUtil.PLAYER_NOT_FOUND.msg(sender);
+                return true;
+            }
+            double value = Double.parseDouble(args[1]);
+            if (value <= 0) {
+                MessagesUtil.TRANSACTION_ERROR_NEGATIVE.msg(sender, ObjectMap.newHashObjectMap().append("%player%", sender.getName()).append("%transaction%", String.valueOf(value)), true);
+                return true;
+            }
+            UserData userData = UserData.getUser(offlinePlayer);
+            if (!(sender instanceof Player)) {
+                userData.setBounty(userData.getBounty() + value);
+                MessagesUtil.BOUNTY_PLAYER_SET.msgAll(userData.user().placeholders().append("%player%", sender.getName()).append("%target%", offlinePlayer.getName()).append("%transaction%", String.valueOf(value)), true);
+            } else {
+                if (Vault.isHooked()) {
+                    if (Vault.getEconomy().has(offlinePlayer, value)) {
+                        Vault.getEconomy().withdrawPlayer(offlinePlayer, value);
+                        userData.setBounty(userData.getBounty() + value);
+                        MessagesUtil.BOUNTY_PLAYER_SET.msgAll(userData.user().placeholders().append("%player%", sender.getName()).append("%target%", offlinePlayer.getName()).append("%transaction%", String.valueOf(value)), true);
+                    } else {
+                        MessagesUtil.TRANSACTION_ERROR.msg(sender, ObjectMap.newHashObjectMap().append("%player%", sender.getName()).append("%transaction%", String.valueOf(value)), true);
+                    }
+                }
+            }
+        }
         return true;
     }
 }

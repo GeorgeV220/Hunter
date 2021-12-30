@@ -38,6 +38,7 @@ public class UserUtils {
             if (OptionsUtil.BOUNTY_ENABLED.getBooleanValue() & Vault.isHooked()) {
                 if (blessedUserData.haveBounty()) {
                     Vault.getEconomy().depositPlayer(killer, blessedUserData.getBounty());
+                    MessagesUtil.BOUNTY_PLAYER_COLLECT.msgAll(blessedUserData.user().placeholders().append("%player%", killer.getName()).append("%target%", blessed.getName()), true);
                     blessedUserData.setBounty(0.0);
                 }
             }
@@ -49,7 +50,7 @@ public class UserUtils {
             if (OptionsUtil.BOUNTY_KILLSTREAK_ENABLED.getBooleanValue()) {
                 if (killerUserData.getKillStreak() >= OptionsUtil.BOUNTY_KILLSTREAK.getIntValue()) {
                     if (killerUserData.haveBounty()) {
-                        killerUserData.setBounty(killerUserData.getBounty() + (killerUserData.getBounty() * (OptionsUtil.BOUNTY_PERCENTAGE.getDoubleValue() / 100)));
+                        killerUserData.setBounty(killerUserData.getBounty() + (OptionsUtil.BOUNTY_PERCENTAGE_ENABLE.getBooleanValue() ? (killerUserData.getBounty() * (OptionsUtil.BOUNTY_PERCENTAGE.getDoubleValue() / 100)) : OptionsUtil.BOUNTY_BASE.getDoubleValue()));
                     } else {
                         killerUserData.setBounty(OptionsUtil.BOUNTY_BASE.getDoubleValue());
                     }
