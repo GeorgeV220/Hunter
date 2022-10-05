@@ -80,7 +80,7 @@ dependencies {
     compileOnly 'org.mongodb:mongo-java-driver:3.12.11'
     compileOnly 'org.jetbrains:annotations:23.0.0'
     compileOnly 'me.clip:placeholderapi:2.11.2'
-    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7.1"
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
 
     // Test dependencies
