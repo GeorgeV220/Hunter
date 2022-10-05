@@ -134,7 +134,7 @@ public final class Main extends JavaPlugin {
             MinecraftUtils.registerCommand("bounty", new BountyCommand());
 
         if (OptionsUtil.UPDATER.getBooleanValue()) {
-            //new Updater();
+            new Updater();
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
