@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/GeorgeV220/Hunter/compare/v1.0.0...v1.1.0) (2022-10-05)
+
+
+### Features
+
+* **Updater:** Added updater check on onEnable ([fdfe418](https://github.com/GeorgeV220/Hunter/commit/fdfe4182632ad2c6a470567bf1352385a9bde3d7))
+
 # 1.0.0 (2022-10-05)
 
 
