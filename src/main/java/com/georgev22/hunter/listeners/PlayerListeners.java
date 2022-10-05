@@ -1,6 +1,6 @@
 package com.georgev22.hunter.listeners;
 
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.hunter.Main;
 import com.georgev22.hunter.hooks.HolographicDisplays;
 import com.georgev22.hunter.utilities.OptionsUtil;
@@ -35,9 +35,9 @@ public class PlayerListeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         UserData userData = UserData.getUser(event.getPlayer().getUniqueId());
         try {
-            userData.load(new Callback() {
+            userData.load(new Callback<>() {
                 @Override
-                public void onSuccess() {
+                public Boolean onSuccess() {
                     UserData.getAllUsersMap().append(userData.user().uniqueId(), userData.user());
                     //HOLOGRAMS
                     if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
@@ -49,11 +49,18 @@ public class PlayerListeners implements Listener {
                             HolographicDisplays.updateAll();
                         }
                     }
+                    return true;
                 }
 
                 @Override
-                public void onFailure(Throwable throwable) {
+                public Boolean onFailure(Throwable throwable) {
                     throwable.printStackTrace();
+                    return false;
+                }
+
+                @Override
+                public Boolean onFailure() {
+                    return false;
                 }
             });
         } catch (Exception e) {
@@ -70,15 +77,22 @@ public class PlayerListeners implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         UserData userData = UserData.getUser(event.getPlayer().getUniqueId());
-        userData.save(true, new Callback() {
+        userData.save(true, new Callback<>() {
             @Override
-            public void onSuccess() {
+            public Boolean onSuccess() {
                 UserData.getAllUsersMap().append(userData.user().uniqueId(), userData.user());
+                return true;
             }
 
             @Override
-            public void onFailure(Throwable throwable) {
+            public Boolean onFailure(Throwable throwable) {
                 throwable.printStackTrace();
+                return onFailure();
+            }
+
+            @Override
+            public Boolean onFailure() {
+                return false;
             }
         });
 

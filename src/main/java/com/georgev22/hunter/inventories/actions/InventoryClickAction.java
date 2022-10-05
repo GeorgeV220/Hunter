@@ -1,10 +1,10 @@
 package com.georgev22.hunter.inventories.actions;
 
-import com.georgev22.api.inventory.ItemBuilder;
-import com.georgev22.api.inventory.utils.actions.Action;
-import com.georgev22.api.inventory.utils.actions.ActionManager;
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.exceptions.ActionRunException;
+import com.georgev22.api.exceptions.ActionRunException;
+import com.georgev22.api.maps.HashObjectMap;
+import com.georgev22.api.minecraft.inventory.ItemBuilder;
+import com.georgev22.api.minecraft.inventory.utils.actions.Action;
+import com.georgev22.api.minecraft.inventory.utils.actions.ActionManager;
 import com.georgev22.hunter.hooks.Vault;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.configmanager.FileManager;
@@ -97,7 +97,7 @@ public class InventoryClickAction extends Action {
                                 i.setAmount(i.getAmount() - 1);
                             }
                             Vault.getEconomy().depositPlayer(offlinePlayer, itemSellMoney);
-                            MessagesUtil.TRANSACTION_DEPOSIT_SUCCESS.msg(offlinePlayer.getPlayer(), ObjectMap.newHashObjectMap().append("%transaction%", String.valueOf(itemSellMoney)).append(userData.user().placeholders()), true);
+                            MessagesUtil.TRANSACTION_DEPOSIT_SUCCESS.msg(offlinePlayer.getPlayer(), new HashObjectMap<String, String>().append("%transaction%", String.valueOf(itemSellMoney)).append(userData.user().placeholders()), true);
                         } else {
                             throw new ActionRunException("Player does not have enough items to sell!");
                         }
@@ -131,13 +131,13 @@ public class InventoryClickAction extends Action {
                         ItemStack itemStack = itemBuilder.build();
                         offlinePlayer.getPlayer().getInventory().addItem(itemStack);
                         Vault.getEconomy().withdrawPlayer(offlinePlayer, itemBuyMoney);
-                        MessagesUtil.TRANSACTION_WITHDRAW_SUCCESS.msg(offlinePlayer.getPlayer(), ObjectMap.newHashObjectMap().append("%transaction%", String.valueOf(itemBuyMoney)).append(userData.user().placeholders()), true);
+                        MessagesUtil.TRANSACTION_WITHDRAW_SUCCESS.msg(offlinePlayer.getPlayer(), new HashObjectMap<String, String>().append("%transaction%", String.valueOf(itemBuyMoney)).append(userData.user().placeholders()), true);
                     } else {
-                        MessagesUtil.TRANSACTION_FULL_INVENTORY.msg(offlinePlayer.getPlayer(), ObjectMap.newHashObjectMap().append("%transaction%", String.valueOf(itemBuyMoney)), true);
+                        MessagesUtil.TRANSACTION_FULL_INVENTORY.msg(offlinePlayer.getPlayer(), new HashObjectMap<String, String>().append("%transaction%", String.valueOf(itemBuyMoney)), true);
                         throw new ActionRunException("Player inventory is full!");
                     }
                 } else {
-                    MessagesUtil.TRANSACTION_ERROR.msg(offlinePlayer.getPlayer(), ObjectMap.newHashObjectMap().append("%transaction%", String.valueOf(itemBuyMoney)), true);
+                    MessagesUtil.TRANSACTION_ERROR.msg(offlinePlayer.getPlayer(), new HashObjectMap<String, String>().append("%transaction%", String.valueOf(itemBuyMoney)), true);
                     throw new ActionRunException("Player does not have the required funds!");
                 }
             } else {

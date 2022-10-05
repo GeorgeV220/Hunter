@@ -1,8 +1,8 @@
 package com.georgev22.hunter.commands;
 
-import com.georgev22.api.inventory.ItemBuilder;
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.maps.HashObjectMap;
+import com.georgev22.api.minecraft.MinecraftUtils;
+import com.georgev22.api.minecraft.inventory.ItemBuilder;
 import com.georgev22.hunter.Main;
 import com.georgev22.hunter.hooks.HolographicDisplays;
 import com.georgev22.hunter.hooks.Vault;
@@ -39,6 +39,10 @@ public class HunterCommand extends BukkitCommand {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         if (!testPermission(sender)) return true;
+        if (args.length == 0) {
+            onHelp(sender);
+            return true;
+        }
         if (args[0].equalsIgnoreCase("reload")) {
             Main.getInstance().reloadConfig();
             MinecraftUtils.msg(sender, "&a&l(!)&a Plugin configs successfully reloaded (Some settings will take effect after server restart)");
@@ -93,14 +97,21 @@ public class HunterCommand extends BukkitCommand {
                 MinecraftUtils.msg(sender, "&c&l(!)&c Data: kills killstreak prestige levels multiplier experience");
             }
             UserData.getAllUsersMap().replace(target.getUniqueId(), userData.user());
-            userData.save(true, new Callback() {
+            userData.save(true, new Callback<>() {
                 @Override
-                public void onSuccess() {
+                public Boolean onSuccess() {
+                    return true;
                 }
 
                 @Override
-                public void onFailure(Throwable throwable) {
+                public Boolean onFailure(Throwable throwable) {
                     throwable.printStackTrace();
+                    return onFailure();
+                }
+
+                @Override
+                public Boolean onFailure() {
+                    return false;
                 }
             });
             return true;
@@ -152,15 +163,15 @@ public class HunterCommand extends BukkitCommand {
                     }
                     if (Vault.getEconomy().has(target, transaction)) {
                         userData.setPrestige(userData.getPrestige() + Integer.parseInt(args[4])).setMultiplier(userData.getMultiplier() + Double.parseDouble(args[5]));
-                        MessagesUtil.PRESTIGE.msg(target, ObjectMap.newHashObjectMap().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
+                        MessagesUtil.PRESTIGE.msg(target, new HashObjectMap<String, String>().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
                         Vault.getEconomy().withdrawPlayer(target, transaction);
                         if (Boolean.parseBoolean(args[6])) {
-                            MessagesUtil.TRANSACTION_WITHDRAW_SUCCESS.msg(target, ObjectMap.newHashObjectMap().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
+                            MessagesUtil.TRANSACTION_WITHDRAW_SUCCESS.msg(target, new HashObjectMap<String, String>().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
                         } else {
-                            MessagesUtil.TRANSACTION_WITHDRAW_SUCCESS.msg(target, ObjectMap.newHashObjectMap().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
+                            MessagesUtil.TRANSACTION_WITHDRAW_SUCCESS.msg(target, new HashObjectMap<String, String>().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
                         }
                     } else {
-                        MessagesUtil.TRANSACTION_ERROR.msg(target, ObjectMap.newHashObjectMap().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)), true);
+                        MessagesUtil.TRANSACTION_ERROR.msg(target, new HashObjectMap<String, String>().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)), true);
                     }
                 } else if (args[3].equalsIgnoreCase("sell")) {
                     if (args.length < 5) {
@@ -181,7 +192,7 @@ public class HunterCommand extends BukkitCommand {
                                     i.setAmount(i.getAmount() - 1);
                                 }
                                 Vault.getEconomy().depositPlayer(target, transaction);
-                                MessagesUtil.TRANSACTION_DEPOSIT_SUCCESS.msg(target, ObjectMap.newHashObjectMap().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
+                                MessagesUtil.TRANSACTION_DEPOSIT_SUCCESS.msg(target, new HashObjectMap<String, String>().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
                             }
                             break;
                         }
@@ -197,12 +208,12 @@ public class HunterCommand extends BukkitCommand {
                             ItemStack itemStack = itemBuilder.build();
                             target.getInventory().addItem(itemStack);
                             Vault.getEconomy().withdrawPlayer(target, transaction);
-                            MessagesUtil.TRANSACTION_WITHDRAW_SUCCESS.msg(target, ObjectMap.newHashObjectMap().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
+                            MessagesUtil.TRANSACTION_WITHDRAW_SUCCESS.msg(target, new HashObjectMap<String, String>().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)).append(userData.user().placeholders()), true);
                         } else {
-                            MessagesUtil.TRANSACTION_FULL_INVENTORY.msg(target, ObjectMap.newHashObjectMap().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)), true);
+                            MessagesUtil.TRANSACTION_FULL_INVENTORY.msg(target, new HashObjectMap<String, String>().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)), true);
                         }
                     } else {
-                        MessagesUtil.TRANSACTION_ERROR.msg(target, ObjectMap.newHashObjectMap().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)), true);
+                        MessagesUtil.TRANSACTION_ERROR.msg(target, new HashObjectMap<String, String>().append("%player%", target.getName()).append("%transaction%", String.valueOf(transaction)), true);
                     }
                 }
             } else {
@@ -220,11 +231,10 @@ public class HunterCommand extends BukkitCommand {
             }
 
             if (args[1].equalsIgnoreCase("create")) {
-                if (!(sender instanceof Player)) {
+                if (!(sender instanceof Player player)) {
                     MessagesUtil.ONLY_PLAYER_COMMAND.msg(sender);
                     return true;
                 }
-                Player player = (Player) sender;
                 if (args.length < 4) {
                     MinecraftUtils.msg(player, "&c&l(!) &cUsage: /hunter hologram create <hologramName> <type>");
                     return true;
@@ -267,29 +277,24 @@ public class HunterCommand extends BukkitCommand {
                 MinecraftUtils.msg(sender, "&a&l(!) &aHologram " + args[2] + " successfully removed!");
             }
         } else if (args[0].equalsIgnoreCase("help")) {
-            MinecraftUtils.msg(sender, " ");
-            MinecraftUtils.msg(sender, " ");
-            MinecraftUtils.msg(sender, " ");
-            MinecraftUtils.msg(sender, "&c&l(!)&c Commands&c &l(!)");
-            MinecraftUtils.msg(sender, "&6/hunter clear <player>");
-            MinecraftUtils.msg(sender, "&6/hunter set <player> <data> <value>");
-            MinecraftUtils.msg(sender, "&c&l(!)&c /hunter transaction <player> <funds> <data> <values>");
-            MinecraftUtils.msg(sender, "&6/hunter reload");
-            MinecraftUtils.msg(sender, "&6/hunter help");
-            MinecraftUtils.msg(sender, "&c&l==============");
+            onHelp(sender);
         } else {
-            MinecraftUtils.msg(sender, " ");
-            MinecraftUtils.msg(sender, " ");
-            MinecraftUtils.msg(sender, " ");
-            MinecraftUtils.msg(sender, "&c&l(!)&c Commands&c &l(!)");
-            MinecraftUtils.msg(sender, "&6/hunter clear <player>");
-            MinecraftUtils.msg(sender, "&6/hunter set <player> <data> <value>");
-            MinecraftUtils.msg(sender, "&c&l(!)&c /hunter transaction <player> <funds> <data> <values>");
-            MinecraftUtils.msg(sender, "&6/hunter reload");
-            MinecraftUtils.msg(sender, "&6/hunter help");
-            MinecraftUtils.msg(sender, "&c&l==============");
+            onHelp(sender);
             return true;
         }
         return true;
+    }
+
+    private void onHelp(@NotNull CommandSender sender) {
+        MinecraftUtils.msg(sender, " ");
+        MinecraftUtils.msg(sender, " ");
+        MinecraftUtils.msg(sender, " ");
+        MinecraftUtils.msg(sender, "&c&l(!)&c Commands&c &l(!)");
+        MinecraftUtils.msg(sender, "&6/hunter clear <player>");
+        MinecraftUtils.msg(sender, "&6/hunter set <player> <data> <value>");
+        MinecraftUtils.msg(sender, "&6/hunter transaction <player> <funds> <data> <values>");
+        MinecraftUtils.msg(sender, "&6/hunter reload");
+        MinecraftUtils.msg(sender, "&6/hunter help");
+        MinecraftUtils.msg(sender, "&c&l==============");
     }
 }

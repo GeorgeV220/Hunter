@@ -1,17 +1,19 @@
 package com.georgev22.hunter.inventories;
 
-import com.georgev22.api.configmanager.CFG;
-import com.georgev22.api.inventory.CustomItemInventory;
-import com.georgev22.api.inventory.IPagedInventory;
-import com.georgev22.api.inventory.ItemBuilder;
-import com.georgev22.api.inventory.NavigationRow;
-import com.georgev22.api.inventory.handlers.PagedInventoryClickHandler;
-import com.georgev22.api.inventory.handlers.PagedInventoryCustomNavigationHandler;
-import com.georgev22.api.inventory.navigationitems.*;
-import com.georgev22.api.inventory.utils.actions.Action;
-import com.georgev22.api.inventory.utils.actions.ActionManager;
+import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.minecraft.MinecraftUtils;
+import com.georgev22.api.minecraft.configmanager.CFG;
+import com.georgev22.api.minecraft.inventory.CustomItemInventory;
+import com.georgev22.api.minecraft.inventory.IPagedInventory;
+import com.georgev22.api.minecraft.inventory.ItemBuilder;
+import com.georgev22.api.minecraft.inventory.NavigationRow;
+import com.georgev22.api.minecraft.inventory.handlers.PagedInventoryClickHandler;
+import com.georgev22.api.minecraft.inventory.handlers.PagedInventoryCustomNavigationHandler;
+import com.georgev22.api.minecraft.inventory.navigationitems.*;
+import com.georgev22.api.minecraft.inventory.utils.actions.Action;
+import com.georgev22.api.minecraft.inventory.utils.actions.ActionManager;
+import com.georgev22.api.minecraft.nbt.nbtapi.NBTItem;
 import com.georgev22.api.utilities.Utils;
 import com.georgev22.api.utilities.Utils.Cooldown;
 import com.georgev22.hunter.Main;
@@ -22,7 +24,6 @@ import com.georgev22.hunter.utilities.configmanager.FileManager;
 import com.georgev22.hunter.utilities.player.UserData;
 import com.google.common.collect.Lists;
 import com.google.gson.reflect.TypeToken;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -34,7 +35,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class PrestigeInventory {
 
@@ -61,7 +61,7 @@ public class PrestigeInventory {
 
         List<NavigationItem> navigationItemList = Lists.newArrayList();
 
-        ObjectMap<Integer, ItemStack> objectMap = ObjectMap.newHashObjectMap();
+        ObjectMap<Integer, ItemStack> objectMap = new HashObjectMap<>();
 
         final FileManager fileManager = FileManager.getInstance();
 
@@ -98,7 +98,7 @@ public class PrestigeInventory {
                                 new CloseNavigationItem(ItemBuilder.buildItemFromConfig(prestigeConfig.getFileConfiguration(), "navigation.cancel").build(), prestigeConfig.getFileConfiguration().getInt("navigation.cancel.slot", 4)),
                                 navigationItemList.toArray(new NavigationItem[0])));
 
-        CustomItemInventory customItemInventory = new CustomItemInventory(Utils.placeHolder(MinecraftUtils.colorize(prestigeConfig.getFileConfiguration().getString("name")), userData.user().placeholders().append("%prestige_inventory%", String.valueOf(prestigeClosest)).append("%prestige_inventory_roman%", Utils.toRoman(prestigeClosest)), true), objectMap, 54);
+        CustomItemInventory customItemInventory = new CustomItemInventory(Utils.placeHolder(MinecraftUtils.colorize(prestigeConfig.getFileConfiguration().getString("name", "")), userData.user().placeholders().append("%prestige_inventory%", String.valueOf(prestigeClosest)).append("%prestige_inventory_roman%", Utils.toRoman(prestigeClosest)), true), objectMap, 54);
 
         Inventory inventory = customItemInventory.getInventory();
 
@@ -134,10 +134,10 @@ public class PrestigeInventory {
                     }.getType());
                     if (clickHandler.isRightClick()) {
                         if (itemCommands.stream().anyMatch(lamba -> lamba.getType().equals(ItemBuilder.ItemCommandType.RIGHT))) {
-                            ItemBuilder.ItemCommand itemCommand = itemCommands.stream().filter(lamba -> lamba.getType().equals(ItemBuilder.ItemCommandType.RIGHT)).collect(Collectors.toList()).get(0);
+                            ItemBuilder.ItemCommand itemCommand = itemCommands.stream().filter(lamba -> lamba.getType().equals(ItemBuilder.ItemCommandType.RIGHT)).toList().get(0);
                             if (Cooldown.isInCooldown(clickHandlerPlayer.getUniqueId(), "cooldown-" + name + "-commandsR")) {
                                 MessagesUtil.ITEM_ON_COOLDOWN.msg(clickHandlerPlayer,
-                                        ObjectMap.newHashObjectMap()
+                                        new HashObjectMap<String, String>()
                                                 .append("%seconds%", String.valueOf(Cooldown.getTimeLeft(clickHandlerPlayer.getUniqueId(), "cooldown-" + name + "-commandsR")))
                                                 .append("%item%", name),
                                         true);
@@ -151,10 +151,10 @@ public class PrestigeInventory {
                         }
                     } else if (clickHandler.isLeftClick()) {
                         if (itemCommands.stream().anyMatch(lamba -> lamba.getType().equals(ItemBuilder.ItemCommandType.LEFT))) {
-                            ItemBuilder.ItemCommand itemCommand = itemCommands.stream().filter(lamba -> lamba.getType().equals(ItemBuilder.ItemCommandType.LEFT)).collect(Collectors.toList()).get(0);
+                            ItemBuilder.ItemCommand itemCommand = itemCommands.stream().filter(lamba -> lamba.getType().equals(ItemBuilder.ItemCommandType.LEFT)).toList().get(0);
                             if (Cooldown.isInCooldown(clickHandlerPlayer.getUniqueId(), "cooldown-" + name + "-commandsL")) {
                                 MessagesUtil.ITEM_ON_COOLDOWN.msg(clickHandlerPlayer,
-                                        ObjectMap.newHashObjectMap()
+                                        new HashObjectMap<String, String>()
                                                 .append("%seconds%", String.valueOf(Cooldown.getTimeLeft(clickHandlerPlayer.getUniqueId(), "cooldown-" + name + "-commandsL")))
                                                 .append("%item%", name),
                                         true);
@@ -168,10 +168,10 @@ public class PrestigeInventory {
                         }
                     } else if (clickHandler.isMiddleClick()) {
                         if (itemCommands.stream().anyMatch(lamba -> lamba.getType().equals(ItemBuilder.ItemCommandType.MIDDLE))) {
-                            ItemBuilder.ItemCommand itemCommand = itemCommands.stream().filter(lamba -> lamba.getType().equals(ItemBuilder.ItemCommandType.MIDDLE)).collect(Collectors.toList()).get(0);
+                            ItemBuilder.ItemCommand itemCommand = itemCommands.stream().filter(lamba -> lamba.getType().equals(ItemBuilder.ItemCommandType.MIDDLE)).toList().get(0);
                             if (Cooldown.isInCooldown(clickHandlerPlayer.getUniqueId(), "cooldown-" + name + "-commandsM")) {
                                 MessagesUtil.ITEM_ON_COOLDOWN.msg(clickHandlerPlayer,
-                                        ObjectMap.newHashObjectMap()
+                                        new HashObjectMap<String, String>()
                                                 .append("%seconds%", String.valueOf(Cooldown.getTimeLeft(clickHandlerPlayer.getUniqueId(), "cooldown-" + name + "-commandsM")))
                                                 .append("%item%", name),
                                         true);

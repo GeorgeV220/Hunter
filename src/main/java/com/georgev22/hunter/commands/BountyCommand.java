@@ -1,7 +1,7 @@
 package com.georgev22.hunter.commands;
 
 import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.hunter.hooks.Vault;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.player.UserData;

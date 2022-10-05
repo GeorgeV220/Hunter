@@ -1,6 +1,7 @@
 package com.georgev22.hunter.utilities.player;
 
 import com.georgev22.api.maps.ConcurrentObjectMap;
+import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.utilities.Utils;
 import org.bukkit.Bukkit;
@@ -96,7 +97,7 @@ public class User extends ConcurrentObjectMap<String, Object> {
     }
 
     public ObjectMap<String, String> placeholders() {
-        return ObjectMap.newHashObjectMap()
+        return new HashObjectMap<String, String>()
                 .append("%player%", name())
                 .append("%kills%", String.valueOf(totalKills()))
                 .append("%kills_roman%", Utils.toRoman(totalKills()))

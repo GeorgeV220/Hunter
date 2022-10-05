@@ -1,7 +1,7 @@
 package com.georgev22.hunter.utilities.interfaces;
 
 import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.hunter.Main;
 import com.georgev22.hunter.utilities.player.User;
 import org.jetbrains.annotations.NotNull;
@@ -14,9 +14,9 @@ public interface IDatabaseType {
 
     void save(User user) throws Exception;
 
-    void load(User user, Callback callback) throws Exception;
+    void load(User user, Callback<Boolean> callback) throws Exception;
 
-    void setupUser(User user, Callback callback) throws Exception;
+    void setupUser(User user, Callback<Boolean> callback) throws Exception;
 
     default void reset(@NotNull User user) throws Exception {
         user

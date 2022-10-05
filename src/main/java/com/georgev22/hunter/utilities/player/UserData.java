@@ -1,9 +1,10 @@
 package com.georgev22.hunter.utilities.player;
 
+import com.georgev22.api.maps.ConcurrentObjectMap;
 import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.maps.LinkedObjectMap;
 import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.api.utilities.Utils.Callback;
 import com.georgev22.hunter.Main;
 import com.georgev22.hunter.utilities.OptionsUtil;
@@ -31,16 +32,10 @@ import java.util.stream.Collectors;
 /**
  * Used to handle all user's data and anything related to them.
  */
-public class UserData {
+public record UserData(User user) {
     private static final Main mainPlugin = Main.getInstance();
 
-    private static final ObjectMap<UUID, User> allUsersMap = ObjectMap.newConcurrentObjectMap();
-
-    private final User user;
-
-    public UserData(User user) {
-        this.user = user;
-    }
+    private static final ObjectMap<UUID, User> allUsersMap = new ConcurrentObjectMap<>();
 
     /**
      * Returns all the players in a map
@@ -184,7 +179,7 @@ public class UserData {
      * @param callback Callback
      * @throws Exception When something goes wrong
      */
-    public UserData load(Callback callback) throws Exception {
+    public UserData load(Callback<Boolean> callback) throws Exception {
         mainPlugin.getIDatabaseType().load(user, callback);
         return this;
     }
@@ -194,7 +189,7 @@ public class UserData {
      *
      * @param async True if you want to save async
      */
-    public UserData save(boolean async, Callback callback) {
+    public UserData save(boolean async, Callback<Boolean> callback) {
         if (async) {
             Bukkit.getScheduler().runTaskAsynchronously(mainPlugin, () -> {
                 try {
@@ -245,16 +240,12 @@ public class UserData {
         return this;
     }
 
-    public User user() {
-        return user;
-    }
-
     /**
      * @param limit number of top players by level in a Map.
      * @return a {@link LinkedObjectMap} with {@param limit} top players.
      */
     public static LinkedObjectMap<String, Integer> getTopPlayersByLevels(int limit) {
-        ObjectMap<String, Integer> objectMap = ObjectMap.newLinkedObjectMap();
+        ObjectMap<String, Integer> objectMap = new LinkedObjectMap<>();
 
         for (Map.Entry<UUID, User> entry : UserData.getAllUsersMap().entrySet()) {
             objectMap.append(entry.getValue().getString("name"), entry.getValue().getInteger("level"));
@@ -270,7 +261,7 @@ public class UserData {
      * @return a {@link LinkedObjectMap} with {@param limit} top players.
      */
     public static LinkedObjectMap<String, Integer> getTopPlayersByKills(int limit) {
-        ObjectMap<String, Integer> objectMap = ObjectMap.newLinkedObjectMap();
+        ObjectMap<String, Integer> objectMap = new LinkedObjectMap<>();
 
         for (Map.Entry<UUID, User> entry : UserData.getAllUsersMap().entrySet()) {
             objectMap.append(entry.getValue().getString("name"), entry.getValue().getInteger("kills"));
@@ -286,7 +277,7 @@ public class UserData {
      * @return a {@link LinkedObjectMap} with {@param limit} top players.
      */
     public static LinkedObjectMap<String, Integer> getTopPlayersByKillstreak(int limit) {
-        ObjectMap<String, Integer> objectMap = ObjectMap.newLinkedObjectMap();
+        ObjectMap<String, Integer> objectMap = new LinkedObjectMap<>();
 
         for (Map.Entry<UUID, User> entry : UserData.getAllUsersMap().entrySet()) {
             objectMap.append(entry.getValue().getString("name"), entry.getValue().getInteger("killstreak"));
@@ -343,10 +334,10 @@ public class UserData {
          *
          * @param callback Callback
          */
-        public void load(User user, Callback callback) {
-            setupUser(user, new Callback() {
+        public void load(User user, Callback<Boolean> callback) {
+            setupUser(user, new Callback<Boolean>() {
                 @Override
-                public void onSuccess() {
+                public Boolean onSuccess() {
                     try {
                         ResultSet resultSet = mainPlugin.getDatabase().querySQL("SELECT * FROM `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` WHERE `uuid` = '" + user.uniqueId().toString() + "'");
                         while (resultSet.next()) {
@@ -360,15 +351,21 @@ public class UserData {
                                     .append("prestige", resultSet.getInt("prestige"))
                             ;
                         }
-                        callback.onSuccess();
+                        return callback.onSuccess();
                     } catch (SQLException | ClassNotFoundException throwables) {
-                        callback.onFailure(throwables.getCause());
+                        return callback.onFailure(throwables.getCause());
                     }
                 }
 
                 @Override
-                public void onFailure(Throwable throwable) {
+                public Boolean onFailure(Throwable throwable) {
                     throwable.printStackTrace();
+                    return callback.onFailure(throwable);
+                }
+
+                @Override
+                public Boolean onFailure() {
+                    return false;
                 }
             });
         }
@@ -387,7 +384,7 @@ public class UserData {
          *
          * @param callback Callback
          */
-        public void setupUser(User user, Callback callback) {
+        public void setupUser(User user, Callback<Boolean> callback) {
             try {
                 if (!playerExists(user)) {
                     mainPlugin.getDatabase().updateSQL(
@@ -409,19 +406,26 @@ public class UserData {
          * @throws ClassNotFoundException When the class is not found
          */
         public ObjectMap<UUID, User> getAllUsers() throws Exception {
-            ObjectMap<UUID, User> map = ObjectMap.newConcurrentObjectMap();
+            ObjectMap<UUID, User> map = new ConcurrentObjectMap<>();
             ResultSet resultSet = mainPlugin.getDatabase().querySQL("SELECT * FROM `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "`");
             while (resultSet.next()) {
                 UserData userData = UserData.getUser(UUID.fromString(resultSet.getString("uuid")));
-                userData.load(new Callback() {
+                userData.load(new Callback<Boolean>() {
                     @Override
-                    public void onSuccess() {
+                    public Boolean onSuccess() {
                         map.append(userData.user().uniqueId(), userData.user());
+                        return true;
                     }
 
                     @Override
-                    public void onFailure(Throwable throwable) {
+                    public Boolean onFailure(Throwable throwable) {
                         throwable.printStackTrace();
+                        return false;
+                    }
+
+                    @Override
+                    public Boolean onFailure() {
+                        return false;
                     }
                 });
             }
@@ -455,7 +459,7 @@ public class UserData {
                     .append("prestige", user.prestige())
             );
 
-            mainPlugin.getMongoDB().getCollection().updateOne(query, updateObject);
+            mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).updateOne(query, updateObject);
         }
 
         /**
@@ -464,13 +468,13 @@ public class UserData {
          * @param user     User
          * @param callback Callback
          */
-        public void load(User user, Callback callback) {
-            setupUser(user, new Callback() {
+        public void load(User user, Callback<Boolean> callback) {
+            setupUser(user, new Callback<>() {
                 @Override
-                public void onSuccess() {
+                public Boolean onSuccess() {
                     BasicDBObject searchQuery = new BasicDBObject();
                     searchQuery.append("uuid", user.uniqueId().toString());
-                    FindIterable<Document> findIterable = mainPlugin.getMongoDB().getCollection().find(searchQuery);
+                    FindIterable<Document> findIterable = mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).find(searchQuery);
                     Document document = findIterable.first();
                     user
                             .append("name", document.getString("name"))
@@ -481,12 +485,17 @@ public class UserData {
                             .append("multiplier", document.getDouble("multiplier"))
                             .append("prestige", document.getInteger("prestige"))
                     ;
-                    callback.onSuccess();
+                    return callback.onSuccess();
                 }
 
                 @Override
-                public void onFailure(Throwable throwable) {
-                    callback.onFailure(throwable.getCause());
+                public Boolean onFailure(Throwable throwable) {
+                    return callback.onFailure(throwable.getCause());
+                }
+
+                @Override
+                public Boolean onFailure() {
+                    return callback.onFailure();
                 }
             });
         }
@@ -497,9 +506,9 @@ public class UserData {
          * @param user     User object
          * @param callback Callback
          */
-        public void setupUser(User user, Callback callback) {
+        public void setupUser(User user, Callback<Boolean> callback) {
             if (!playerExists(user)) {
-                mainPlugin.getMongoDB().getCollection().insertOne(new Document()
+                mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).insertOne(new Document()
                         .append("uuid", user.uniqueId().toString())
                         .append("name", user.offlinePlayer().getName())
                         .append("experience", 0D)
@@ -519,7 +528,7 @@ public class UserData {
          * @return true if user exists or false when is not
          */
         public boolean playerExists(@NotNull User user) {
-            long count = mainPlugin.getMongoDB().getCollection().countDocuments(new BsonDocument("uuid", new BsonString(user.uniqueId().toString())));
+            long count = mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).countDocuments(new BsonDocument("uuid", new BsonString(user.uniqueId().toString())));
             return count > 0;
         }
 
@@ -529,7 +538,7 @@ public class UserData {
         public void delete(@NotNull User user) {
             BasicDBObject theQuery = new BasicDBObject();
             theQuery.put("uuid", user.uniqueId().toString());
-            DeleteResult result = mainPlugin.getMongoDB().getCollection().deleteMany(theQuery);
+            DeleteResult result = mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).deleteMany(theQuery);
             if (result.getDeletedCount() > 0) {
                 allUsersMap.remove(user.uniqueId());
             }
@@ -541,20 +550,27 @@ public class UserData {
          * @return all the users from the database
          */
         public ObjectMap<UUID, User> getAllUsers() {
-            ObjectMap<UUID, User> map = ObjectMap.newConcurrentObjectMap();
-            FindIterable<Document> iterable = mainPlugin.getMongoDB().getCollection().find();
+            ObjectMap<UUID, User> map = new ConcurrentObjectMap<>();
+            FindIterable<Document> iterable = mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).find();
             iterable.forEach((Block<Document>) document -> {
                 UserData userData = UserData.getUser(UUID.fromString(document.getString("uuid")));
                 try {
-                    userData.load(new Callback() {
+                    userData.load(new Callback<Boolean>() {
                         @Override
-                        public void onSuccess() {
+                        public Boolean onSuccess() {
                             map.append(userData.user().uniqueId(), userData.user());
+                            return true;
                         }
 
                         @Override
-                        public void onFailure(Throwable throwable) {
+                        public Boolean onFailure(Throwable throwable) {
                             throwable.printStackTrace();
+                            return onFailure();
+                        }
+
+                        @Override
+                        public Boolean onFailure() {
+                            return false;
                         }
                     });
                 } catch (Exception e) {
@@ -585,15 +601,21 @@ public class UserData {
             File file = new File(mainPlugin.getDataFolder(),
                     "userdata" + File.separator + user.uniqueId().toString() + ".yml");
             if (!file.exists()) {
-                setupUser(user, new Callback() {
+                setupUser(user, new Callback<Boolean>() {
                     @Override
-                    public void onSuccess() {
-
+                    public Boolean onSuccess() {
+                        return true;
                     }
 
                     @Override
-                    public void onFailure(Throwable throwable) {
+                    public Boolean onFailure(Throwable throwable) {
                         throwable.printStackTrace();
+                        return onFailure();
+                    }
+
+                    @Override
+                    public Boolean onFailure() {
+                        return false;
                     }
                 });
             }
@@ -618,10 +640,10 @@ public class UserData {
          * @param user     User object
          * @param callback Callback
          */
-        public void load(User user, Callback callback) {
-            setupUser(user, new Callback() {
+        public void load(User user, Callback<Boolean> callback) {
+            setupUser(user, new Callback<Boolean>() {
                 @Override
-                public void onSuccess() {
+                public Boolean onSuccess() {
                     YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(new File(mainPlugin.getDataFolder(),
                             "userdata" + File.separator + user.uniqueId().toString() + ".yml"));
                     user
@@ -633,12 +655,17 @@ public class UserData {
                             .append("multiplier", yamlConfiguration.getDouble("multiplier"))
                             .append("prestige", yamlConfiguration.getInt("prestige"))
                     ;
-                    callback.onSuccess();
+                    return callback.onSuccess();
                 }
 
                 @Override
-                public void onFailure(Throwable throwable) {
-                    callback.onFailure(throwable.getCause());
+                public Boolean onFailure(Throwable throwable) {
+                    return callback.onFailure(throwable.getCause());
+                }
+
+                @Override
+                public Boolean onFailure() {
+                    return callback.onFailure();
                 }
             });
         }
@@ -649,7 +676,7 @@ public class UserData {
          * @param user     User object
          * @param callback Callback
          */
-        public void setupUser(@NotNull User user, Callback callback) {
+        public void setupUser(@NotNull User user, Callback<Boolean> callback) {
             new File(mainPlugin.getDataFolder(),
                     "userdata").mkdirs();
             File file = new File(mainPlugin.getDataFolder(),
@@ -697,7 +724,7 @@ public class UserData {
         }
 
         public ObjectMap<UUID, User> getAllUsers() throws Exception {
-            ObjectMap<UUID, User> map = ObjectMap.newLinkedObjectMap();
+            ObjectMap<UUID, User> map = new LinkedObjectMap<>();
 
             File[] files = new File(mainPlugin.getDataFolder(), "userdata").listFiles((dir, name) -> name.endsWith(".yml"));
 
@@ -707,15 +734,22 @@ public class UserData {
 
             for (File file : files) {
                 UserData userData = UserData.getUser(UUID.fromString(file.getName().replace(".yml", "")));
-                userData.load(new Callback() {
+                userData.load(new Callback<Boolean>() {
                     @Override
-                    public void onSuccess() {
+                    public Boolean onSuccess() {
                         map.append(userData.user().uniqueId(), userData.user());
+                        return true;
                     }
 
                     @Override
-                    public void onFailure(Throwable throwable) {
+                    public Boolean onFailure(Throwable throwable) {
                         throwable.printStackTrace();
+                        return onFailure();
+                    }
+
+                    @Override
+                    public Boolean onFailure() {
+                        return false;
                     }
                 });
             }

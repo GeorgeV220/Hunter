@@ -1,7 +1,8 @@
 package com.georgev22.hunter.listeners;
 
+import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.hunter.Main;
 import com.georgev22.hunter.utilities.OptionsUtil;
 import com.google.common.collect.Lists;
@@ -33,11 +34,11 @@ public class DeveloperInformListener implements Listener {
         boolean found = false;
 
         for (ObjectMap.Pair<String, UUID> loop : this.inform) {
-            if (loop.getKey().equals(pair.getKey())) {
+            if (loop.key().equals(pair.key())) {
                 found = true;
                 break;
             }
-            if (loop.getValue().equals(pair.getValue())) {
+            if (loop.value().equals(pair.value())) {
                 found = true;
                 break;
             }
@@ -52,7 +53,7 @@ public class DeveloperInformListener implements Listener {
                 return;
             }
 
-            MinecraftUtils.msg(player.getPlayer(), joinMessage, ObjectMap.newHashObjectMap()
+            MinecraftUtils.msg(player.getPlayer(), joinMessage, new HashObjectMap<String, String>()
                     .append("%player%", e.getPlayer().getName())
                     .append("%version%", Main.getInstance().getDescription().getVersion())
                     .append("%package%", Main.getInstance().getClass().getPackage().getName())

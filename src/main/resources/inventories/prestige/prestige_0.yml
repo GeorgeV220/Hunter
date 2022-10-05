@@ -102,7 +102,7 @@ custom item:
         - "Prestige %prestige%"
         - "Next Prestige 1"
         - "Next Multiplier 1.2"
-        - "Purchase next prestige level for $200000"
+        - "Purchase next prestige level for \$200000"
       glow: false
       show attributes: false
       amount: 1
@@ -133,8 +133,8 @@ custom item:
       item: DIAMOND
       title: "&c&lSell or Purchase a Diamond"
       lores:
-        - "Sell Price $100"
-        - "Purchase Price $150"
+        - "Sell Price \$100"
+        - "Purchase Price \$150"
       glow: false
       show attributes: false
       amount: 1

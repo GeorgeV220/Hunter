@@ -1,7 +1,7 @@
 package com.georgev22.hunter.commands;
 
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.maps.HashObjectMap;
+import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.api.utilities.Utils;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.player.UserData;
@@ -33,7 +33,7 @@ public class LevelCommand extends BukkitCommand {
             UserData userData = UserData.getUser((Player) sender);
             MessagesUtil.LEVEL_COMMAND.msg(
                     sender,
-                    ObjectMap.newHashObjectMap()
+                    new HashObjectMap<String, String>()
                             .append("%player%", sender.getName())
                             .append("%kills%", String.valueOf(userData.getKills()))
                             .append("%killstreak%", String.valueOf(userData.getKillStreak()))
@@ -47,7 +47,7 @@ public class LevelCommand extends BukkitCommand {
         UserData userData = UserData.getUser(target);
         MessagesUtil.LEVEL_COMMAND_OTHER.msg(
                 sender,
-                ObjectMap.newHashObjectMap()
+                new HashObjectMap<String, String>()
                         .append("%player%", target.getName())
                         .append("%kills%", String.valueOf(userData.getKills()))
                         .append("%killstreak%", String.valueOf(userData.getKillStreak()))

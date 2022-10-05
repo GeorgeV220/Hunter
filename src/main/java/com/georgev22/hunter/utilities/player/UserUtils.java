@@ -1,7 +1,7 @@
 package com.georgev22.hunter.utilities.player;
 
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.maps.HashObjectMap;
+import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.hunter.Main;
 import com.georgev22.hunter.hooks.HolographicDisplays;
 import com.georgev22.hunter.hooks.Vault;
@@ -99,9 +99,9 @@ public class UserUtils {
         if (OptionsUtil.KILLSTREAK_MESSAGE.getBooleanValue()) {
             if (killerUserData.getKillStreak() % OptionsUtil.KILLSTREAK_MESSAGE_EVERY.getIntValue() == 0) {
                 if (OptionsUtil.KILLSTREAK_MESSAGE_RECEIVER.getStringValue().equalsIgnoreCase("all")) {
-                    MessagesUtil.KILLSTREAK.msgAll(ObjectMap.newHashObjectMap().append("%player%", killer.getName()).append("%killstreak%", String.valueOf(killerUserData.getKillStreak())), true);
+                    MessagesUtil.KILLSTREAK.msgAll(new HashObjectMap<String, String>().append("%player%", killer.getName()).append("%killstreak%", String.valueOf(killerUserData.getKillStreak())), true);
                 } else if (OptionsUtil.KILLSTREAK_MESSAGE_RECEIVER.getStringValue().equalsIgnoreCase("player")) {
-                    MessagesUtil.KILLSTREAK.msg(killer, ObjectMap.newHashObjectMap().append("%player%", killer.getName()).append("%killstreak%", String.valueOf(killerUserData.getKillStreak())), true);
+                    MessagesUtil.KILLSTREAK.msg(killer, new HashObjectMap<String, String>().append("%player%", killer.getName()).append("%killstreak%", String.valueOf(killerUserData.getKillStreak())), true);
                 }
             }
         }
@@ -124,18 +124,18 @@ public class UserUtils {
             if (OptionsUtil.LEVELS_MESSAGE.getBooleanValue()) {
                 if (killerUserData.getLevel() % OptionsUtil.LEVELS_MESSAGE__EVERY.getIntValue() == 0) {
                     if (OptionsUtil.LEVELS_MESSAGE_RECEIVER.getStringValue().equalsIgnoreCase("all")) {
-                        MessagesUtil.LEVEL_UP.msgAll(ObjectMap.newHashObjectMap().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
+                        MessagesUtil.LEVEL_UP.msgAll(new HashObjectMap<String, String>().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
                     } else if (OptionsUtil.LEVELS_MESSAGE_RECEIVER.getStringValue().equalsIgnoreCase("player")) {
-                        MessagesUtil.LEVEL_UP.msg(killer, ObjectMap.newHashObjectMap().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
+                        MessagesUtil.LEVEL_UP.msg(killer, new HashObjectMap<String, String>().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
                     }
                 }
             }
             if (OptionsUtil.LEVELS_TITLE.getBooleanValue()) {
                 if (killerUserData.getLevel() % OptionsUtil.LEVELS_TITLE_EVERY.getIntValue() == 0) {
                     if (OptionsUtil.LEVELS_TITLE_RECEIVER.getStringValue().equalsIgnoreCase("all")) {
-                        MessagesUtil.TITLE_LEVEL_UP.titleAll(ObjectMap.newHashObjectMap().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
+                        MessagesUtil.TITLE_LEVEL_UP.titleAll(new HashObjectMap<String, String>().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
                     } else if (OptionsUtil.LEVELS_TITLE_RECEIVER.getStringValue().equalsIgnoreCase("player")) {
-                        MessagesUtil.TITLE_LEVEL_UP.title(killer, ObjectMap.newHashObjectMap().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
+                        MessagesUtil.TITLE_LEVEL_UP.title(killer, new HashObjectMap<String, String>().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
                     }
                 }
             }

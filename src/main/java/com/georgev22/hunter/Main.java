@@ -1,16 +1,16 @@
 package com.georgev22.hunter;
 
-import com.georgev22.api.configmanager.CFG;
 import com.georgev22.api.database.Database;
+import com.georgev22.api.database.DatabaseType;
+import com.georgev22.api.database.DatabaseWrapper;
 import com.georgev22.api.database.mongo.MongoDB;
-import com.georgev22.api.database.sql.mysql.MySQL;
-import com.georgev22.api.database.sql.postgresql.PostgreSQL;
-import com.georgev22.api.database.sql.sqlite.SQLite;
-import com.georgev22.api.inventory.PagedInventoryAPI;
+import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.maven.LibraryLoader;
 import com.georgev22.api.maven.MavenLibrary;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.minecraft.MinecraftUtils;
+import com.georgev22.api.minecraft.configmanager.CFG;
+import com.georgev22.api.minecraft.inventory.PagedInventoryAPI;
 import com.georgev22.hunter.commands.*;
 import com.georgev22.hunter.hooks.HolographicDisplays;
 import com.georgev22.hunter.hooks.PAPI;
@@ -24,6 +24,8 @@ import com.georgev22.hunter.utilities.configmanager.FileManager;
 import com.georgev22.hunter.utilities.interfaces.IDatabaseType;
 import com.georgev22.hunter.utilities.player.UserData;
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.client.MongoClient;
+import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,6 +33,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.sql.Connection;
@@ -48,11 +51,37 @@ public final class Main extends JavaPlugin {
 
     private static Main instance = null;
 
-    private Database database = null;
+    @Getter
+    private DatabaseWrapper databaseWrapper = null;
+
+    /**
+     * Return Database Type
+     *
+     * @return Database Type
+     */
+    @Getter
     private IDatabaseType iDatabaseType = null;
+
+    /**
+     * Get Database open connection
+     *
+     * @return connection
+     */
+    @Getter
     private Connection connection = null;
-    private MongoDB mongoDB = null;
+
+    /**
+     * Return MongoDB instance when MongoDB is in use.
+     * <p>
+     * Returns null if MongoDB is not in use
+     *
+     * @return {@link MongoDB} instance
+     */
+    @Getter
+    private @Nullable MongoClient mongoClient = null;
+
     private PagedInventoryAPI api = null;
+
     private PAPI placeholdersAPI = null;
 
     /**
@@ -78,7 +107,7 @@ public final class Main extends JavaPlugin {
         CFG dataCFG = fm.getData();
         FileConfiguration data = dataCFG.getFileConfiguration();
         if (data.get("cooldowns") != null)
-            Cooldown.appendToCooldowns(deserialize(data.getString("cooldowns"), new TypeToken<ObjectMap<String, Cooldown>>() {
+            Cooldown.appendToCooldowns(deserialize(data.getString("cooldowns", ""), new TypeToken<ObjectMap<String, Cooldown>>() {
             }.getType()));
         api = new PagedInventoryAPI(this);
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
@@ -105,7 +134,7 @@ public final class Main extends JavaPlugin {
             MinecraftUtils.registerCommand("bounty", new BountyCommand());
 
         if (OptionsUtil.UPDATER.getBooleanValue()) {
-            new Updater();
+            //new Updater();
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -155,14 +184,21 @@ public final class Main extends JavaPlugin {
             MinecraftUtils.unRegisterCommand("bounty");
         Bukkit.getOnlinePlayers().forEach(player -> {
             UserData userData = UserData.getUser(player.getUniqueId());
-            userData.save(false, new Callback() {
+            userData.save(false, new Callback<Boolean>() {
                 @Override
-                public void onSuccess() {
+                public Boolean onSuccess() {
+                    return true;
                 }
 
                 @Override
-                public void onFailure(Throwable throwable) {
+                public Boolean onFailure() {
+                    return false;
+                }
+
+                @Override
+                public Boolean onFailure(Throwable throwable) {
                     throwable.printStackTrace();
+                    return onFailure();
                 }
             });
         });
@@ -189,8 +225,8 @@ public final class Main extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-        if (mongoDB != null) {
-            mongoDB.getMongoClient().close();
+        if (mongoClient != null) {
+            mongoClient.close();
         }
     }
 
@@ -201,7 +237,7 @@ public final class Main extends JavaPlugin {
      * @throws ClassNotFoundException When class is not found
      */
     private void setupDatabase() throws Exception {
-        ObjectMap<String, ObjectMap.Pair<String, String>> map = ObjectMap.newHashObjectMap()
+        ObjectMap<String, ObjectMap.Pair<String, String>> map = new HashObjectMap<String, ObjectMap.Pair<String, String>>()
                 .append("uuid", ObjectMap.Pair.create("VARCHAR(38)", "NULL"))
                 .append("name", ObjectMap.Pair.create("VARCHAR(18)", "NULL"))
                 .append("kills", ObjectMap.Pair.create("INT(10)", "0"))
@@ -210,70 +246,60 @@ public final class Main extends JavaPlugin {
                 .append("experience", ObjectMap.Pair.create("INT(10)", "0"))
                 .append("multiplier", ObjectMap.Pair.create("VARCHAR(5)", "0"));
         switch (OptionsUtil.DATABASE_TYPE.getStringValue()) {
-            case "MySQL": {
+            case "MySQL" -> {
                 if (connection == null || connection.isClosed()) {
-                    database = new MySQL(
+                    databaseWrapper = new DatabaseWrapper(DatabaseType.MYSQL,
                             OptionsUtil.DATABASE_HOST.getStringValue(),
-                            OptionsUtil.DATABASE_PORT.getIntValue(),
-                            OptionsUtil.DATABASE_DATABASE.getStringValue(),
+                            OptionsUtil.DATABASE_PORT.getStringValue(),
                             OptionsUtil.DATABASE_USER.getStringValue(),
-                            OptionsUtil.DATABASE_PASSWORD.getStringValue());
+                            OptionsUtil.DATABASE_PASSWORD.getStringValue(),
+                            OptionsUtil.DATABASE_DATABASE.getStringValue());
+                    connection = databaseWrapper.connect().getSQLConnection();
+                    databaseWrapper.getSQLDatabase().createTable(OptionsUtil.DATABASE_TABLE_NAME.getStringValue(), map);
                     iDatabaseType = new UserData.SQLUserUtils();
-                    connection = database.openConnection();
-                    database.createTable(OptionsUtil.DATABASE_TABLE_NAME.getStringValue(), map);
                     MinecraftUtils.debug(this, "Database: MySQL");
                 }
-                break;
             }
-            case "PostgreSQL": {
+            case "PostgreSQL" -> {
                 if (connection == null || connection.isClosed()) {
-                    database = new PostgreSQL(
+                    databaseWrapper = new DatabaseWrapper(DatabaseType.POSTGRESQL,
                             OptionsUtil.DATABASE_HOST.getStringValue(),
-                            OptionsUtil.DATABASE_PORT.getIntValue(),
-                            OptionsUtil.DATABASE_DATABASE.getStringValue(),
+                            OptionsUtil.DATABASE_PORT.getStringValue(),
                             OptionsUtil.DATABASE_USER.getStringValue(),
-                            OptionsUtil.DATABASE_PASSWORD.getStringValue());
+                            OptionsUtil.DATABASE_PASSWORD.getStringValue(),
+                            OptionsUtil.DATABASE_DATABASE.getStringValue());
+                    connection = databaseWrapper.connect().getSQLConnection();
+                    databaseWrapper.getSQLDatabase().createTable(OptionsUtil.DATABASE_TABLE_NAME.getStringValue(), map);
                     iDatabaseType = new UserData.SQLUserUtils();
-                    connection = database.openConnection();
-                    database.createTable(OptionsUtil.DATABASE_TABLE_NAME.getStringValue(), map);
                     MinecraftUtils.debug(this, "Database: PostgreSQL");
                 }
-                break;
             }
-            case "SQLite": {
+            case "SQLite" -> {
                 if (connection == null || connection.isClosed()) {
-                    database = new SQLite(
-                            getDataFolder(),
-                            OptionsUtil.DATABASE_SQLITE.getStringValue());
+                    databaseWrapper = new DatabaseWrapper(DatabaseType.SQLITE, getDataFolder().getAbsolutePath(), OptionsUtil.DATABASE_SQLITE.getStringValue());
+                    connection = databaseWrapper.connect().getSQLConnection();
+                    databaseWrapper.getSQLDatabase().createTable(OptionsUtil.DATABASE_TABLE_NAME.getStringValue(), map);
                     iDatabaseType = new UserData.SQLUserUtils();
-                    connection = database.openConnection();
-                    database.createTable(OptionsUtil.DATABASE_TABLE_NAME.getStringValue(), map);
                     MinecraftUtils.debug(this, "Database: SQLite");
                 }
-                break;
             }
-            case "MongoDB": {
-                mongoDB = new MongoDB(
+            case "MongoDB" -> {
+                databaseWrapper = new DatabaseWrapper(DatabaseType.MONGO,
                         OptionsUtil.DATABASE_MONGO_HOST.getStringValue(),
-                        OptionsUtil.DATABASE_MONGO_PORT.getIntValue(),
+                        OptionsUtil.DATABASE_MONGO_PORT.getStringValue(),
                         OptionsUtil.DATABASE_MONGO_USER.getStringValue(),
                         OptionsUtil.DATABASE_MONGO_PASSWORD.getStringValue(),
-                        OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue(),
-                        OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue());
-                database = null;
+                        OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue());
                 iDatabaseType = new UserData.MongoDBUtils();
+                mongoClient = databaseWrapper.connect().getMongoClient();
                 MinecraftUtils.debug(this, "Database: MongoDB");
-                break;
             }
-            case "File": {
-                database = null;
+            case "File" -> {
+                databaseWrapper = null;
                 iDatabaseType = new UserData.FileUserUtils();
                 MinecraftUtils.debug(this, "Database: File");
-                break;
             }
-            default: {
-                database = null;
-                iDatabaseType = null;
+            default -> {
                 setEnabled(false);
                 throw new RuntimeException("Please use one of the available databases\nAvailable databases: File, MySQL, SQLite, PostgreSQL and MongoDB");
             }
@@ -284,15 +310,22 @@ public final class Main extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(player -> {
             UserData userData = UserData.getUser(player.getUniqueId());
             try {
-                userData.load(new Callback() {
+                userData.load(new Callback<>() {
                     @Override
-                    public void onSuccess() {
+                    public Boolean onSuccess() {
                         UserData.getAllUsersMap().append(userData.user().uniqueId(), userData.user());
+                        return true;
                     }
 
                     @Override
-                    public void onFailure(Throwable throwable) {
+                    public Boolean onFailure(Throwable throwable) {
                         throwable.printStackTrace();
+                        return onFailure();
+                    }
+
+                    @Override
+                    public Boolean onFailure() {
+                        return false;
                     }
                 });
             } catch (Exception e) {
@@ -307,41 +340,12 @@ public final class Main extends JavaPlugin {
     }
 
     /**
-     * Get Database open connection
-     *
-     * @return connection
-     */
-    public Connection getConnection() {
-        return connection;
-    }
-
-    /**
      * Get Database class instance
      *
      * @return {@link Database} class instance
      */
     public Database getDatabase() {
-        return database;
-    }
-
-    /**
-     * Return Database Type
-     *
-     * @return Database Type
-     */
-    public IDatabaseType getIDatabaseType() {
-        return iDatabaseType;
-    }
-
-    /**
-     * Return MongoDB instance when MongoDB is in use.
-     * <p>
-     * Returns null if MongoDB is not in use
-     *
-     * @return {@link MongoDB} instance
-     */
-    public MongoDB getMongoDB() {
-        return mongoDB;
+        return databaseWrapper.getSQLDatabase();
     }
 
     public PagedInventoryAPI getInventoryAPI() {

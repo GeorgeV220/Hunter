@@ -1,9 +1,9 @@
 package com.georgev22.hunter.utilities;
 
-import com.georgev22.api.configmanager.CFG;
-import com.georgev22.api.externals.xseries.messages.Titles;
 import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.minecraft.MinecraftUtils;
+import com.georgev22.api.minecraft.configmanager.CFG;
+import com.georgev22.api.minecraft.xseries.messages.Titles;
 import com.georgev22.api.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

@@ -1,8 +1,10 @@
 package com.georgev22.hunter.hooks;
 
-import com.georgev22.api.configmanager.CFG;
+import com.georgev22.api.maps.ConcurrentObjectMap;
+import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.utilities.MinecraftUtils;
+import com.georgev22.api.minecraft.MinecraftUtils;
+import com.georgev22.api.minecraft.configmanager.CFG;
 import com.georgev22.api.utilities.Utils;
 import com.georgev22.hunter.Main;
 import com.georgev22.hunter.utilities.OptionsUtil;
@@ -30,7 +32,7 @@ public class HolographicDisplays {
     private final static CFG dataCFG = fileManager.getData();
     private final static FileConfiguration data = dataCFG.getFileConfiguration();
     private final static Main mainPlugin = Main.getInstance();
-    private static final ObjectMap<String, Hologram> hologramMap = ObjectMap.newConcurrentObjectMap();
+    private static final ObjectMap<String, Hologram> hologramMap = new ConcurrentObjectMap<>();
 
     /**
      * Create a hologram
@@ -209,7 +211,7 @@ public class HolographicDisplays {
      * @return a map with all hologram placeholders
      */
     public static @NotNull ObjectMap<String, String> getPlaceholderMap() {
-        final ObjectMap<String, String> map = ObjectMap.newHashObjectMap();
+        final ObjectMap<String, String> map = new HashObjectMap<>();
         int levelTop = 1;
         for (Map.Entry<String, Integer> b : UserData.getTopPlayersByLevels(OptionsUtil.LEVELS_TOP.getIntValue()).entrySet()) {
             String[] args = String.valueOf(b).split("=");

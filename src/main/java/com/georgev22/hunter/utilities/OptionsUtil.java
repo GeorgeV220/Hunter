@@ -1,8 +1,8 @@
 package com.georgev22.hunter.utilities;
 
-import com.georgev22.api.colors.Color;
-import com.georgev22.api.externals.xseries.XMaterial;
-import com.georgev22.api.inventory.ItemBuilder;
+import com.georgev22.api.minecraft.colors.Color;
+import com.georgev22.api.minecraft.inventory.ItemBuilder;
+import com.georgev22.api.minecraft.xseries.XMaterial;
 import com.georgev22.hunter.Main;
 import com.google.common.collect.Lists;
 import org.bukkit.inventory.ItemStack;
@@ -60,7 +60,11 @@ public enum OptionsUtil {
 
     EXPERIMENTAL_FEATURES("experimental features", false, Optional.empty()),
 
-    UPDATER("updater", true, Optional.empty()),
+    UPDATER("updater.enabled", true, Optional.of("updater")),
+
+    UPDATER_DOWNLOAD("updater.download", false, Optional.empty()),
+
+    UPDATER_RESTART("updater.restart", false, Optional.empty()),
 
     LEVELS_MESSAGE_RECEIVER("levels.message.receiver", "all", Optional.of("message.level up.receiver")),
 
