@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/GeorgeV220/Hunter/compare/v1.2.0...v1.2.1) (2022-10-26)
+
+
+### Bug Fixes
+
+* **build.gradle:** Change to GeorgeV22 repo for API ([990a398](https://github.com/GeorgeV220/Hunter/commit/990a398bc21a0dfe10f04907c2affce704b819b9))
+
 # [1.2.0](https://github.com/GeorgeV220/Hunter/compare/v1.1.0...v1.2.0) (2022-10-26)
 
 
