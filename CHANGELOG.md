@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/GeorgeV220/Hunter/compare/v1.1.0...v1.2.0) (2022-10-26)
+
+
+### Features
+
+* **publish:** Publish to GeorgeV22 repository ([5e61f32](https://github.com/GeorgeV220/Hunter/commit/5e61f32e819a2808af11d59b8569b373b91790a8))
+
 # [1.1.0](https://github.com/GeorgeV220/Hunter/compare/v1.0.0...v1.1.0) (2022-10-05)
 
 
