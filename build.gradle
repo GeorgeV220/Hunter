@@ -66,6 +66,7 @@ repositories {
     maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
     maven { url = 'https://repo.dmulloy2.net/repository/public/' }
     maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url 'https://repo.georgev22.com/releases' }
 }
 
 dependencies {
@@ -73,7 +74,7 @@ dependencies {
 
     implementation(bStats())
     implementation 'co.aikar:acf-paper:0.5.1-SNAPSHOT'
-    implementation 'com.github.GeorgeV220:API:5.4.0'
+    implementation 'com.georgev22:api:5.4.5'
 
     compileOnly 'org.apache.commons:commons-lang3:3.12.0'
     compileOnly 'com.google.guava:guava:31.1-jre'
