@@ -134,9 +134,26 @@ public class UserUtils {
             if (OptionsUtil.LEVELS_TITLE.getBooleanValue()) {
                 if (killerUserData.getLevel() % OptionsUtil.LEVELS_TITLE_EVERY.getIntValue() == 0) {
                     if (OptionsUtil.LEVELS_TITLE_RECEIVER.getStringValue().equalsIgnoreCase("all")) {
-                        MessagesUtil.TITLE_LEVEL_UP.titleAll(new HashObjectMap<String, String>().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
+                        MessagesUtil.TITLE_LEVEL_UP.titleAll(
+                                OptionsUtil.LEVELS_TITLE_FADE_IN.getIntValue(),
+                                OptionsUtil.LEVELS_TITLE_STAY.getIntValue(),
+                                OptionsUtil.LEVELS_TITLE_FADE_OUT.getIntValue(),
+                                new HashObjectMap<String, String>()
+                                        .append("%player%", killer.getName())
+                                        .append("%level%", String.valueOf(killerUserData.getLevel()))
+                                        .append("%level_roman%", toRoman(killerUserData.getLevel())),
+                                true);
                     } else if (OptionsUtil.LEVELS_TITLE_RECEIVER.getStringValue().equalsIgnoreCase("player")) {
-                        MessagesUtil.TITLE_LEVEL_UP.title(killer, new HashObjectMap<String, String>().append("%player%", killer.getName()).append("%level%", String.valueOf(killerUserData.getLevel())).append("%level_roman%", toRoman(killerUserData.getLevel())), true);
+                        MessagesUtil.TITLE_LEVEL_UP.title(
+                                killer,
+                                OptionsUtil.LEVELS_TITLE_FADE_IN.getIntValue(),
+                                OptionsUtil.LEVELS_TITLE_STAY.getIntValue(),
+                                OptionsUtil.LEVELS_TITLE_FADE_OUT.getIntValue(),
+                                new HashObjectMap<String, String>()
+                                        .append("%player%", killer.getName())
+                                        .append("%level%", String.valueOf(killerUserData.getLevel()))
+                                        .append("%level_roman%", toRoman(killerUserData.getLevel())),
+                                true);
                     }
                 }
             }

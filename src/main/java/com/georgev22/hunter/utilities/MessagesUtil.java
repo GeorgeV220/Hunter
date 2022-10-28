@@ -1,6 +1,6 @@
 package com.georgev22.hunter.utilities;
 
-import com.georgev22.api.maps.ObjectMap;
+import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.api.minecraft.configmanager.CFG;
 import com.georgev22.api.minecraft.xseries.messages.Titles;
@@ -187,7 +187,7 @@ public enum MessagesUtil {
      * @see #msg(CommandSender, Map, boolean)
      */
     public void msg(final CommandSender target) {
-        msg(target, ObjectMap.newHashObjectMap(), false);
+        msg(target, new HashObjectMap<>(), false);
     }
 
     /**
@@ -213,7 +213,7 @@ public enum MessagesUtil {
      * @param target Message target
      */
     public void title(final Player target) {
-        title(target, ObjectMap.newHashObjectMap(), false);
+        title(target, 10, 20, 10, new HashObjectMap<>(), false);
     }
 
     /**
@@ -225,11 +225,26 @@ public enum MessagesUtil {
      * @param map        The Map with the placeholders
      * @param ignoreCase If you want to ignore case
      */
-    public void title(final Player target, final Map<String, String> map, final boolean ignoreCase) {
+    public void title(final Player target, int fadeIn, int stay, int fadeOut,
+                      final Map<String, String> map, final boolean ignoreCase) {
         if (this.isMultiLined()) {
-            Titles.sendTitle(target, MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)), MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[1], map, ignoreCase)));
+            Titles.sendTitle(
+                    target,
+                    fadeIn,
+                    stay,
+                    fadeOut,
+                    MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)),
+                    MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[1], map, ignoreCase))
+            );
         } else {
-            Titles.sendTitle(target, MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)), "");
+            Titles.sendTitle(
+                    target,
+                    fadeIn,
+                    stay,
+                    fadeOut,
+                    MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)),
+                    ""
+            );
         }
     }
 
@@ -237,8 +252,8 @@ public enum MessagesUtil {
         Bukkit.getOnlinePlayers().forEach(this::title);
     }
 
-    public void titleAll(final Map<String, String> map, final boolean ignoreCase) {
-        Bukkit.getOnlinePlayers().forEach(target -> title(target, map, ignoreCase));
+    public void titleAll(int fadeIn, int stay, int fadeOut, final Map<String, String> map, final boolean ignoreCase) {
+        Bukkit.getOnlinePlayers().forEach(target -> title(target, fadeIn, stay, fadeOut, map, ignoreCase));
     }
 
     /**

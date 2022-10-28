@@ -86,7 +86,7 @@ public enum OptionsUtil {
 
     LEVELS_TITLE_FADE_IN("levels.title.fade in", 10, Optional.of("title.level up.fade in")),
 
-    LEVELS_TITLE__STAY("levels.title.stay", 20, Optional.of("title.level up.stay")),
+    LEVELS_TITLE_STAY("levels.title.stay", 20, Optional.of("title.level up.stay")),
 
     LEVELS_TITLE_FADE_OUT("levels.title.fade out", 10, Optional.of("title.level up.fade out")),
 
