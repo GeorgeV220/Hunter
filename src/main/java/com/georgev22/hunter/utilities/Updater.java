@@ -1,7 +1,7 @@
 package com.georgev22.hunter.utilities;
 
 import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.hunter.Main;
+import com.georgev22.hunter.HunterPlugin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Updater {
 
-    private final Main hunterPlugin = Main.getInstance();
+    private final HunterPlugin hunterPlugin = HunterPlugin.getInstance();
     private final String localVersion = hunterPlugin.getDescription().getVersion();
     private final String onlineVersion;
 

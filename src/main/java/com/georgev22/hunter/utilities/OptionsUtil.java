@@ -3,7 +3,7 @@ package com.georgev22.hunter.utilities;
 import com.georgev22.api.minecraft.colors.Color;
 import com.georgev22.api.minecraft.inventory.ItemBuilder;
 import com.georgev22.api.minecraft.xseries.XMaterial;
-import com.georgev22.hunter.Main;
+import com.georgev22.hunter.HunterPlugin;
 import com.google.common.collect.Lists;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
@@ -122,11 +122,15 @@ public enum OptionsUtil {
 
     BOUNTY_PERCENTAGE_ENABLE("bounty.percentage enabled", true, Optional.empty()),
 
+    HOLOGRAMS_ENABLED("hologram.enabled", false, Optional.empty()),
+
+    HOLOGRAMS_TYPE("hologram.type", "ProtocolLib", Optional.empty()),
+
     ;
     private final String pathName;
     private final Object value;
     private final Optional<String>[] oldPaths;
-    private static final Main mainPlugin = Main.getInstance();
+    private static final HunterPlugin mainPlugin = HunterPlugin.getInstance();
 
     @SafeVarargs
     @Contract(pure = true)

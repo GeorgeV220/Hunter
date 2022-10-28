@@ -3,7 +3,7 @@ package com.georgev22.hunter.listeners;
 import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.hunter.Main;
+import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.utilities.OptionsUtil;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
@@ -48,18 +48,18 @@ public class DeveloperInformListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(HunterPlugin.getInstance(), () -> {
             if (!player.isOnline()) {
                 return;
             }
 
             MinecraftUtils.msg(player.getPlayer(), joinMessage, new HashObjectMap<String, String>()
                     .append("%player%", e.getPlayer().getName())
-                    .append("%version%", Main.getInstance().getDescription().getVersion())
-                    .append("%package%", Main.getInstance().getClass().getPackage().getName())
-                    .append("%name%", Main.getInstance().getDescription().getName())
-                    .append("%author%", String.join(", ", Main.getInstance().getDescription().getAuthors()))
-                    .append("%main%", Main.getInstance().getDescription().getMain())
+                    .append("%version%", HunterPlugin.getInstance().getDescription().getVersion())
+                    .append("%package%", HunterPlugin.getInstance().getClass().getPackage().getName())
+                    .append("%name%", HunterPlugin.getInstance().getDescription().getName())
+                    .append("%author%", String.join(", ", HunterPlugin.getInstance().getDescription().getAuthors()))
+                    .append("%main%", HunterPlugin.getInstance().getDescription().getMain())
                     .append("%javaversion%", System.getProperty("java.version"))
                     .append("%serverversion%", MinecraftUtils.MinecraftVersion.getCurrentVersion().name()), false);
         }, 20L * 10L);

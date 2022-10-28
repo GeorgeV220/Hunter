@@ -12,7 +12,8 @@ import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.api.minecraft.configmanager.CFG;
 import com.georgev22.api.minecraft.inventory.PagedInventoryAPI;
 import com.georgev22.hunter.commands.*;
-import com.georgev22.hunter.hooks.HolographicDisplays;
+import com.georgev22.hunter.hooks.HologramAPI;
+import com.georgev22.hunter.hooks.HolographicDisplaysHook;
 import com.georgev22.hunter.hooks.PAPI;
 import com.georgev22.hunter.hooks.Vault;
 import com.georgev22.hunter.listeners.DeveloperInformListener;
@@ -21,6 +22,7 @@ import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.OptionsUtil;
 import com.georgev22.hunter.utilities.Updater;
 import com.georgev22.hunter.utilities.configmanager.FileManager;
+import com.georgev22.hunter.utilities.interfaces.Holograms;
 import com.georgev22.hunter.utilities.interfaces.IDatabaseType;
 import com.georgev22.hunter.utilities.player.UserData;
 import com.google.gson.reflect.TypeToken;
@@ -38,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import static com.georgev22.api.utilities.Utils.*;
 
@@ -47,9 +50,9 @@ import static com.georgev22.api.utilities.Utils.*;
 @MavenLibrary(groupId = "com.google.guava", artifactId = "guava", version = "30.1.1-jre")
 @MavenLibrary(groupId = "org.postgresql", artifactId = "postgresql", version = "42.2.18")
 @MavenLibrary(groupId = "commons-codec", artifactId = "commons-codec", version = "1.11")
-public final class Main extends JavaPlugin {
+public final class HunterPlugin extends JavaPlugin {
 
-    private static Main instance = null;
+    private static HunterPlugin instance = null;
 
     @Getter
     private DatabaseWrapper databaseWrapper = null;
@@ -80,17 +83,20 @@ public final class Main extends JavaPlugin {
     @Getter
     private @Nullable MongoClient mongoClient = null;
 
+    @Getter
+    private Holograms holograms = new Holograms.HologramsNoop();
+
     private PagedInventoryAPI api = null;
 
     private PAPI placeholdersAPI = null;
 
     /**
-     * Return the Main instance
+     * Return the HunterPlugin instance
      *
-     * @return Main instance
+     * @return HunterPlugin instance
      */
-    public static Main getInstance() {
-        return instance == null ? instance = Main.getPlugin(Main.class) : instance;
+    public static HunterPlugin getInstance() {
+        return instance == null ? instance = HunterPlugin.getPlugin(HunterPlugin.class) : instance;
     }
 
     @Override
@@ -143,13 +149,30 @@ public final class Main extends JavaPlugin {
                 MinecraftUtils.debug(this, "[Hunter] Hooked into PlaceholderAPI!");
         }
 
-        if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-            if (data.get("Holograms") != null) {
-                data.getConfigurationSection("Holograms").getKeys(false)
-                        .forEach(s -> HolographicDisplays.create(s, (Location) data.get("Holograms." + s + ".location"),
-                                data.getString("Holograms." + s + ".type"), false));
+        if (OptionsUtil.HOLOGRAMS_ENABLED.getBooleanValue()) {
+            switch (OptionsUtil.HOLOGRAMS_TYPE.getStringValue()) {
+                case "ProtocolLib" -> {
+                    if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+                        holograms = new HologramAPI();
+                    }
+                }
+                case "HolographicDisplays" -> {
+                    if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
+                        holograms = new HolographicDisplaysHook();
+                    }
+                }
             }
-            Bukkit.getLogger().info("[Hunter] Hooked into HolographicDisplays!");
+
+            holograms.setHook(true);
+
+            if (holograms.isHooked()) {
+                if (data.get("Holograms") != null) {
+                    Objects.requireNonNull(data.getConfigurationSection("Holograms")).getKeys(false)
+                            .forEach(s -> holograms.create(s, (Location) data.get("Holograms." + s + ".location"),
+                                    data.getString("Holograms." + s + ".type"), false));
+                }
+                Bukkit.getLogger().info("[Hunter] " + holograms.getClass().getName() + " hooked - Holograms enabled!");
+            }
         }
 
         if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
@@ -160,7 +183,7 @@ public final class Main extends JavaPlugin {
             }
         }
 
-        Metrics metrics = new Metrics(this, 0);
+        new Metrics(this, 0);
         if (YamlConfiguration.loadConfiguration(new File(new File(this.getDataFolder().getParentFile(), "bStats"), "config.yml")).getBoolean("enabled", true)) {
             Bukkit.getLogger().info("[Hunter] Metrics are enabled!");
         }
@@ -214,8 +237,8 @@ public final class Main extends JavaPlugin {
                 }
             }
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-            HolographicDisplays.getHologramMap().forEach((name, hologram) -> HolographicDisplays.remove(name, false));
+        if (holograms.isHooked()) {
+            holograms.getHologramMap().forEach((name, hologram) -> holograms.remove(name, false));
             MinecraftUtils.debug(this, "[Hunter] Unhooked from HolographicDisplays");
         }
         if (connection != null) {
@@ -333,8 +356,8 @@ public final class Main extends JavaPlugin {
             }
         });
 
-        if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-            HolographicDisplays.updateAll();
+        if (holograms.isHooked()) {
+            holograms.updateAll();
         }
 
     }

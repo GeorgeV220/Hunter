@@ -73,6 +73,9 @@ Options:
       password: "yourpassword"
       database: "hunter"
       collection: "hunter_users"
+  hologram:
+    enabled: false
+    type: ProtocolLib #ProtocolLib or HolographicDisplays
 
 Rewards:
   level up:

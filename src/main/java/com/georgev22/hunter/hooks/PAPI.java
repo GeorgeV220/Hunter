@@ -1,7 +1,7 @@
 package com.georgev22.hunter.hooks;
 
 import com.georgev22.api.utilities.Utils;
-import com.georgev22.hunter.Main;
+import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.utilities.player.UserData;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PAPI extends PlaceholderExpansion {
 
-    Main plugin = Main.getInstance();
+    HunterPlugin plugin = HunterPlugin.getInstance();
 
     @Override
     public @NotNull String getIdentifier() {

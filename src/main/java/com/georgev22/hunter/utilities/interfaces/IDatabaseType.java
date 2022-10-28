@@ -2,7 +2,7 @@ package com.georgev22.hunter.utilities.interfaces;
 
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.hunter.Main;
+import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.utilities.player.User;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +28,7 @@ public interface IDatabaseType {
                 .append("prestige", 0)
         ;
         save(user);
-        MinecraftUtils.debug(Main.getInstance(), "User " + user.name() + " has been reset!");
+        MinecraftUtils.debug(HunterPlugin.getInstance(), "User " + user.name() + " has been reset!");
     }
 
     void delete(User user) throws Exception;

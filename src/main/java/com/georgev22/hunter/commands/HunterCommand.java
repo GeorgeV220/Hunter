@@ -3,8 +3,7 @@ package com.georgev22.hunter.commands;
 import com.georgev22.api.maps.HashObjectMap;
 import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.api.minecraft.inventory.ItemBuilder;
-import com.georgev22.hunter.Main;
-import com.georgev22.hunter.hooks.HolographicDisplays;
+import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.hooks.Vault;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.configmanager.FileManager;
@@ -26,7 +25,7 @@ import static com.georgev22.api.utilities.Utils.*;
 
 public class HunterCommand extends BukkitCommand {
 
-    private final Main mainPlugin = Main.getInstance();
+    private final HunterPlugin hunterPlugin = HunterPlugin.getInstance();
 
     public HunterCommand() {
         super("hunter");
@@ -44,7 +43,7 @@ public class HunterCommand extends BukkitCommand {
             return true;
         }
         if (args[0].equalsIgnoreCase("reload")) {
-            Main.getInstance().reloadConfig();
+            HunterPlugin.getInstance().reloadConfig();
             MinecraftUtils.msg(sender, "&a&l(!)&a Plugin configs successfully reloaded (Some settings will take effect after server restart)");
             return true;
         }
@@ -122,14 +121,14 @@ public class HunterCommand extends BukkitCommand {
             }
             String originalFileName = args[1];
             String newFileName = args[2];
-            if (Files.exists(new File(mainPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + originalFileName).toPath())) {
-                if (Files.exists(new File(mainPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + newFileName).toPath())) {
+            if (Files.exists(new File(hunterPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + originalFileName).toPath())) {
+                if (Files.exists(new File(hunterPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + newFileName).toPath())) {
                     MinecraftUtils.msg(sender, "&c&l(!)&c Target file already exists.");
                     return true;
                 }
                 try {
-                    Files.copy(new File(mainPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + originalFileName).toPath(),
-                            new File(mainPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + newFileName).toPath());
+                    Files.copy(new File(hunterPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + originalFileName).toPath(),
+                            new File(hunterPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + newFileName).toPath());
                     MinecraftUtils.msg(sender, "&a&l(!)&a Successfully copied " + originalFileName + " to " + newFileName);
                 } catch (IOException e) {
                     MinecraftUtils.msg(sender, "&c&l(!)&c An error has occurred, check the console for logs.");
@@ -240,24 +239,26 @@ public class HunterCommand extends BukkitCommand {
                     return true;
                 }
 
-                if (HolographicDisplays.hologramExists(args[2])) {
+                if (hunterPlugin.getHolograms().hologramExists(args[2])) {
                     MinecraftUtils.msg(sender, "&c&l(!) &cHologram already exists!");
                     return true;
                 }
 
-                if (mainPlugin.getConfig().get("Holograms." + args[3]) == null) {
+                if (hunterPlugin.getConfig().get("Holograms." + args[3]) == null) {
                     MinecraftUtils.msg(sender, "&c&l(!) &cHologram type doesn't exists!");
                     return true;
                 }
 
-                HolographicDisplays.show(HolographicDisplays.updateHologram(HolographicDisplays.create(
-                                        args[2],
-                                        player.getLocation(),
-                                        args[3], true),
-                                mainPlugin.getConfig().getStringList("Holograms." + args[2]), HolographicDisplays.getPlaceholderMap()),
+                hunterPlugin.getHolograms().show(hunterPlugin.getHolograms().updateHologram(hunterPlugin.getHolograms()
+                                        .create(
+                                                args[2],
+                                                player.getLocation(),
+                                                args[3], true),
+                                hunterPlugin.getConfig().getStringList("Holograms." + args[2]),
+                                hunterPlugin.getHolograms().getPlaceholderMap()),
                         player);
 
-                HolographicDisplays.getPlaceholderMap().clear();
+                hunterPlugin.getHolograms().getPlaceholderMap().clear();
 
                 MinecraftUtils.msg(sender, "&a&l(!) &aHologram " + args[2] + " with type " + args[3] + " successfully created!");
 
@@ -267,12 +268,12 @@ public class HunterCommand extends BukkitCommand {
                     return true;
                 }
 
-                if (!HolographicDisplays.hologramExists(args[2])) {
+                if (!hunterPlugin.getHolograms().hologramExists(args[2])) {
                     MinecraftUtils.msg(sender, "&c&l(!) &cHologram doesn't exists!");
                     return true;
                 }
 
-                HolographicDisplays.remove(args[2], true);
+                hunterPlugin.getHolograms().remove(args[2], true);
 
                 MinecraftUtils.msg(sender, "&a&l(!) &aHologram " + args[2] + " successfully removed!");
             }

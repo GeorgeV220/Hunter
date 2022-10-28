@@ -16,7 +16,7 @@ import com.georgev22.api.minecraft.inventory.utils.actions.ActionManager;
 import com.georgev22.api.minecraft.nbt.nbtapi.NBTItem;
 import com.georgev22.api.utilities.Utils;
 import com.georgev22.api.utilities.Utils.Cooldown;
-import com.georgev22.hunter.Main;
+import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.inventories.actions.InventoryClickAction;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.OptionsUtil;
@@ -38,26 +38,26 @@ import java.util.regex.Pattern;
 
 public class PrestigeInventory {
 
-    private final Main mainPlugin = Main.getInstance();
+    private final HunterPlugin hunterPluginPlugin = HunterPlugin.getInstance();
 
     public void openInventory(Player player) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         UserData userData = UserData.getUser(player);
 
         List<Integer> prestigeListClosest = Lists.newArrayList();
 
-        Arrays.stream(new File(mainPlugin.getDataFolder(), "inventories" + File.separator + "prestige").listFiles((dir, name) -> name.startsWith("prestige") && name.endsWith(".yml"))).forEach(file -> {
+        Arrays.stream(new File(hunterPluginPlugin.getDataFolder(), "inventories" + File.separator + "prestige").listFiles((dir, name) -> name.startsWith("prestige") && name.endsWith(".yml"))).forEach(file -> {
             String fileName = file.getName();
             String[] split = fileName.split(Pattern.quote("_"));
             Integer number = Integer.parseInt(split[1].replace(".yml", ""));
             prestigeListClosest.add(number);
         });
 
-        int prestigeClosest = Files.exists(new File(mainPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + "prestige_" + userData.getPrestige() + ".yml").toPath()) ? userData.getPrestige() : prestigeListClosest.stream().min(Comparator.comparingInt(i -> Math.abs(i - userData.getPrestige())))
+        int prestigeClosest = Files.exists(new File(hunterPluginPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + "prestige_" + userData.getPrestige() + ".yml").toPath()) ? userData.getPrestige() : prestigeListClosest.stream().min(Comparator.comparingInt(i -> Math.abs(i - userData.getPrestige())))
                 .orElseThrow(() -> new NoSuchElementException("No value present"));
 
-        MinecraftUtils.debug(mainPlugin, String.valueOf(prestigeClosest));
+        MinecraftUtils.debug(hunterPluginPlugin, String.valueOf(prestigeClosest));
 
-        CFG prestigeConfig = new CFG(mainPlugin, "inventories" + File.separator + "prestige" + File.separator + "prestige_" + prestigeClosest, false);
+        CFG prestigeConfig = new CFG(hunterPluginPlugin, "inventories" + File.separator + "prestige" + File.separator + "prestige_" + prestigeClosest, false);
 
         List<NavigationItem> navigationItemList = Lists.newArrayList();
 
@@ -90,7 +90,7 @@ public class PrestigeInventory {
                 objectMap.append(Integer.parseInt(s), itemStack);
             }
 
-        IPagedInventory pagedInventory = mainPlugin.getInventoryAPI()
+        IPagedInventory pagedInventory = hunterPluginPlugin.getInventoryAPI()
                 .createPagedInventory(
                         new NavigationRow(
                                 new NextNavigationItem(ItemBuilder.buildItemFromConfig(prestigeConfig.getFileConfiguration(), "navigation.next").build(), prestigeConfig.getFileConfiguration().getInt("navigation.next.slot", 6)),
@@ -126,7 +126,7 @@ public class PrestigeInventory {
                     }.getType());
                     List<Action> actionList = Lists.newArrayList(actions.toArray(new Action[0]));
                     if (!actions.isEmpty())
-                        ActionManager.runActions(player, mainPlugin, OptionsUtil.DEBUG_ERROR.getBooleanValue(), actionList);
+                        ActionManager.runActions(player, hunterPluginPlugin, OptionsUtil.DEBUG_ERROR.getBooleanValue(), actionList);
                 }
 
                 if (nbtItem.hasKey("commands")) {

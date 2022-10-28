@@ -1,9 +1,9 @@
 package com.georgev22.hunter.utilities.player;
 
 import com.georgev22.api.maps.HashObjectMap;
+import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.hunter.Main;
-import com.georgev22.hunter.hooks.HolographicDisplays;
+import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.hooks.Vault;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.OptionsUtil;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import static com.georgev22.api.utilities.Utils.placeHolder;
@@ -23,7 +24,7 @@ import static com.georgev22.api.utilities.Utils.toRoman;
 
 public class UserUtils {
 
-    private final static Main mainPlugin = Main.getInstance();
+    private final static HunterPlugin hunterPlugin = HunterPlugin.getInstance();
 
     public static void processKillerBlessedUser(@NotNull Player killer, @Nullable Player blessed) throws IOException {
         if (killer == null) {
@@ -60,26 +61,26 @@ public class UserUtils {
 
         // KILLSTREAK REWARDS
         if (OptionsUtil.KILLSTREAK_REWARDS.getBooleanValue()) {
-            if (mainPlugin.getConfig().getString("Rewards.killstreak." + killerUserData.getKillStreak()) != null) {
-                mainPlugin.getConfig()
-                        .getStringList("Rewards.killstreak." + killerUserData.getKillStreak() + ".commands").forEach(s -> MinecraftUtils.runCommand(mainPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
+            if (hunterPlugin.getConfig().getString("Rewards.killstreak." + killerUserData.getKillStreak()) != null) {
+                hunterPlugin.getConfig()
+                        .getStringList("Rewards.killstreak." + killerUserData.getKillStreak() + ".commands").forEach(s -> MinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
             }
         }
 
         // KILL REWARDS
         if (OptionsUtil.KILLS_REWARDS.getBooleanValue()) {
             if (OptionsUtil.KILLS_REWARDS_CLOSEST.getBooleanValue()) {
-                int configRewardsKills = mainPlugin.getConfig().get("Rewards.kills." + killerUserData.getKills()) == null ? Integer.parseInt(mainPlugin.getConfig().getConfigurationSection("Rewards.kills").getKeys(false).stream()
+                int configRewardsKills = hunterPlugin.getConfig().get("Rewards.kills." + killerUserData.getKills()) == null ? Integer.parseInt(hunterPlugin.getConfig().getConfigurationSection("Rewards.kills").getKeys(false).stream()
                         .min(Comparator.comparingInt(i -> Math.abs(Integer.parseInt(i) - killerUserData.getKills())))
                         .orElseThrow(() -> new NoSuchElementException("No value present"))) : killerUserData.getKills();
-                if (mainPlugin.getConfig().getString("Rewards.kills." + configRewardsKills) != null) {
-                    mainPlugin.getConfig()
-                            .getStringList("Rewards.kills." + configRewardsKills + ".commands").forEach(s -> MinecraftUtils.runCommand(mainPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
+                if (hunterPlugin.getConfig().getString("Rewards.kills." + configRewardsKills) != null) {
+                    hunterPlugin.getConfig()
+                            .getStringList("Rewards.kills." + configRewardsKills + ".commands").forEach(s -> MinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
                 }
             } else {
-                if (mainPlugin.getConfig().getString("Rewards.killstreak." + killerUserData.getKillStreak()) != null) {
-                    mainPlugin.getConfig()
-                            .getStringList("Rewards.killstreak." + killerUserData.getKillStreak() + ".commands").forEach(s -> MinecraftUtils.runCommand(mainPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
+                if (hunterPlugin.getConfig().getString("Rewards.killstreak." + killerUserData.getKillStreak()) != null) {
+                    hunterPlugin.getConfig()
+                            .getStringList("Rewards.killstreak." + killerUserData.getKillStreak() + ".commands").forEach(s -> MinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
                 }
             }
         }
@@ -106,20 +107,20 @@ public class UserUtils {
             }
         }
 
-        int configLevel = mainPlugin.getConfig().get("Levels." + killerUserData.getLevel() + 1) == null ? Integer.parseInt(mainPlugin.getConfig().getConfigurationSection("Levels").getKeys(false).stream().min(Comparator.comparingInt(i -> Math.abs(Integer.parseInt(i) - (killerUserData.getLevel() + 1)))).orElseThrow(() -> new NoSuchElementException("No value present")))
+        int configLevel = hunterPlugin.getConfig().get("Levels." + killerUserData.getLevel() + 1) == null ? Integer.parseInt(hunterPlugin.getConfig().getConfigurationSection("Levels").getKeys(false).stream().min(Comparator.comparingInt(i -> Math.abs(Integer.parseInt(i) - (killerUserData.getLevel() + 1)))).orElseThrow(() -> new NoSuchElementException("No value present")))
                 : killerUserData.getLevel() + 1;
 
-        int configLevelRewards = mainPlugin.getConfig().get("Rewards.level up." + killerUserData.getLevel() + 1) == null ? Integer.parseInt(mainPlugin.getConfig().getConfigurationSection("Rewards.level up").getKeys(false).stream().min(Comparator.comparingInt(i -> Math.abs(Integer.parseInt(i) - (killerUserData.getLevel() + 1)))).orElseThrow(() -> new NoSuchElementException("No value present")))
+        int configLevelRewards = hunterPlugin.getConfig().get("Rewards.level up." + killerUserData.getLevel() + 1) == null ? Integer.parseInt(hunterPlugin.getConfig().getConfigurationSection("Rewards.level up").getKeys(false).stream().min(Comparator.comparingInt(i -> Math.abs(Integer.parseInt(i) - (killerUserData.getLevel() + 1)))).orElseThrow(() -> new NoSuchElementException("No value present")))
                 : killerUserData.getLevel() + 1;
 
         if (OptionsUtil.DEBUG.getBooleanValue()) {
-            MinecraftUtils.debug(mainPlugin, "level rewards value: " + configLevelRewards);
-            MinecraftUtils.debug(mainPlugin, "config level rewards value: " + mainPlugin.getConfig().getStringList("Rewards.level up." + configLevelRewards + ".commands"));
-            MinecraftUtils.debug(mainPlugin, "level value: " + configLevel);
-            MinecraftUtils.debug(mainPlugin, "config level value: " + mainPlugin.getConfig().getInt("Levels." + configLevel));
+            MinecraftUtils.debug(hunterPlugin, "level rewards value: " + configLevelRewards);
+            MinecraftUtils.debug(hunterPlugin, "config level rewards value: " + hunterPlugin.getConfig().getStringList("Rewards.level up." + configLevelRewards + ".commands"));
+            MinecraftUtils.debug(hunterPlugin, "level value: " + configLevel);
+            MinecraftUtils.debug(hunterPlugin, "config level value: " + hunterPlugin.getConfig().getInt("Levels." + configLevel));
         }
 
-        if (killerUserData.getExperience() >= mainPlugin.getConfig().getInt("Levels." + configLevel)) {
+        if (killerUserData.getExperience() >= hunterPlugin.getConfig().getInt("Levels." + configLevel)) {
             killerUserData.setLevel(killerUserData.getLevel() + 1).setExperience(0);
             if (OptionsUtil.LEVELS_MESSAGE.getBooleanValue()) {
                 if (killerUserData.getLevel() % OptionsUtil.LEVELS_MESSAGE__EVERY.getIntValue() == 0) {
@@ -142,9 +143,9 @@ public class UserUtils {
 
             // LEVEL UP REWARDS
             if (OptionsUtil.LEVELS_REWARDS.getBooleanValue()) {
-                if (mainPlugin.getConfig().get("Rewards.level up." + configLevelRewards) != null) {
-                    mainPlugin.getConfig()
-                            .getStringList("Rewards.level up." + configLevelRewards + ".commands").forEach(s -> MinecraftUtils.runCommand(mainPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
+                if (hunterPlugin.getConfig().get("Rewards.level up." + configLevelRewards) != null) {
+                    hunterPlugin.getConfig()
+                            .getStringList("Rewards.level up." + configLevelRewards + ".commands").forEach(s -> MinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
                 }
             }
 
@@ -157,7 +158,35 @@ public class UserUtils {
         }
         // HOLOGRAM UPDATE
         if (Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays"))
-            HolographicDisplays.updateAll();
+            hunterPlugin.getHolograms().updateAll();
+    }
+
+    /**
+     * A map with all hologram placeholders
+     *
+     * @return a map with all hologram placeholders
+     */
+    public static @NotNull ObjectMap<String, String> getPlaceholdersMap() {
+        final ObjectMap<String, String> map = new HashObjectMap<>();
+        int levelTop = 1;
+        for (Map.Entry<String, Integer> b : UserData.getTopPlayersByLevels(OptionsUtil.LEVELS_TOP.getIntValue()).entrySet()) {
+            String[] args = String.valueOf(b).split("=");
+            map.append("%toplevel-" + levelTop + "%", args[0]).append("%level-" + levelTop + "%", args[1]);
+            levelTop++;
+        }
+        int killsTop = 1;
+        for (Map.Entry<String, Integer> b : UserData.getTopPlayersByKills(OptionsUtil.KILLS_TOP.getIntValue()).entrySet()) {
+            String[] args = String.valueOf(b).split("=");
+            map.append("%topkills-" + killsTop + "%", args[0]).append("%kills-" + killsTop + "%", args[1]);
+            killsTop++;
+        }
+        int killstreakTop = 1;
+        for (Map.Entry<String, Integer> b : UserData.getTopPlayersByKillstreak(OptionsUtil.KILLS_TOP.getIntValue()).entrySet()) {
+            String[] args = String.valueOf(b).split("=");
+            map.append("%topkillstreak-" + killstreakTop + "%", args[0]).append("%killstreak-" + killstreakTop + "%", args[1]);
+            killstreakTop++;
+        }
+        return map;
     }
 
 }

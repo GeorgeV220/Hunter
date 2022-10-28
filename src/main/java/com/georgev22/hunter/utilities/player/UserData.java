@@ -6,7 +6,7 @@ import com.georgev22.api.maps.LinkedObjectMap;
 import com.georgev22.api.maps.ObjectMap;
 import com.georgev22.api.minecraft.MinecraftUtils;
 import com.georgev22.api.utilities.Utils.Callback;
-import com.georgev22.hunter.Main;
+import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.utilities.OptionsUtil;
 import com.georgev22.hunter.utilities.interfaces.IDatabaseType;
 import com.mongodb.BasicDBObject;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * Used to handle all user's data and anything related to them.
  */
 public record UserData(User user) {
-    private static final Main mainPlugin = Main.getInstance();
+    private static final HunterPlugin hunterPlugin = HunterPlugin.getInstance();
 
     private static final ObjectMap<UUID, User> allUsersMap = new ConcurrentObjectMap<>();
 
@@ -60,7 +60,7 @@ public record UserData(User user) {
      * @throws Exception When something goes wrong
      */
     public static void loadAllUsers() throws Exception {
-        allUsersMap.putAll(mainPlugin.getIDatabaseType().getAllUsers());
+        allUsersMap.putAll(hunterPlugin.getIDatabaseType().getAllUsers());
     }
 
     /**
@@ -180,7 +180,7 @@ public record UserData(User user) {
      * @throws Exception When something goes wrong
      */
     public UserData load(Callback<Boolean> callback) throws Exception {
-        mainPlugin.getIDatabaseType().load(user, callback);
+        hunterPlugin.getIDatabaseType().load(user, callback);
         return this;
     }
 
@@ -191,9 +191,9 @@ public record UserData(User user) {
      */
     public UserData save(boolean async, Callback<Boolean> callback) {
         if (async) {
-            Bukkit.getScheduler().runTaskAsynchronously(mainPlugin, () -> {
+            Bukkit.getScheduler().runTaskAsynchronously(hunterPlugin, () -> {
                 try {
-                    mainPlugin.getIDatabaseType().save(user);
+                    hunterPlugin.getIDatabaseType().save(user);
                     callback.onSuccess();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -202,7 +202,7 @@ public record UserData(User user) {
             });
         } else {
             try {
-                mainPlugin.getIDatabaseType().save(user);
+                hunterPlugin.getIDatabaseType().save(user);
                 callback.onSuccess();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -216,9 +216,9 @@ public record UserData(User user) {
      * Reset user's stats
      */
     public UserData reset() {
-        Bukkit.getScheduler().runTaskAsynchronously(mainPlugin, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(hunterPlugin, () -> {
             try {
-                mainPlugin.getIDatabaseType().reset(user);
+                hunterPlugin.getIDatabaseType().reset(user);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -230,9 +230,9 @@ public record UserData(User user) {
      * Delete user from database
      */
     public UserData delete() {
-        Bukkit.getScheduler().runTaskAsynchronously(mainPlugin, () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(hunterPlugin, () -> {
             try {
-                mainPlugin.getIDatabaseType().delete(user);
+                hunterPlugin.getIDatabaseType().delete(user);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -295,7 +295,7 @@ public record UserData(User user) {
      */
     public static class SQLUserUtils implements IDatabaseType {
 
-        private static final Main mainPlugin = Main.getInstance();
+        private static final HunterPlugin HUNTER_PLUGIN_PLUGIN = HunterPlugin.getInstance();
 
         /**
          * Save all user's data
@@ -304,7 +304,7 @@ public record UserData(User user) {
          * @throws ClassNotFoundException When class not found
          */
         public void save(@NotNull User user) throws SQLException, ClassNotFoundException {
-            mainPlugin.getDatabase().updateSQL(
+            HUNTER_PLUGIN_PLUGIN.getDatabase().updateSQL(
                     "UPDATE `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` " +
                             "SET " +
                             "`name` = '" + user.name() + "', " +
@@ -324,8 +324,8 @@ public record UserData(User user) {
          * @throws ClassNotFoundException When class is not found
          */
         public void delete(@NotNull User user) throws SQLException, ClassNotFoundException {
-            mainPlugin.getDatabase().updateSQL("DELETE FROM `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` WHERE `uuid` = '" + user.uniqueId().toString() + "';");
-            MinecraftUtils.debug(mainPlugin, "User " + user.name() + " deleted from the database!");
+            HUNTER_PLUGIN_PLUGIN.getDatabase().updateSQL("DELETE FROM `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` WHERE `uuid` = '" + user.uniqueId().toString() + "';");
+            MinecraftUtils.debug(HUNTER_PLUGIN_PLUGIN, "User " + user.name() + " deleted from the database!");
             allUsersMap.remove(user.uniqueId());
         }
 
@@ -339,7 +339,7 @@ public record UserData(User user) {
                 @Override
                 public Boolean onSuccess() {
                     try {
-                        ResultSet resultSet = mainPlugin.getDatabase().querySQL("SELECT * FROM `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` WHERE `uuid` = '" + user.uniqueId().toString() + "'");
+                        ResultSet resultSet = HUNTER_PLUGIN_PLUGIN.getDatabase().querySQL("SELECT * FROM `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` WHERE `uuid` = '" + user.uniqueId().toString() + "'");
                         while (resultSet.next()) {
                             user
                                     .append("name", resultSet.getString("name"))
@@ -376,7 +376,7 @@ public record UserData(User user) {
          * @return true if user exists or false when is not
          */
         public boolean playerExists(@NotNull User user) throws SQLException, ClassNotFoundException {
-            return mainPlugin.getDatabase().querySQL("SELECT * FROM " + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + " WHERE `uuid` = '" + user.uniqueId().toString() + "'").next();
+            return HUNTER_PLUGIN_PLUGIN.getDatabase().querySQL("SELECT * FROM " + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + " WHERE `uuid` = '" + user.uniqueId().toString() + "'").next();
         }
 
         /**
@@ -387,7 +387,7 @@ public record UserData(User user) {
         public void setupUser(User user, Callback<Boolean> callback) {
             try {
                 if (!playerExists(user)) {
-                    mainPlugin.getDatabase().updateSQL(
+                    HUNTER_PLUGIN_PLUGIN.getDatabase().updateSQL(
                             "INSERT INTO `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` (`uuid`, `name`, `experience`, `killstreak`, `level`, `kills` `multiplier`, `prestige`)" +
                                     " VALUES " +
                                     "('" + user.uniqueId().toString() + "', '" + user.offlinePlayer().getName() + "', '0.0', '0', '0', '0', '1.0', '0');");
@@ -407,7 +407,7 @@ public record UserData(User user) {
          */
         public ObjectMap<UUID, User> getAllUsers() throws Exception {
             ObjectMap<UUID, User> map = new ConcurrentObjectMap<>();
-            ResultSet resultSet = mainPlugin.getDatabase().querySQL("SELECT * FROM `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "`");
+            ResultSet resultSet = HUNTER_PLUGIN_PLUGIN.getDatabase().querySQL("SELECT * FROM `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "`");
             while (resultSet.next()) {
                 UserData userData = UserData.getUser(UUID.fromString(resultSet.getString("uuid")));
                 userData.load(new Callback<Boolean>() {
@@ -459,7 +459,7 @@ public record UserData(User user) {
                     .append("prestige", user.prestige())
             );
 
-            mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).updateOne(query, updateObject);
+            hunterPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).updateOne(query, updateObject);
         }
 
         /**
@@ -474,7 +474,7 @@ public record UserData(User user) {
                 public Boolean onSuccess() {
                     BasicDBObject searchQuery = new BasicDBObject();
                     searchQuery.append("uuid", user.uniqueId().toString());
-                    FindIterable<Document> findIterable = mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).find(searchQuery);
+                    FindIterable<Document> findIterable = hunterPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).find(searchQuery);
                     Document document = findIterable.first();
                     user
                             .append("name", document.getString("name"))
@@ -508,7 +508,7 @@ public record UserData(User user) {
          */
         public void setupUser(User user, Callback<Boolean> callback) {
             if (!playerExists(user)) {
-                mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).insertOne(new Document()
+                hunterPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).insertOne(new Document()
                         .append("uuid", user.uniqueId().toString())
                         .append("name", user.offlinePlayer().getName())
                         .append("experience", 0D)
@@ -528,7 +528,7 @@ public record UserData(User user) {
          * @return true if user exists or false when is not
          */
         public boolean playerExists(@NotNull User user) {
-            long count = mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).countDocuments(new BsonDocument("uuid", new BsonString(user.uniqueId().toString())));
+            long count = hunterPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).countDocuments(new BsonDocument("uuid", new BsonString(user.uniqueId().toString())));
             return count > 0;
         }
 
@@ -538,7 +538,7 @@ public record UserData(User user) {
         public void delete(@NotNull User user) {
             BasicDBObject theQuery = new BasicDBObject();
             theQuery.put("uuid", user.uniqueId().toString());
-            DeleteResult result = mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).deleteMany(theQuery);
+            DeleteResult result = hunterPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).deleteMany(theQuery);
             if (result.getDeletedCount() > 0) {
                 allUsersMap.remove(user.uniqueId());
             }
@@ -551,7 +551,7 @@ public record UserData(User user) {
          */
         public ObjectMap<UUID, User> getAllUsers() {
             ObjectMap<UUID, User> map = new ConcurrentObjectMap<>();
-            FindIterable<Document> iterable = mainPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).find();
+            FindIterable<Document> iterable = hunterPlugin.getMongoClient().getDatabase(OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue()).getCollection(OptionsUtil.DATABASE_MONGO_COLLECTION.getStringValue()).find();
             iterable.forEach((Block<Document>) document -> {
                 UserData userData = UserData.getUser(UUID.fromString(document.getString("uuid")));
                 try {
@@ -589,7 +589,7 @@ public record UserData(User user) {
 
     public static class FileUserUtils implements IDatabaseType {
 
-        private final Main mainPlugin = Main.getInstance();
+        private final HunterPlugin hunterPluginPlugin = HunterPlugin.getInstance();
 
         /**
          * Save all user's data
@@ -598,7 +598,7 @@ public record UserData(User user) {
          */
         @Override
         public void save(@NotNull User user) {
-            File file = new File(mainPlugin.getDataFolder(),
+            File file = new File(hunterPluginPlugin.getDataFolder(),
                     "userdata" + File.separator + user.uniqueId().toString() + ".yml");
             if (!file.exists()) {
                 setupUser(user, new Callback<Boolean>() {
@@ -644,7 +644,7 @@ public record UserData(User user) {
             setupUser(user, new Callback<Boolean>() {
                 @Override
                 public Boolean onSuccess() {
-                    YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(new File(mainPlugin.getDataFolder(),
+                    YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(new File(hunterPluginPlugin.getDataFolder(),
                             "userdata" + File.separator + user.uniqueId().toString() + ".yml"));
                     user
                             .append("name", yamlConfiguration.getString("name"))
@@ -677,9 +677,9 @@ public record UserData(User user) {
          * @param callback Callback
          */
         public void setupUser(@NotNull User user, Callback<Boolean> callback) {
-            new File(mainPlugin.getDataFolder(),
+            new File(hunterPluginPlugin.getDataFolder(),
                     "userdata").mkdirs();
-            File file = new File(mainPlugin.getDataFolder(),
+            File file = new File(hunterPluginPlugin.getDataFolder(),
                     "userdata" + File.separator + user.uniqueId().toString() + ".yml");
             if (!playerExists(user)) {
                 try {
@@ -706,7 +706,7 @@ public record UserData(User user) {
          * Remove user's data from file.
          */
         public void delete(@NotNull User user) {
-            File file = new File(mainPlugin.getDataFolder(),
+            File file = new File(hunterPluginPlugin.getDataFolder(),
                     "userdata" + File.separator + user.uniqueId().toString() + ".yml");
             if (file.exists() & file.delete()) {
                 UserData.getAllUsersMap().remove(user.uniqueId());
@@ -719,14 +719,14 @@ public record UserData(User user) {
          * @return true if user exists or false when is not
          */
         public boolean playerExists(@NotNull User user) {
-            return new File(mainPlugin.getDataFolder(),
+            return new File(hunterPluginPlugin.getDataFolder(),
                     "userdata" + File.separator + user.uniqueId().toString() + ".yml").exists();
         }
 
         public ObjectMap<UUID, User> getAllUsers() throws Exception {
             ObjectMap<UUID, User> map = new LinkedObjectMap<>();
 
-            File[] files = new File(mainPlugin.getDataFolder(), "userdata").listFiles((dir, name) -> name.endsWith(".yml"));
+            File[] files = new File(hunterPluginPlugin.getDataFolder(), "userdata").listFiles((dir, name) -> name.endsWith(".yml"));
 
             if (files == null) {
                 return map;
