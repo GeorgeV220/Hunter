@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/GeorgeV220/Hunter/compare/v1.2.1...v1.3.0) (2022-10-28)
+
+
+### Bug Fixes
+
+* **Updater:** Updater URL ([3dde47b](https://github.com/GeorgeV220/Hunter/commit/3dde47b8f3a769de1341a41294e37b9050799338))
+
+
+### Features
+
+* **Holograms:** HologramAPI ProtocolLib support ([0d60ba6](https://github.com/GeorgeV220/Hunter/commit/0d60ba615e6ff815c7c1c815dd6313eee272fabc))
+
 ## [1.2.1](https://github.com/GeorgeV220/Hunter/compare/v1.2.0...v1.2.1) (2022-10-26)
 
 
