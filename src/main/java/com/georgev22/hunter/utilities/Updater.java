@@ -137,7 +137,7 @@ public class Updater {
             MinecraftUtils.msg(player, "&e&lUpdater &8» &6New stable version is downloading (&c" + onlineVersion + "&6)!");
         File tempFile = new File(hunterPlugin.getDataFolder().getParentFile().getAbsolutePath(), "Hunter-" + onlineVersion + ".jar.temp");
         try {
-            HttpsURLConnection httpsURLConnection = (HttpsURLConnection) new URL("https://github.com/GeorgeV220/Hunter/releases/download/v" + onlineVersion + "/Hunter-" + onlineVersion + ".jar").openConnection();
+            HttpsURLConnection httpsURLConnection = (HttpsURLConnection) new URL("https://github.com/GeorgeV220/Hunter/releases/download/" + onlineVersion + "/Hunter-" + onlineVersion.replace("v", "") + ".jar").openConnection();
             ReadableByteChannel rbc = Channels.newChannel(httpsURLConnection.getInputStream());
             FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
             fileOutputStream.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
