@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/GeorgeV220/Hunter/compare/v1.3.0...v1.3.1) (2022-10-28)
+
+
+### Bug Fixes
+
+* **Titles:** Title configurations ([3e68945](https://github.com/GeorgeV220/Hunter/commit/3e6894519c561940df013ad5e7e72c30d8b938d3))
+
 # [1.3.0](https://github.com/GeorgeV220/Hunter/compare/v1.2.1...v1.3.0) (2022-10-28)
 
 
