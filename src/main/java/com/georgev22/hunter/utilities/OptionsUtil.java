@@ -1,8 +1,8 @@
 package com.georgev22.hunter.utilities;
 
-import com.georgev22.api.minecraft.colors.Color;
-import com.georgev22.api.minecraft.inventory.ItemBuilder;
-import com.georgev22.api.minecraft.xseries.XMaterial;
+import com.georgev22.library.minecraft.colors.Color;
+import com.georgev22.library.minecraft.inventory.ItemBuilder;
+import com.georgev22.library.minecraft.xseries.XMaterial;
 import com.georgev22.hunter.HunterPlugin;
 import com.google.common.collect.Lists;
 import org.bukkit.inventory.ItemStack;
@@ -10,9 +10,10 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-import static com.georgev22.api.utilities.Utils.Assertions.notNull;
+import static com.georgev22.library.utilities.Utils.Assertions.notNull;
 
 public enum OptionsUtil {
 
@@ -180,7 +181,7 @@ public enum OptionsUtil {
                 return (ItemStack) getDefaultValue();
             }
             ItemBuilder itemBuilder = new ItemBuilder(
-                    notNull("Material", XMaterial.valueOf(mainPlugin.getConfig().getString(getPath() + ".item")).parseMaterial()))
+                    notNull("Material", Objects.requireNonNull(XMaterial.valueOf(mainPlugin.getConfig().getString(getPath() + ".item")).parseMaterial())))
                     .amount(mainPlugin.getConfig().getInt(getPath() + ".amount"))
                     .title(mainPlugin.getConfig().getString(getPath() + ".title"))
                     .lores(mainPlugin.getConfig().getStringList(getPath() + ".lores"))
@@ -213,15 +214,13 @@ public enum OptionsUtil {
      */
     public @NotNull
     String getPath() {
-        if (getOldPaths().length > 0) {
-            for (Optional<String> path : getOldPaths()) {
-                if (mainPlugin.getConfig().get("Options." + getDefaultPath()) == null & path.isPresent()) {
-                    if (mainPlugin.getConfig().get("Options." + path.get()) != null) {
-                        return "Options." + path.get();
-                    }
-                } else {
-                    return "Options." + getDefaultPath();
+        for (Optional<String> path : getOldPaths()) {
+            if (mainPlugin.getConfig().get("Options." + getDefaultPath()) == null & path.isPresent()) {
+                if (mainPlugin.getConfig().get("Options." + path.get()) != null) {
+                    return "Options." + path.get();
                 }
+            } else {
+                return "Options." + getDefaultPath();
             }
         }
         return "Options." + getDefaultPath();

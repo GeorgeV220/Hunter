@@ -1,6 +1,6 @@
 package com.georgev22.hunter.listeners;
 
-import com.georgev22.api.minecraft.MinecraftUtils;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
 import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.utilities.OptionsUtil;
 import com.georgev22.hunter.utilities.Updater;
@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.IOException;
 
-import static com.georgev22.api.utilities.Utils.*;
+import static com.georgev22.library.utilities.Utils.*;
 
 public class PlayerListeners implements Listener {
 
@@ -25,8 +25,8 @@ public class PlayerListeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPreLogin(AsyncPlayerPreLoginEvent event) {
-        if (MinecraftUtils.isLoginDisallowed())
-            event.disallow(PlayerPreLoginEvent.Result.KICK_OTHER, MinecraftUtils.colorize(MinecraftUtils.getDisallowLoginMessage()));
+        if (BukkitMinecraftUtils.isLoginDisallowed())
+            event.disallow(PlayerPreLoginEvent.Result.KICK_OTHER, BukkitMinecraftUtils.colorize(BukkitMinecraftUtils.getDisallowLoginMessage()));
     }
 
     @EventHandler

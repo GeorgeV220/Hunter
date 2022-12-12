@@ -1,11 +1,11 @@
 package com.georgev22.hunter.utilities.player;
 
-import com.georgev22.api.maps.ConcurrentObjectMap;
-import com.georgev22.api.maps.HashObjectMap;
-import com.georgev22.api.maps.LinkedObjectMap;
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.api.utilities.Utils.Callback;
+import com.georgev22.library.maps.ConcurrentObjectMap;
+import com.georgev22.library.maps.HashObjectMap;
+import com.georgev22.library.maps.LinkedObjectMap;
+import com.georgev22.library.maps.ObjectMap;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
+import com.georgev22.library.utilities.Utils.Callback;
 import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.utilities.OptionsUtil;
 import com.georgev22.hunter.utilities.interfaces.IDatabaseType;
@@ -325,7 +325,7 @@ public record UserData(User user) {
          */
         public void delete(@NotNull User user) throws SQLException, ClassNotFoundException {
             HUNTER_PLUGIN_PLUGIN.getDatabase().updateSQL("DELETE FROM `" + OptionsUtil.DATABASE_TABLE_NAME.getStringValue() + "` WHERE `uuid` = '" + user.uniqueId().toString() + "';");
-            MinecraftUtils.debug(HUNTER_PLUGIN_PLUGIN, "User " + user.name() + " deleted from the database!");
+            BukkitMinecraftUtils.debug(HUNTER_PLUGIN_PLUGIN, "User " + user.name() + " deleted from the database!");
             allUsersMap.remove(user.uniqueId());
         }
 

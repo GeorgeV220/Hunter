@@ -1,21 +1,21 @@
 package com.georgev22.hunter.inventories;
 
-import com.georgev22.api.maps.HashObjectMap;
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.api.minecraft.configmanager.CFG;
-import com.georgev22.api.minecraft.inventory.CustomItemInventory;
-import com.georgev22.api.minecraft.inventory.IPagedInventory;
-import com.georgev22.api.minecraft.inventory.ItemBuilder;
-import com.georgev22.api.minecraft.inventory.NavigationRow;
-import com.georgev22.api.minecraft.inventory.handlers.PagedInventoryClickHandler;
-import com.georgev22.api.minecraft.inventory.handlers.PagedInventoryCustomNavigationHandler;
-import com.georgev22.api.minecraft.inventory.navigationitems.*;
-import com.georgev22.api.minecraft.inventory.utils.actions.Action;
-import com.georgev22.api.minecraft.inventory.utils.actions.ActionManager;
-import com.georgev22.api.minecraft.nbt.nbtapi.NBTItem;
-import com.georgev22.api.utilities.Utils;
-import com.georgev22.api.utilities.Utils.Cooldown;
+import com.georgev22.library.maps.HashObjectMap;
+import com.georgev22.library.maps.ObjectMap;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
+import com.georgev22.library.minecraft.configmanager.CFG;
+import com.georgev22.library.minecraft.inventory.CustomItemInventory;
+import com.georgev22.library.minecraft.inventory.IPagedInventory;
+import com.georgev22.library.minecraft.inventory.ItemBuilder;
+import com.georgev22.library.minecraft.inventory.NavigationRow;
+import com.georgev22.library.minecraft.inventory.handlers.PagedInventoryClickHandler;
+import com.georgev22.library.minecraft.inventory.handlers.PagedInventoryCustomNavigationHandler;
+import com.georgev22.library.minecraft.inventory.navigationitems.*;
+import com.georgev22.library.minecraft.inventory.utils.actions.Action;
+import com.georgev22.library.minecraft.inventory.utils.actions.ActionManager;
+import com.georgev22.library.minecraft.nbt.nbtapi.NBTItem;
+import com.georgev22.library.utilities.Utils;
+import com.georgev22.library.utilities.Utils.Cooldown;
 import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.inventories.actions.InventoryClickAction;
 import com.georgev22.hunter.utilities.MessagesUtil;
@@ -55,7 +55,7 @@ public class PrestigeInventory {
         int prestigeClosest = Files.exists(new File(hunterPluginPlugin.getDataFolder(), "inventories" + File.separator + "prestige" + File.separator + "prestige_" + userData.getPrestige() + ".yml").toPath()) ? userData.getPrestige() : prestigeListClosest.stream().min(Comparator.comparingInt(i -> Math.abs(i - userData.getPrestige())))
                 .orElseThrow(() -> new NoSuchElementException("No value present"));
 
-        MinecraftUtils.debug(hunterPluginPlugin, String.valueOf(prestigeClosest));
+        BukkitMinecraftUtils.debug(hunterPluginPlugin, String.valueOf(prestigeClosest));
 
         CFG prestigeConfig = new CFG(hunterPluginPlugin, "inventories" + File.separator + "prestige" + File.separator + "prestige_" + prestigeClosest, false);
 
@@ -98,7 +98,7 @@ public class PrestigeInventory {
                                 new CloseNavigationItem(ItemBuilder.buildItemFromConfig(prestigeConfig.getFileConfiguration(), "navigation.cancel").build(), prestigeConfig.getFileConfiguration().getInt("navigation.cancel.slot", 4)),
                                 navigationItemList.toArray(new NavigationItem[0])));
 
-        CustomItemInventory customItemInventory = new CustomItemInventory(Utils.placeHolder(MinecraftUtils.colorize(prestigeConfig.getFileConfiguration().getString("name", "")), userData.user().placeholders().append("%prestige_inventory%", String.valueOf(prestigeClosest)).append("%prestige_inventory_roman%", Utils.toRoman(prestigeClosest)), true), objectMap, 54);
+        CustomItemInventory customItemInventory = new CustomItemInventory(Utils.placeHolder(BukkitMinecraftUtils.colorize(prestigeConfig.getFileConfiguration().getString("name", "")), userData.user().placeholders().append("%prestige_inventory%", String.valueOf(prestigeClosest)).append("%prestige_inventory_roman%", Utils.toRoman(prestigeClosest)), true), objectMap, 54);
 
         Inventory inventory = customItemInventory.getInventory();
 
@@ -119,7 +119,7 @@ public class PrestigeInventory {
 
                 Cooldown cooldown;
 
-                String name = MinecraftUtils.stripColor(itemStack.getItemMeta().getDisplayName());
+                String name = BukkitMinecraftUtils.stripColor(itemStack.getItemMeta().getDisplayName());
 
                 if (nbtItem.hasKey("actions")) {
                     List<InventoryClickAction> actions = Utils.deserialize(nbtItem.getString("actions"), new TypeToken<List<InventoryClickAction>>() {

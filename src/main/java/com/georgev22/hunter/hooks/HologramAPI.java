@@ -1,10 +1,10 @@
 package com.georgev22.hunter.hooks;
 
-import com.georgev22.api.maps.ConcurrentObjectMap;
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.api.minecraft.configmanager.CFG;
-import com.georgev22.api.utilities.Utils;
+import com.georgev22.library.maps.ConcurrentObjectMap;
+import com.georgev22.library.maps.ObjectMap;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
+import com.georgev22.library.minecraft.configmanager.CFG;
+import com.georgev22.library.utilities.Utils;
 import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.utilities.configmanager.FileManager;
 import com.georgev22.hunter.utilities.interfaces.Holograms;
@@ -48,7 +48,7 @@ public class HologramAPI implements Holograms {
             Hologram.Builder builder = Hologram.builder().location(location);
 
             for (String line : fileManager.getConfig().getFileConfiguration().getStringList("Holograms." + type)) {
-                builder.addLine(MinecraftUtils.colorize(line), false);
+                builder.addLine(BukkitMinecraftUtils.colorize(line), false);
             }
             hologram = builder.build(hologramPool);
         }
@@ -89,7 +89,7 @@ public class HologramAPI implements Holograms {
         Hologram hologram = (Hologram) getHologramMap().get(name);
 
         if (hologram == null) {
-            MinecraftUtils.msg(player, "Hologram " + name + " doesn't exist");
+            BukkitMinecraftUtils.msg(player, "Hologram " + name + " doesn't exist");
             return;
         }
         hologram.show(player);
@@ -105,7 +105,7 @@ public class HologramAPI implements Holograms {
         Hologram hologram = (Hologram) getHologramMap().get(name);
 
         if (hologram == null) {
-            MinecraftUtils.msg(player, "Hologram " + name + " doesn't exist");
+            BukkitMinecraftUtils.msg(player, "Hologram " + name + " doesn't exist");
             return;
         }
 
@@ -179,7 +179,7 @@ public class HologramAPI implements Holograms {
             for (String placeholder : placeholders.keySet()) {
                 if (key.contains(placeholder)) {
                     Hologram hologram1 = (Hologram) hologram;
-                    hologram1.setLine(i, Utils.placeHolder(MinecraftUtils.colorize(key), placeholders, true));
+                    hologram1.setLine(i, Utils.placeHolder(BukkitMinecraftUtils.colorize(key), placeholders, true));
                     break;
                 }
             }
@@ -199,7 +199,7 @@ public class HologramAPI implements Holograms {
             Hologram.Builder builder = new Hologram.Builder().location(getHologram(hologramName).getLocation());
             int i = 0;
             for (String line : hunterPlugin.getConfig().getStringList("Holograms." + data.getString("Holograms." + hologramName + ".type"))) {
-                builder.addLine(MinecraftUtils.colorize(Utils.placeHolder(line, getPlaceholderMap(), true)), false);
+                builder.addLine(BukkitMinecraftUtils.colorize(Utils.placeHolder(line, getPlaceholderMap(), true)), false);
             }
             getHologramMap().append(hologramName, builder.build(hologramPool));
             getPlaceholderMap().clear();

@@ -1,6 +1,6 @@
 package com.georgev22.hunter.commands;
 
-import com.georgev22.api.minecraft.MinecraftUtils;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
 import com.georgev22.hunter.inventories.PrestigeInventory;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import org.bukkit.command.CommandSender;
@@ -18,13 +18,13 @@ public class PrestigeCommand extends BukkitCommand {
         this.description = "Prestige command";
         this.usageMessage = "/prestige";
         this.setPermission("killstreak.prestige");
-        this.setPermissionMessage(MinecraftUtils.colorize(MessagesUtil.NO_PERMISSION.getMessagesToString()));
+        this.setPermissionMessage(BukkitMinecraftUtils.colorize(MessagesUtil.NO_PERMISSION.getMessagesToString()));
     }
 
     public boolean execute(@NotNull final CommandSender sender, @NotNull final String label, final String[] args) {
         if (!testPermission(sender)) return true;
         if (!(sender instanceof Player player)) {
-            MinecraftUtils.msg(sender, MessagesUtil.ONLY_PLAYER_COMMAND.getMessagesToString());
+            BukkitMinecraftUtils.msg(sender, MessagesUtil.ONLY_PLAYER_COMMAND.getMessagesToString());
             return true;
         }
 

@@ -1,8 +1,8 @@
 package com.georgev22.hunter.utilities.player;
 
-import com.georgev22.api.maps.HashObjectMap;
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.minecraft.MinecraftUtils;
+import com.georgev22.library.maps.HashObjectMap;
+import com.georgev22.library.maps.ObjectMap;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
 import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.hooks.Vault;
 import com.georgev22.hunter.utilities.MessagesUtil;
@@ -18,18 +18,16 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
-import static com.georgev22.api.utilities.Utils.placeHolder;
-import static com.georgev22.api.utilities.Utils.toRoman;
+import static com.georgev22.library.utilities.Utils.placeHolder;
+import static com.georgev22.library.utilities.Utils.toRoman;
 
 public class UserUtils {
 
     private final static HunterPlugin hunterPlugin = HunterPlugin.getInstance();
 
     public static void processKillerBlessedUser(@NotNull Player killer, @Nullable Player blessed) throws IOException {
-        if (killer == null) {
-            return;
-        }
         UserData killerUserData = UserData.getUser(killer);
 
         if (blessed != null) {
@@ -63,24 +61,24 @@ public class UserUtils {
         if (OptionsUtil.KILLSTREAK_REWARDS.getBooleanValue()) {
             if (hunterPlugin.getConfig().getString("Rewards.killstreak." + killerUserData.getKillStreak()) != null) {
                 hunterPlugin.getConfig()
-                        .getStringList("Rewards.killstreak." + killerUserData.getKillStreak() + ".commands").forEach(s -> MinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
+                        .getStringList("Rewards.killstreak." + killerUserData.getKillStreak() + ".commands").forEach(s -> BukkitMinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
             }
         }
 
         // KILL REWARDS
         if (OptionsUtil.KILLS_REWARDS.getBooleanValue()) {
             if (OptionsUtil.KILLS_REWARDS_CLOSEST.getBooleanValue()) {
-                int configRewardsKills = hunterPlugin.getConfig().get("Rewards.kills." + killerUserData.getKills()) == null ? Integer.parseInt(hunterPlugin.getConfig().getConfigurationSection("Rewards.kills").getKeys(false).stream()
+                int configRewardsKills = hunterPlugin.getConfig().get("Rewards.kills." + killerUserData.getKills()) == null ? Integer.parseInt(Objects.requireNonNull(hunterPlugin.getConfig().getConfigurationSection("Rewards.kills")).getKeys(false).stream()
                         .min(Comparator.comparingInt(i -> Math.abs(Integer.parseInt(i) - killerUserData.getKills())))
                         .orElseThrow(() -> new NoSuchElementException("No value present"))) : killerUserData.getKills();
                 if (hunterPlugin.getConfig().getString("Rewards.kills." + configRewardsKills) != null) {
                     hunterPlugin.getConfig()
-                            .getStringList("Rewards.kills." + configRewardsKills + ".commands").forEach(s -> MinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
+                            .getStringList("Rewards.kills." + configRewardsKills + ".commands").forEach(s -> BukkitMinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
                 }
             } else {
                 if (hunterPlugin.getConfig().getString("Rewards.killstreak." + killerUserData.getKillStreak()) != null) {
                     hunterPlugin.getConfig()
-                            .getStringList("Rewards.killstreak." + killerUserData.getKillStreak() + ".commands").forEach(s -> MinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
+                            .getStringList("Rewards.killstreak." + killerUserData.getKillStreak() + ".commands").forEach(s -> BukkitMinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
                 }
             }
         }
@@ -88,13 +86,13 @@ public class UserUtils {
         // DISCORD KILL WEBHOOK
         if (OptionsUtil.KILLS_DISCORD.getBooleanValue() & OptionsUtil.EXPERIMENTAL_FEATURES.getBooleanValue()) {
             FileConfiguration discordFileConfiguration = FileManager.getInstance().getDiscord().getFileConfiguration();
-            MinecraftUtils.buildDiscordWebHookFromConfig(discordFileConfiguration, "kill", killerUserData.user().placeholders(), killerUserData.user().placeholders()).execute();
+            BukkitMinecraftUtils.buildDiscordWebHookFromConfig(discordFileConfiguration, "kill", killerUserData.user().placeholders(), killerUserData.user().placeholders()).execute();
         }
 
         // DISCORD KILLSTREAK WEBHOOK
         if (OptionsUtil.KILLSTREAK_DISCORD.getBooleanValue() & OptionsUtil.EXPERIMENTAL_FEATURES.getBooleanValue()) {
             FileConfiguration discordFileConfiguration = FileManager.getInstance().getDiscord().getFileConfiguration();
-            MinecraftUtils.buildDiscordWebHookFromConfig(discordFileConfiguration, "killstreak", killerUserData.user().placeholders(), killerUserData.user().placeholders()).execute();
+            BukkitMinecraftUtils.buildDiscordWebHookFromConfig(discordFileConfiguration, "killstreak", killerUserData.user().placeholders(), killerUserData.user().placeholders()).execute();
         }
 
         if (OptionsUtil.KILLSTREAK_MESSAGE.getBooleanValue()) {
@@ -114,10 +112,10 @@ public class UserUtils {
                 : killerUserData.getLevel() + 1;
 
         if (OptionsUtil.DEBUG.getBooleanValue()) {
-            MinecraftUtils.debug(hunterPlugin, "level rewards value: " + configLevelRewards);
-            MinecraftUtils.debug(hunterPlugin, "config level rewards value: " + hunterPlugin.getConfig().getStringList("Rewards.level up." + configLevelRewards + ".commands"));
-            MinecraftUtils.debug(hunterPlugin, "level value: " + configLevel);
-            MinecraftUtils.debug(hunterPlugin, "config level value: " + hunterPlugin.getConfig().getInt("Levels." + configLevel));
+            BukkitMinecraftUtils.debug(hunterPlugin, "level rewards value: " + configLevelRewards);
+            BukkitMinecraftUtils.debug(hunterPlugin, "config level rewards value: " + hunterPlugin.getConfig().getStringList("Rewards.level up." + configLevelRewards + ".commands"));
+            BukkitMinecraftUtils.debug(hunterPlugin, "level value: " + configLevel);
+            BukkitMinecraftUtils.debug(hunterPlugin, "config level value: " + hunterPlugin.getConfig().getInt("Levels." + configLevel));
         }
 
         if (killerUserData.getExperience() >= hunterPlugin.getConfig().getInt("Levels." + configLevel)) {
@@ -162,14 +160,14 @@ public class UserUtils {
             if (OptionsUtil.LEVELS_REWARDS.getBooleanValue()) {
                 if (hunterPlugin.getConfig().get("Rewards.level up." + configLevelRewards) != null) {
                     hunterPlugin.getConfig()
-                            .getStringList("Rewards.level up." + configLevelRewards + ".commands").forEach(s -> MinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
+                            .getStringList("Rewards.level up." + configLevelRewards + ".commands").forEach(s -> BukkitMinecraftUtils.runCommand(hunterPlugin, placeHolder(s, killerUserData.user().placeholders(), true)));
                 }
             }
 
             // DISCORD LEVEL UP WEBHOOK
             if (OptionsUtil.LEVELS_DISCORD.getBooleanValue() & OptionsUtil.EXPERIMENTAL_FEATURES.getBooleanValue()) {
                 FileConfiguration discordFileConfiguration = FileManager.getInstance().getDiscord().getFileConfiguration();
-                MinecraftUtils.buildDiscordWebHookFromConfig(discordFileConfiguration, "levelup", killerUserData.user().placeholders(), killerUserData.user().placeholders()).execute();
+                BukkitMinecraftUtils.buildDiscordWebHookFromConfig(discordFileConfiguration, "levelup", killerUserData.user().placeholders(), killerUserData.user().placeholders()).execute();
             }
 
         }

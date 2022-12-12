@@ -1,6 +1,6 @@
 package com.georgev22.hunter.utilities.configmanager;
 
-import com.georgev22.api.minecraft.configmanager.CFG;
+import com.georgev22.library.minecraft.configmanager.CFG;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

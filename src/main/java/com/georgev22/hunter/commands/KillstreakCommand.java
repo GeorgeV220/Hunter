@@ -1,8 +1,8 @@
 package com.georgev22.hunter.commands;
 
-import com.georgev22.api.maps.HashObjectMap;
-import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.api.utilities.Utils;
+import com.georgev22.library.maps.HashObjectMap;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
+import com.georgev22.library.utilities.Utils;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.player.UserData;
 import org.bukkit.Bukkit;
@@ -19,7 +19,7 @@ public class KillstreakCommand extends BukkitCommand {
         this.description = "Killstreak command";
         this.usageMessage = "/killstreak";
         this.setPermission("killstreak.use");
-        this.setPermissionMessage(MinecraftUtils.colorize(MessagesUtil.NO_PERMISSION.getMessages()[0]));
+        this.setPermissionMessage(BukkitMinecraftUtils.colorize(MessagesUtil.NO_PERMISSION.getMessages()[0]));
     }
 
     @Override

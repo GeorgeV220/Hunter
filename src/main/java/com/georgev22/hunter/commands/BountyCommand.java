@@ -1,7 +1,7 @@
 package com.georgev22.hunter.commands;
 
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.minecraft.MinecraftUtils;
+import com.georgev22.library.maps.ObjectMap;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
 import com.georgev22.hunter.hooks.Vault;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.player.UserData;
@@ -20,7 +20,7 @@ public class BountyCommand extends BukkitCommand {
         this.description = "bounty command";
         this.usageMessage = "/bounty";
         this.setPermission("hunter.bounty");
-        this.setPermissionMessage(MinecraftUtils.colorize(MessagesUtil.NO_PERMISSION.getMessages()[0]));
+        this.setPermissionMessage(BukkitMinecraftUtils.colorize(MessagesUtil.NO_PERMISSION.getMessages()[0]));
     }
 
 

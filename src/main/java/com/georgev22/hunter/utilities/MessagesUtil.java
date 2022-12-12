@@ -1,10 +1,10 @@
 package com.georgev22.hunter.utilities;
 
-import com.georgev22.api.maps.HashObjectMap;
-import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.api.minecraft.configmanager.CFG;
-import com.georgev22.api.minecraft.xseries.messages.Titles;
-import com.georgev22.api.utilities.Utils;
+import com.georgev22.library.maps.HashObjectMap;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
+import com.georgev22.library.minecraft.configmanager.CFG;
+import com.georgev22.library.minecraft.xseries.messages.Titles;
+import com.georgev22.library.utilities.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -131,7 +131,7 @@ public enum MessagesUtil {
      */
     private static void setPathToMessage(final @NotNull CFG cfg, final @NotNull MessagesUtil enumMessage) {
         /* Is our path a list? */
-        if (MinecraftUtils.isList(cfg.getFileConfiguration(), enumMessage.getPath())) {
+        if (BukkitMinecraftUtils.isList(cfg.getFileConfiguration(), enumMessage.getPath())) {
             /* Set our default message to be the path's message. */
             enumMessage.setMessages(
                     cfg.getFileConfiguration().getStringList(enumMessage.getPath()).toArray(new String[0]));
@@ -201,9 +201,9 @@ public enum MessagesUtil {
      */
     public void msg(final CommandSender target, final Map<String, String> map, final boolean ignoreCase) {
         if (this.isMultiLined()) {
-            MinecraftUtils.msg(target, this.getMessages(), map, ignoreCase);
+            BukkitMinecraftUtils.msg(target, this.getMessages(), map, ignoreCase);
         } else {
-            MinecraftUtils.msg(target, this.getMessages()[0], map, ignoreCase);
+            BukkitMinecraftUtils.msg(target, this.getMessages()[0], map, ignoreCase);
         }
     }
 
@@ -233,8 +233,8 @@ public enum MessagesUtil {
                     fadeIn,
                     stay,
                     fadeOut,
-                    MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)),
-                    MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[1], map, ignoreCase))
+                    BukkitMinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)),
+                    BukkitMinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[1], map, ignoreCase))
             );
         } else {
             Titles.sendTitle(
@@ -242,7 +242,7 @@ public enum MessagesUtil {
                     fadeIn,
                     stay,
                     fadeOut,
-                    MinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)),
+                    BukkitMinecraftUtils.colorize(Utils.placeHolder(this.getMessages()[0], map, ignoreCase)),
                     ""
             );
         }

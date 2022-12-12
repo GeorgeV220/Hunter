@@ -1,6 +1,6 @@
 package com.georgev22.hunter.hooks;
 
-import com.georgev22.api.utilities.Utils;
+import com.georgev22.library.utilities.Utils;
 import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.utilities.player.UserData;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;

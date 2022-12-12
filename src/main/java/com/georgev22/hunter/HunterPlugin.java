@@ -1,16 +1,18 @@
 package com.georgev22.hunter;
 
-import com.georgev22.api.database.Database;
-import com.georgev22.api.database.DatabaseType;
-import com.georgev22.api.database.DatabaseWrapper;
-import com.georgev22.api.database.mongo.MongoDB;
-import com.georgev22.api.maps.HashObjectMap;
-import com.georgev22.api.maps.ObjectMap;
-import com.georgev22.api.maven.LibraryLoader;
-import com.georgev22.api.maven.MavenLibrary;
-import com.georgev22.api.minecraft.MinecraftUtils;
-import com.georgev22.api.minecraft.configmanager.CFG;
-import com.georgev22.api.minecraft.inventory.PagedInventoryAPI;
+import com.georgev22.api.libraryloader.LibraryLoader;
+import com.georgev22.api.libraryloader.annotations.MavenLibrary;
+import com.georgev22.api.libraryloader.exceptions.InvalidDependencyException;
+import com.georgev22.api.libraryloader.exceptions.UnknownDependencyException;
+import com.georgev22.library.database.Database;
+import com.georgev22.library.database.DatabaseType;
+import com.georgev22.library.database.DatabaseWrapper;
+import com.georgev22.library.database.mongo.MongoDB;
+import com.georgev22.library.maps.HashObjectMap;
+import com.georgev22.library.maps.ObjectMap;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
+import com.georgev22.library.minecraft.configmanager.CFG;
+import com.georgev22.library.minecraft.inventory.PagedInventoryAPI;
 import com.georgev22.hunter.commands.*;
 import com.georgev22.hunter.hooks.HologramAPI;
 import com.georgev22.hunter.hooks.HolographicDisplaysHook;
@@ -42,7 +44,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static com.georgev22.api.utilities.Utils.*;
+import static com.georgev22.library.utilities.Utils.*;
 
 @MavenLibrary(groupId = "org.mongodb", artifactId = "mongo-java-driver", version = "3.12.7")
 @MavenLibrary(groupId = "mysql", artifactId = "mysql-connector-java", version = "8.0.22")
@@ -101,8 +103,13 @@ public final class HunterPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        if (MinecraftUtils.MinecraftVersion.getCurrentVersion().isBelow(MinecraftUtils.MinecraftVersion.V1_16_R1))
-            new LibraryLoader(this.getClass(), this.getDataFolder()).loadAll();
+        if (BukkitMinecraftUtils.MinecraftVersion.getCurrentVersion().isBelow(BukkitMinecraftUtils.MinecraftVersion.V1_16_R1)) {
+            try {
+                new LibraryLoader(this.getClass(), this.getDataFolder()).loadAll();
+            } catch (InvalidDependencyException | UnknownDependencyException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -124,20 +131,20 @@ public final class HunterPlugin extends JavaPlugin {
             }
         });
 
-        MinecraftUtils.registerListeners(this,
+        BukkitMinecraftUtils.registerListeners(this,
                 new PlayerListeners(),
                 new DeveloperInformListener());
 
         if (OptionsUtil.COMMAND_KILLSTREAK.getBooleanValue())
-            MinecraftUtils.registerCommand("killstreak", new KillstreakCommand());
+            BukkitMinecraftUtils.registerCommand("killstreak", new KillstreakCommand());
         if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
-            MinecraftUtils.registerCommand("level", new LevelCommand());
+            BukkitMinecraftUtils.registerCommand("level", new LevelCommand());
         if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
-            MinecraftUtils.registerCommand("hunter", new HunterCommand());
+            BukkitMinecraftUtils.registerCommand("hunter", new HunterCommand());
         if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
-            MinecraftUtils.registerCommand("prestige", new PrestigeCommand());
+            BukkitMinecraftUtils.registerCommand("prestige", new PrestigeCommand());
         if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
-            MinecraftUtils.registerCommand("bounty", new BountyCommand());
+            BukkitMinecraftUtils.registerCommand("bounty", new BountyCommand());
 
         if (OptionsUtil.UPDATER.getBooleanValue()) {
             new Updater();
@@ -146,7 +153,7 @@ public final class HunterPlugin extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             placeholdersAPI = new PAPI();
             if (placeholdersAPI.register())
-                MinecraftUtils.debug(this, "[Hunter] Hooked into PlaceholderAPI!");
+                BukkitMinecraftUtils.debug(this, "[Hunter] Hooked into PlaceholderAPI!");
         }
 
         if (OptionsUtil.HOLOGRAMS_ENABLED.getBooleanValue()) {
@@ -188,23 +195,23 @@ public final class HunterPlugin extends JavaPlugin {
             Bukkit.getLogger().info("[Hunter] Metrics are enabled!");
         }
 
-        if (MinecraftUtils.MinecraftVersion.getCurrentVersion().isBelow(MinecraftUtils.MinecraftVersion.V1_12_R1)) {
-            MinecraftUtils.debug(this, "This version of Minecraft is extremely outdated and support for it has reached its end of life. You will still be able to run Hunter on this Minecraft version(" + MinecraftUtils.MinecraftVersion.getCurrentVersion().name().toLowerCase() + "). Please consider updating to give your players a better experience and to avoid issues that have long been fixed.");
+        if (BukkitMinecraftUtils.MinecraftVersion.getCurrentVersion().isBelow(BukkitMinecraftUtils.MinecraftVersion.V1_12_R1)) {
+            BukkitMinecraftUtils.debug(this, "This version of Minecraft is extremely outdated and support for it has reached its end of life. You will still be able to run Hunter on this Minecraft version(" + BukkitMinecraftUtils.MinecraftVersion.getCurrentVersion().name().toLowerCase() + "). Please consider updating to give your players a better experience and to avoid issues that have long been fixed.");
         }
     }
 
     @Override
     public void onDisable() {
         if (OptionsUtil.COMMAND_KILLSTREAK.getBooleanValue())
-            MinecraftUtils.unRegisterCommand("killstreak");
+            BukkitMinecraftUtils.unRegisterCommand("killstreak");
         if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
-            MinecraftUtils.unRegisterCommand("level");
+            BukkitMinecraftUtils.unRegisterCommand("level");
         if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
-            MinecraftUtils.unRegisterCommand("hunter");
+            BukkitMinecraftUtils.unRegisterCommand("hunter");
         if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
-            MinecraftUtils.unRegisterCommand("prestige");
+            BukkitMinecraftUtils.unRegisterCommand("prestige");
         if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
-            MinecraftUtils.unRegisterCommand("bounty");
+            BukkitMinecraftUtils.unRegisterCommand("bounty");
         Bukkit.getOnlinePlayers().forEach(player -> {
             UserData userData = UserData.getUser(player.getUniqueId());
             userData.save(false, new Callback<Boolean>() {
@@ -233,13 +240,13 @@ public final class HunterPlugin extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             if (placeholdersAPI.isRegistered()) {
                 if (placeholdersAPI.unregister()) {
-                    MinecraftUtils.debug(this, "[Hunter] Unhooked from PlaceholderAPI!");
+                    BukkitMinecraftUtils.debug(this, "[Hunter] Unhooked from PlaceholderAPI!");
                 }
             }
         }
         if (holograms.isHooked()) {
             holograms.getHologramMap().forEach((name, hologram) -> holograms.remove(name, false));
-            MinecraftUtils.debug(this, "[Hunter] Unhooked from HolographicDisplays");
+            BukkitMinecraftUtils.debug(this, "[Hunter] Unhooked from HolographicDisplays");
         }
         if (connection != null) {
             try {
@@ -280,7 +287,7 @@ public final class HunterPlugin extends JavaPlugin {
                     connection = databaseWrapper.connect().getSQLConnection();
                     databaseWrapper.getSQLDatabase().createTable(OptionsUtil.DATABASE_TABLE_NAME.getStringValue(), map);
                     iDatabaseType = new UserData.SQLUserUtils();
-                    MinecraftUtils.debug(this, "Database: MySQL");
+                    BukkitMinecraftUtils.debug(this, "Database: MySQL");
                 }
             }
             case "PostgreSQL" -> {
@@ -294,7 +301,7 @@ public final class HunterPlugin extends JavaPlugin {
                     connection = databaseWrapper.connect().getSQLConnection();
                     databaseWrapper.getSQLDatabase().createTable(OptionsUtil.DATABASE_TABLE_NAME.getStringValue(), map);
                     iDatabaseType = new UserData.SQLUserUtils();
-                    MinecraftUtils.debug(this, "Database: PostgreSQL");
+                    BukkitMinecraftUtils.debug(this, "Database: PostgreSQL");
                 }
             }
             case "SQLite" -> {
@@ -303,7 +310,7 @@ public final class HunterPlugin extends JavaPlugin {
                     connection = databaseWrapper.connect().getSQLConnection();
                     databaseWrapper.getSQLDatabase().createTable(OptionsUtil.DATABASE_TABLE_NAME.getStringValue(), map);
                     iDatabaseType = new UserData.SQLUserUtils();
-                    MinecraftUtils.debug(this, "Database: SQLite");
+                    BukkitMinecraftUtils.debug(this, "Database: SQLite");
                 }
             }
             case "MongoDB" -> {
@@ -315,12 +322,12 @@ public final class HunterPlugin extends JavaPlugin {
                         OptionsUtil.DATABASE_MONGO_DATABASE.getStringValue());
                 iDatabaseType = new UserData.MongoDBUtils();
                 mongoClient = databaseWrapper.connect().getMongoClient();
-                MinecraftUtils.debug(this, "Database: MongoDB");
+                BukkitMinecraftUtils.debug(this, "Database: MongoDB");
             }
             case "File" -> {
                 databaseWrapper = null;
                 iDatabaseType = new UserData.FileUserUtils();
-                MinecraftUtils.debug(this, "Database: File");
+                BukkitMinecraftUtils.debug(this, "Database: File");
             }
             default -> {
                 setEnabled(false);

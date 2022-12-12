@@ -1,10 +1,10 @@
 package com.georgev22.hunter.inventories.actions;
 
-import com.georgev22.api.exceptions.ActionRunException;
-import com.georgev22.api.maps.HashObjectMap;
-import com.georgev22.api.minecraft.inventory.ItemBuilder;
-import com.georgev22.api.minecraft.inventory.utils.actions.Action;
-import com.georgev22.api.minecraft.inventory.utils.actions.ActionManager;
+import com.georgev22.library.exceptions.ActionRunException;
+import com.georgev22.library.maps.HashObjectMap;
+import com.georgev22.library.minecraft.inventory.ItemBuilder;
+import com.georgev22.library.minecraft.inventory.utils.actions.Action;
+import com.georgev22.library.minecraft.inventory.utils.actions.ActionManager;
 import com.georgev22.hunter.hooks.Vault;
 import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.hunter.utilities.configmanager.FileManager;
