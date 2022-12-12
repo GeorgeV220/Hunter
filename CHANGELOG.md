@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/GeorgeV220/Hunter/compare/v1.3.1...v1.4.0) (2022-12-12)
+
+
+### Features
+
+* **1.19.3:** 1.19.3 Support and usage of the new API ([2894ca0](https://github.com/GeorgeV220/Hunter/commit/2894ca0c51ab3d690fa9418cca7d70ee96c95ba3))
+
 ## [1.3.1](https://github.com/GeorgeV220/Hunter/compare/v1.3.0...v1.3.1) (2022-10-28)
 
 
