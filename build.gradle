@@ -67,14 +67,21 @@ repositories {
     maven { url = 'https://repo.dmulloy2.net/repository/public/' }
     maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url 'https://repo.georgev22.com/releases' }
+    maven { url 'https://repo.georgev22.com/snapshots' }
 }
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:${mcVersion}-R0.1-SNAPSHOT"
+    compileOnly "com.georgev22.library:extensions:${libraryVersion}:all"
 
     implementation(bStats())
-    implementation 'co.aikar:acf-paper:0.5.1-SNAPSHOT'
-    implementation 'com.georgev22:martexlibrary:8.15.0'
+    implementation 'co.aikar:acf-paper:0.5.1-G-1.0-SNAPSHOT'
+    implementation "com.georgev22.library:database:${libraryVersion}:all"
+    implementation "com.georgev22.library:maps:${libraryVersion}:all"
+    implementation "com.georgev22.library:scheduler:${libraryVersion}:all"
+    implementation "com.georgev22.library:utilities:${libraryVersion}:all"
+    implementation "com.georgev22.library:yaml:${libraryVersion}:all"
+    implementation "com.georgev22.library:minecraft:${libraryVersion}"
     implementation 'com.georgev22.api:libraryloader:1.3.0'
     implementation 'com.github.GeorgeV220:Hologram-Lib:1.3.0-G'
 
