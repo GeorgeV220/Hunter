@@ -1,3 +1,17 @@
+# [1.5.0](https://github.com/GeorgeV220/Hunter/compare/v1.4.0...v1.5.0) (2023-02-11)
+
+
+### Bug Fixes
+
+* bounty command ([e235594](https://github.com/GeorgeV220/Hunter/commit/e23559438288ff798fa6485ec8dedb29481dff23))
+* Fixed GitHub workflow ([0a33aff](https://github.com/GeorgeV220/Hunter/commit/0a33affeeebe90ffdd781bcd5c44ad1af266e3bc))
+* LibraryLoader#loadAll ([d21a7a2](https://github.com/GeorgeV220/Hunter/commit/d21a7a2e3aa3b71311cfa6157e121731d97105b1))
+
+
+### Features
+
+* **Commands:** rework commands ([26a3a99](https://github.com/GeorgeV220/Hunter/commit/26a3a996478b5a219e37b94394e1c3a9fd022ec4))
+
 # [1.4.0](https://github.com/GeorgeV220/Hunter/compare/v1.3.1...v1.4.0) (2022-12-12)
 
 
