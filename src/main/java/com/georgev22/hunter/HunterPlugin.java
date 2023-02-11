@@ -1,5 +1,6 @@
 package com.georgev22.hunter;
 
+import co.aikar.commands.PaperCommandManager;
 import com.georgev22.api.libraryloader.LibraryLoader;
 import com.georgev22.api.libraryloader.annotations.MavenLibrary;
 import com.georgev22.api.libraryloader.exceptions.InvalidDependencyException;
@@ -88,6 +89,8 @@ public final class HunterPlugin extends JavaPlugin {
     @Getter
     private Holograms holograms = new Holograms.HologramsNoop();
 
+    private PaperCommandManager paperCommandManager;
+
     private PagedInventoryAPI api = null;
 
     private PAPI placeholdersAPI = null;
@@ -123,6 +126,7 @@ public final class HunterPlugin extends JavaPlugin {
             Cooldown.appendToCooldowns(deserialize(data.getString("cooldowns", ""), new TypeToken<ObjectMap<String, Cooldown>>() {
             }.getType()));
         api = new PagedInventoryAPI(this);
+        paperCommandManager = new PaperCommandManager(this);
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
             try {
                 setupDatabase();
@@ -136,15 +140,15 @@ public final class HunterPlugin extends JavaPlugin {
                 new DeveloperInformListener());
 
         if (OptionsUtil.COMMAND_KILLSTREAK.getBooleanValue())
-            BukkitMinecraftUtils.registerCommand("killstreak", new KillstreakCommand());
+            paperCommandManager.registerCommand(new KillstreakCommand());
         if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
-            BukkitMinecraftUtils.registerCommand("level", new LevelCommand());
+            paperCommandManager.registerCommand(new LevelCommand());
         if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
-            BukkitMinecraftUtils.registerCommand("hunter", new HunterCommand());
+            paperCommandManager.registerCommand(new HunterCommand());
         if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
-            BukkitMinecraftUtils.registerCommand("prestige", new PrestigeCommand());
+            paperCommandManager.registerCommand(new PrestigeCommand());
         if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
-            BukkitMinecraftUtils.registerCommand("bounty", new BountyCommand());
+            paperCommandManager.registerCommand(new BountyCommand());
 
         if (OptionsUtil.UPDATER.getBooleanValue()) {
             new Updater();
@@ -203,18 +207,18 @@ public final class HunterPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         if (OptionsUtil.COMMAND_KILLSTREAK.getBooleanValue())
-            BukkitMinecraftUtils.unRegisterCommand("killstreak");
+            paperCommandManager.unregisterCommand(new KillstreakCommand());
         if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
-            BukkitMinecraftUtils.unRegisterCommand("level");
+            paperCommandManager.unregisterCommand(new LevelCommand());
         if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
-            BukkitMinecraftUtils.unRegisterCommand("hunter");
+            paperCommandManager.unregisterCommand(new HunterCommand());
         if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
-            BukkitMinecraftUtils.unRegisterCommand("prestige");
+            paperCommandManager.unregisterCommand(new PrestigeCommand());
         if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
-            BukkitMinecraftUtils.unRegisterCommand("bounty");
+            paperCommandManager.unregisterCommand(new BountyCommand());
         Bukkit.getOnlinePlayers().forEach(player -> {
             UserData userData = UserData.getUser(player.getUniqueId());
-            userData.save(false, new Callback<Boolean>() {
+            userData.save(false, new Callback<>() {
                 @Override
                 public Boolean onSuccess() {
                     return true;

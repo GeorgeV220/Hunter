@@ -1,40 +1,30 @@
 package com.georgev22.hunter.commands;
 
-import com.georgev22.library.minecraft.BukkitMinecraftUtils;
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.CommandIssuer;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Description;
 import com.georgev22.hunter.inventories.PrestigeInventory;
 import com.georgev22.hunter.utilities.MessagesUtil;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.BukkitCommand;
-import org.bukkit.entity.Player;
+import com.georgev22.library.minecraft.BukkitMinecraftUtils;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
+@CommandAlias("prestige")
+public class PrestigeCommand extends BaseCommand {
 
-public class PrestigeCommand extends BukkitCommand {
-
-
-    public PrestigeCommand() {
-        super("prestige");
-        this.description = "Prestige command";
-        this.usageMessage = "/prestige";
-        this.setPermission("killstreak.prestige");
-        this.setPermissionMessage(BukkitMinecraftUtils.colorize(MessagesUtil.NO_PERMISSION.getMessagesToString()));
-    }
-
-    public boolean execute(@NotNull final CommandSender sender, @NotNull final String label, final String[] args) {
-        if (!testPermission(sender)) return true;
-        if (!(sender instanceof Player player)) {
-            BukkitMinecraftUtils.msg(sender, MessagesUtil.ONLY_PLAYER_COMMAND.getMessagesToString());
-            return true;
+    @SneakyThrows
+    @Default
+    @Description("{@@commands.descriptions.prestige}")
+    @CommandPermission("hunter.prestige")
+    public void execute(@NotNull CommandIssuer commandIssuer) {
+        if (!commandIssuer.isPlayer()) {
+            BukkitMinecraftUtils.msg(commandIssuer.getIssuer(), MessagesUtil.ONLY_PLAYER_COMMAND.getMessagesToString());
+            return;
         }
 
-        try {
-            new PrestigeInventory().openInventory(player);
-        } catch (InvocationTargetException | IllegalAccessException | InstantiationException |
-                 NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-
-        return true;
+        new PrestigeInventory().openInventory(commandIssuer.getIssuer());
     }
 }
