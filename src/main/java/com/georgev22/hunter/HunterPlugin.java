@@ -108,7 +108,7 @@ public final class HunterPlugin extends JavaPlugin {
     public void onLoad() {
         if (BukkitMinecraftUtils.MinecraftVersion.getCurrentVersion().isBelow(BukkitMinecraftUtils.MinecraftVersion.V1_16_R1)) {
             try {
-                new LibraryLoader(this.getClass(), this.getDataFolder()).loadAll();
+                new LibraryLoader(this.getClass(), this.getDataFolder()).loadAll(false);
             } catch (InvalidDependencyException | UnknownDependencyException e) {
                 throw new RuntimeException(e);
             }
