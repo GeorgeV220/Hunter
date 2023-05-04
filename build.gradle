@@ -7,7 +7,7 @@ buildscript {
 plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'kr.entree.spigradle' version '2.4.3'
-    id 'io.freefair.lombok' version '6.6.1'
+    id 'io.freefair.lombok' version '6.6.2'
     id 'java'
     id 'jacoco'
     id 'idea'
@@ -34,11 +34,11 @@ spigot {
     authors = [project.property("author")]
     apiVersion = project.property("apiVersion")
     load = POSTWORLD
-    libraries = ["org.mongodb:mongo-java-driver:3.12.11",
-                 "mysql:mysql-connector-java:8.0.31",
-                 "org.xerial:sqlite-jdbc:3.40.0.0",
+    libraries = ["org.mongodb:mongo-java-driver:3.12.12",
+                 "mysql:mysql-connector-java:8.0.32",
+                 "org.xerial:sqlite-jdbc:3.41.0.0",
                  "com.google.guava:guava:31.1-jre",
-                 "org.postgresql:postgresql:42.5.2",
+                 "org.postgresql:postgresql:42.5.4",
                  "commons-io:commons-io:2.11.0",
                  "commons-codec:commons-codec:1.15"]
     softDepends = [
@@ -81,8 +81,8 @@ dependencies {
 
     compileOnly 'org.apache.commons:commons-lang3:3.12.0'
     compileOnly 'com.google.guava:guava:31.1-jre'
-    compileOnly 'org.mongodb:mongo-java-driver:3.12.11'
-    compileOnly 'org.jetbrains:annotations:23.1.0'
+    compileOnly 'org.mongodb:mongo-java-driver:3.12.12'
+    compileOnly 'org.jetbrains:annotations:24.0.1'
     compileOnly 'me.clip:placeholderapi:2.11.2'
     compileOnly "com.github.MilkBowl:VaultAPI:1.7.1"
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
@@ -90,9 +90,9 @@ dependencies {
     compileOnly 'net.kyori:adventure-text-serializer-legacy:4.13.0'
 
     // Test dependencies
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
     testImplementation 'org.mockito:mockito-core:4.11.0'
-    testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.144.5'
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.19:2.145.1'
     testImplementation 'org.assertj:assertj-core:3.24.2'
 }
 
