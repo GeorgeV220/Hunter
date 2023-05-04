@@ -1,3 +1,20 @@
+# [1.6.0](https://github.com/GeorgeV220/Hunter/compare/v1.5.0...v1.6.0) (2023-05-04)
+
+
+### Bug Fixes
+
+* **Commands:** Added missing lang_en.yml ([eb7c777](https://github.com/GeorgeV220/Hunter/commit/eb7c77743dce0dbe014f5afcae7e349ef42f3827))
+* **Commands:** Fixed commands placeholders and permissions ([981dfe5](https://github.com/GeorgeV220/Hunter/commit/981dfe5a0742617bbc42aabeefc238d938d6b1d3))
+* **Commands:** Load command locales ([94c695e](https://github.com/GeorgeV220/Hunter/commit/94c695e8417c1ccc56cfed14c254ab94e77befd8))
+* Missing adventure api on older minecraft versions. ([ad2a7e5](https://github.com/GeorgeV220/Hunter/commit/ad2a7e57c15a0949f683486b43b1987bde0e5b59))
+* **Updater:** Do not disable the plugin if you are unable to check for updates. ([4336cf4](https://github.com/GeorgeV220/Hunter/commit/4336cf46499bb6c8104daec7596fd01adb29407c))
+
+
+### Features
+
+* **Placeholders:** Added two new placeholders ([335f6b2](https://github.com/GeorgeV220/Hunter/commit/335f6b20cb5e97e8ebb54482fee7896273db3736))
+* **UserData:** Save/load the player bounty ([442df2c](https://github.com/GeorgeV220/Hunter/commit/442df2c7cdcc12174f9cfbf35383c11837e84ad7))
+
 # [1.5.0](https://github.com/GeorgeV220/Hunter/compare/v1.4.0...v1.5.0) (2023-02-11)
 
 
