@@ -25,20 +25,19 @@ public class Updater {
 
     private final HunterPlugin hunterPlugin = HunterPlugin.getInstance();
     private final String localVersion = hunterPlugin.getDescription().getVersion();
-    private final String onlineVersion;
+    private String onlineVersion;
 
     {
         try {
             onlineVersion = getOnlineVersion();
         } catch (IOException e) {
             BukkitMinecraftUtils.debug(hunterPlugin, "Failed to check for an update on Git.", "Either Git or you are offline or are slow to respond.");
-
-            e.printStackTrace();
-            throw new RuntimeException(e);
         }
     }
 
     public Updater() {
+        if (onlineVersion == null)
+            return;
         Bukkit.getScheduler().runTaskTimerAsynchronously(hunterPlugin, () -> {
             hunterPlugin.getLogger().info("Checking for Updates ... ");
             if (compareVersions(onlineVersion.replace("v", ""), localVersion.replace("v", "")) == 0) {
@@ -62,6 +61,8 @@ public class Updater {
     }
 
     public Updater(Player player) {
+        if (onlineVersion == null)
+            return;
         Bukkit.getScheduler().runTaskAsynchronously(hunterPlugin, () -> {
             BukkitMinecraftUtils.msg(player, "&e&lUpdater &8» &6Checking for Updates ...");
             if (compareVersions(onlineVersion.replace("v", ""), localVersion.replace("v", "")) == 0) {
@@ -86,6 +87,8 @@ public class Updater {
 
 
     private int compareVersions(@NotNull String version1, @NotNull String version2) {
+        if (onlineVersion == null)
+            return 0;
         if (version1.contains("alpha") | version1.contains("beta")) {
             return -1;
         }
