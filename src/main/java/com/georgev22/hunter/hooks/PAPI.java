@@ -1,11 +1,14 @@
 package com.georgev22.hunter.hooks;
 
+import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.library.utilities.Utils;
 import com.georgev22.hunter.HunterPlugin;
 import com.georgev22.hunter.utilities.player.UserData;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+
+import java.text.DecimalFormat;
 
 public class PAPI extends PlaceholderExpansion {
 
@@ -70,6 +73,13 @@ public class PAPI extends PlaceholderExpansion {
         }
         if (identifier.equalsIgnoreCase("player_prestige_roman")) {
             return Utils.toRoman(userData.getPrestige());
+        }
+        if (identifier.equalsIgnoreCase("player_bounty")) {
+            return String.valueOf(userData.getBounty());
+        }
+        if (identifier.equalsIgnoreCase("player_bounty_format")) {
+            DecimalFormat decimalFormat = new DecimalFormat(MessagesUtil.PLAYER_BOUNTY_FORMATTED_PATTERN.getMessages()[0]);
+            return decimalFormat.format(userData.getBounty());
         }
         return null;
     }

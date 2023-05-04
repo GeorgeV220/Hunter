@@ -1,5 +1,6 @@
 package com.georgev22.hunter.utilities.player;
 
+import com.georgev22.hunter.utilities.MessagesUtil;
 import com.georgev22.library.maps.ConcurrentObjectMap;
 import com.georgev22.library.maps.HashObjectMap;
 import com.georgev22.library.maps.ObjectMap;
@@ -9,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 public class User extends ConcurrentObjectMap<String, Object> {
@@ -110,6 +112,7 @@ public class User extends ConcurrentObjectMap<String, Object> {
                 .append("%prestige%", String.valueOf(prestige()))
                 .append("%prestige_roman%", Utils.toRoman(prestige()))
                 .append("%bounty%", String.valueOf(bounty()))
+                .append("%bounty_format%", new DecimalFormat(MessagesUtil.PLAYER_BOUNTY_FORMATTED_PATTERN.getMessages()[0]).format(bounty()))
                 ;
     }
 }

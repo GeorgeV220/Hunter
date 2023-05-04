@@ -48,13 +48,15 @@ public enum MessagesUtil {
 
     TRANSACTION_ERROR_NEGATIVE("Messages.Transaction error negative", "&a&l(!)&c Negative numbers cannot be used!"),
 
-    BOUNTY_PLAYER("Messages.Bounty player", "&a&l(!)&a You currently have %bounty% bounty on your head!"),
+    BOUNTY_PLAYER("Messages.Bounty player", "&a&l(!)&a You currently have %bounty%(%bounty_format%) bounty on your head!"),
 
     BOUNTY_PLAYER_OTHER("Messages.Bounty player other", "&a&l(!)&a Player %player% have a %bounty% bounty on his head!"),
 
     BOUNTY_PLAYER_COLLECT("Messages.Bounty player collect", "&a&l(!)&a Player %player% collected %target% bounty (%bounty%)"),
 
     BOUNTY_PLAYER_SET("Messages.Bounty player set", "&a&l(!)&a %player% put a bounty on %target% head. (%transaction%/%bounty%)"),
+
+    PLAYER_BOUNTY_FORMATTED_PATTERN("Other.Player bounty formatted pattern", "$#,##0.00"),
     ;
 
     /**
