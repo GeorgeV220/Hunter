@@ -83,7 +83,7 @@ dependencies {
     compileOnly 'com.google.guava:guava:31.1-jre'
     compileOnly 'org.mongodb:mongo-java-driver:3.12.12'
     compileOnly 'org.jetbrains:annotations:24.0.1'
-    compileOnly 'me.clip:placeholderapi:2.11.2'
+    compileOnly 'me.clip:placeholderapi:2.11.3'
     compileOnly "com.github.MilkBowl:VaultAPI:1.7.1"
     compileOnly 'com.gmail.filoghost.holographicdisplays:holographicdisplays-api:2.4.9'
     compileOnly 'net.kyori:adventure-api:4.13.0'
