@@ -44,7 +44,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.logging.Level;
 
 import static com.georgev22.library.minecraft.BukkitMinecraftUtils.MinecraftVersion.V1_16_R1;
 import static com.georgev22.library.utilities.Utils.*;
@@ -145,16 +147,7 @@ public final class HunterPlugin extends JavaPlugin {
                 new PlayerListeners(),
                 new DeveloperInformListener());
 
-        if (OptionsUtil.COMMAND_KILLSTREAK.getBooleanValue())
-            paperCommandManager.registerCommand(new KillstreakCommand());
-        if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
-            paperCommandManager.registerCommand(new LevelCommand());
-        if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
-            paperCommandManager.registerCommand(new HunterCommand());
-        if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
-            paperCommandManager.registerCommand(new PrestigeCommand());
-        if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
-            paperCommandManager.registerCommand(new BountyCommand());
+        setupCommands();
 
         if (OptionsUtil.UPDATER.getBooleanValue()) {
             new Updater();
@@ -212,16 +205,7 @@ public final class HunterPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (OptionsUtil.COMMAND_KILLSTREAK.getBooleanValue())
-            paperCommandManager.unregisterCommand(new KillstreakCommand());
-        if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
-            paperCommandManager.unregisterCommand(new LevelCommand());
-        if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
-            paperCommandManager.unregisterCommand(new HunterCommand());
-        if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
-            paperCommandManager.unregisterCommand(new PrestigeCommand());
-        if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
-            paperCommandManager.unregisterCommand(new BountyCommand());
+        unregisterCommands();
         Bukkit.getOnlinePlayers().forEach(player -> {
             UserData userData = UserData.getUser(player.getUniqueId());
             userData.save(false, new Callback<>() {
@@ -421,5 +405,57 @@ public final class HunterPlugin extends JavaPlugin {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;
+    }
+
+    public void setupCommands() {
+        // Enable unstable API for deprecated 'help' command
+        //noinspection deprecation
+        paperCommandManager.enableUnstableAPI("help");
+        // Load command locales
+        loadCommandLocales();
+
+        if (OptionsUtil.COMMAND_KILLSTREAK.getBooleanValue())
+            paperCommandManager.registerCommand(new KillstreakCommand());
+        if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
+            paperCommandManager.registerCommand(new LevelCommand());
+        if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
+            paperCommandManager.registerCommand(new HunterCommand());
+        if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
+            paperCommandManager.registerCommand(new PrestigeCommand());
+        if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
+            paperCommandManager.registerCommand(new BountyCommand());
+    }
+
+    public void unregisterCommands() {
+        if (OptionsUtil.COMMAND_KILLSTREAK.getBooleanValue())
+            paperCommandManager.unregisterCommand(new KillstreakCommand());
+        if (OptionsUtil.COMMAND_LEVEL.getBooleanValue())
+            paperCommandManager.unregisterCommand(new LevelCommand());
+        if (OptionsUtil.COMMAND_HUNTER.getBooleanValue())
+            paperCommandManager.unregisterCommand(new HunterCommand());
+        if (OptionsUtil.COMMAND_PRESTIGE.getBooleanValue())
+            paperCommandManager.unregisterCommand(new PrestigeCommand());
+        if (OptionsUtil.COMMAND_BOUNTY.getBooleanValue())
+            paperCommandManager.unregisterCommand(new BountyCommand());
+    }
+
+    /**
+     * Loads the command locales.
+     * If a 'lang_en.yml' language file exists in the data folder, it will be used as the default language file.
+     * Otherwise, the default English language file provided by the command manager will be used.
+     */
+    public void loadCommandLocales() {
+        try {
+            // Save the default English language file if it doesn't exist
+            saveResource("lang_en.yml", true);
+            // Set the default locale to English
+            paperCommandManager.getLocales().setDefaultLocale(Locale.ENGLISH);
+            // Load the language file
+            paperCommandManager.getLocales().loadYamlLanguageFile(new File(getDataFolder(), "lang_en.yml"), Locale.ENGLISH);
+            // Enable per-issuer locale support
+            paperCommandManager.usePerIssuerLocale(true);
+        } catch (Exception e) {
+            getLogger().log(Level.SEVERE, "Failed to load language config 'lang_en.yaml': ", e);
+        }
     }
 }
