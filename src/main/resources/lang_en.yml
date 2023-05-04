@@ -1,0 +1,33 @@
+commands:
+  descriptions:
+    bounty:
+      help: "Show the bounty help message."
+      default: "The main bounty command allows you to view or set the bounty of others, as well as see your own bounty."
+    hunter:
+      help: "Show the hunter help message."
+      clear: "Clear a player's stats."
+      reload: "Reload the plugin."
+      copy: "Copy an inventory file to the same folder with a new name."
+      set:
+        default: "The main set command for the hunter plugin."
+        kills: "Set the player's kill count."
+        killstreak: "Set the player's killstreak count."
+        prestige: "Set the player's prestige count."
+        levels: "Set the player's level."
+        multiplier: "Set the player's experience multiplier."
+        experience: "Set the player's experience points."
+        help: "Show the set help message"
+      transaction:
+        default: "The main transaction command for the hunter plugin."
+        prestige: "Run a prestige transaction."
+        sell: "Sell an item stack from player's inventory."
+        buy: "Buy an item stack."
+        help: "Show the transaction help message"
+      hologram:
+        default: "The main hologram command for the hunter plugin."
+        create: "Create a new hologram."
+        remove: "Remove an existing hologram."
+        help: "Show the hologram help message"
+    killstreak: "The main killstreak command allows you to view the killstreak of others, as well as your own."
+    level: "The main level command allows you to view the level of others, as well as your own."
+    prestige: "Open the prestige inventory."

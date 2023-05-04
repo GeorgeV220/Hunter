@@ -294,7 +294,7 @@ public class HunterCommand extends BaseCommand {
         @HelpCommand
         @Subcommand("help")
         @CommandAlias("hsethelp")
-        @Description("{@@commands.descriptions.set.help}")
+        @Description("{@@commands.descriptions.hunter.set.help}")
         @CommandPermission("hunter.set.help")
         public void onHelp(@NotNull CommandIssuer commandIssuer) {
             BukkitMinecraftUtils.msg(commandIssuer.getIssuer(), "&c&l(!)&c /hunter set <data> <player> <value>");
@@ -461,7 +461,7 @@ public class HunterCommand extends BaseCommand {
         @HelpCommand
         @Subcommand("help")
         @CommandAlias("htransactionhelp")
-        @Description("{@@commands.descriptions.transaction.help}")
+        @Description("{@@commands.descriptions.hunter.transaction.help}")
         @CommandPermission("hunter.transaction.help")
         public void onHelp(@NotNull CommandIssuer commandIssuer) {
             BukkitMinecraftUtils.msg(commandIssuer.getIssuer(), "&c&l(!)&c /hunter transaction <data> <player> <funds> <values>");
@@ -546,7 +546,7 @@ public class HunterCommand extends BaseCommand {
         @HelpCommand
         @Subcommand("help")
         @CommandAlias("hhologramhelp")
-        @Description("{@@commands.descriptions.hologram.help}")
+        @Description("{@@commands.descriptions.hunter.hologram.help}")
         @CommandPermission("hunter.hologram.help")
         public void onHelp(@NotNull CommandIssuer commandIssuer) {
             BukkitMinecraftUtils.msg(commandIssuer.getIssuer(), "&c&l(!)&c /hunter hologram <data> <values>");
