@@ -31,6 +31,7 @@ import com.georgev22.hunter.utilities.player.UserData;
 import com.google.gson.reflect.TypeToken;
 import com.mongodb.client.MongoClient;
 import lombok.Getter;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -45,6 +46,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Objects;
 
+import static com.georgev22.library.minecraft.BukkitMinecraftUtils.MinecraftVersion.V1_16_R1;
 import static com.georgev22.library.utilities.Utils.*;
 
 @MavenLibrary(groupId = "org.mongodb", artifactId = "mongo-java-driver", version = "3.12.7")
@@ -59,6 +61,8 @@ public final class HunterPlugin extends JavaPlugin {
 
     @Getter
     private DatabaseWrapper databaseWrapper = null;
+
+    private BukkitAudiences adventure;
 
     /**
      * Return Database Type
@@ -117,6 +121,8 @@ public final class HunterPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if (BukkitMinecraftUtils.MinecraftVersion.getCurrentVersion().isBelow(V1_16_R1))
+            this.adventure = BukkitAudiences.create(this);
         final FileManager fm = FileManager.getInstance();
         fm.loadFiles(this);
         MessagesUtil.repairPaths(fm.getMessages());
@@ -262,6 +268,10 @@ public final class HunterPlugin extends JavaPlugin {
         if (mongoClient != null) {
             mongoClient.close();
         }
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
     }
 
     /**
@@ -404,5 +414,12 @@ public final class HunterPlugin extends JavaPlugin {
         MessagesUtil.repairPaths(fm.getMessages());
         fm.getItems().reloadFile();
         fm.getDiscord().reloadFile();
+    }
+
+    public @NotNull BukkitAudiences adventure() {
+        if (this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
     }
 }
